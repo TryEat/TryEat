@@ -1,0 +1,20 @@
+{
+  "name": "tryeat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://git.kumoh.ac.kr/TryEat/TryEat.git"
+  },
+  "author": "임석호, 현병록, 이철우",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3",
+    "mongoose": "^5.0.13"
+  }
+}
