@@ -1,7 +1,7 @@
 ## TryEat
-#### µ¥ÀÌÅÍ ±â¹İ À½½Ä ÃßÃµ ¾îÇÃ¸®ÄÉÀÌ¼Ç
+#### ë°ì´í„° ê¸°ë°˜ ìŒì‹ ì¶”ì²œ ì–´í”Œë¦¬ì¼€ì´ì…˜
 
 ##### Programing Language, Database
 + Node.js
-+ MongoDB
++ MySql
 + Android ( Java )
