@@ -1,0 +1,152 @@
+CREATE DATABASE tryeat;
+
+USE tryeat;
+
+CREATE TABLE user(
+	user_id INT(11) NOT NULL AUTO_INCREMENT,
+	user_login_id VARCHAR(30) NOT NULL,
+	user_pwd VARCHAR(50) NOT NULL,
+	profile VARCHAR(100) NULL,
+	signdate DATETIME NOT NULL,
+	PRIMARY KEY (user_id)
+);
+
+CREATE TABLE images (
+	img_id INT(10) NOT NULL auto_increment,
+	restaurant_id INT(11) NULL,
+	user_id INT(11) NULL,
+	image MEDIUMBLOB NOT NULL,
+	PRIMARY KEY (img_id),
+	FOREIGN KEY (user_id) REFERENCES user (user_id)
+);
+
+CREATE TABLE follow(
+	user_id INT(11) NULL,
+	follow_id INT(11) NOT NULL,
+	target_id VARCHAR(100) NOT NULL,
+	fdate DATETIME NOT NULL,
+	FOREIGN KEY (user_id) REFERENCES user (user_id)
+);
+
+CREATE TABLE restaurant(
+	restaurant_id INT(11) NOT NULL AUTO_INCREMENT,
+	img_id INT(10) NULL,
+	restaurant_name VARCHAR(30) NOT NULL,
+	locate_latitude VARCHAR(100) NOT NULL,
+	locate_longitude VARCHAR(100) NOT NULL,
+	restaurant_desc VARCHAR(100) NULL,
+	open_time TIME NOT NULL,
+	close_time TIME NOT NULL,
+	review_count INT(11) NULL,
+	average INT(11) NULL,
+	PRIMARY KEY (restaurant_id),
+	FOREIGN KEY (img_id) REFERENCES images (img_id)
+);
+
+CREATE TABLE rst_rate(
+	txt_id INT(11) NOT NULL AUTO_INCREMENT,
+	restaurant_id INT(11) NULL,
+	user_id INT(11) NULL,
+	img_id INT(10) NULL,
+	title VARCHAR(100) NOT NULL,
+	content TEXT NOT NULL,
+	date DATETIME NOT NULL,
+	rate INT(11) NOT NULL,
+	PRIMARY KEY (txt_id),
+	FOREIGN KEY (restaurant_id) REFERENCES restaurant (restaurant_id),
+	FOREIGN KEY (user_id) REFERENCES user (user_id),
+	FOREIGN KEY (img_id) REFERENCES images (img_id)
+);
+
+CREATE TABLE ad(
+	ad_id INT(11) NOT NULL AUTO_INCREMENT,
+	restaurant_id INT(11) NULL,
+	ad_requester VARCHAR(100) NOT NULL,
+	start_date DATETIME NOT NULL,
+	ad_period INT(11) NOT NULL,
+	PRIMARY KEY (ad_id),
+	FOREIGN KEY (restaurant_id) REFERENCES restaurant (restaurant_id)
+);
+
+
+쿼리문 예제 (18.05.08.22:27 수정)
+
+USE tryeat;
+
+음식점 이름 검색하는 쿼리
+ SELECT restaurant_name FROM restaurant;
+
+restaurant_id 음식점 평가, 등록하는 쿼리
+ INSERT INTO rst_rate (restaurant_id,title,content,rate,date) VALUES ('restaurant_id','title','content','rate',NOW());
+ 
+restaurant_id 음식점 평가 수정, 등록하는 쿼리
+ UPDATE rst_rate SET title='title', content='content', rate='rate', date=NOW() WHERE txt_id=restaurant_id;
+ 
+restaurant_id 음식점의 리뷰 갯수를 1 증가시키는 쿼리
+ UPDATE restaurant SET review_count=review_count+1 WHERE restaurant_id=restaurant_id;
+ 
+restaurant_id 음식점 평가 삭제하는 쿼리
+ DELETE FROM rst_rate WHERE txt_id=restaurant_id;
+ 
+restaurant_id 음식점 평가 보여주는 쿼리
+ SELECT * FROM rst_rate WHERE restaurant_id=restaurant_id;
+
+restaurant_id 음식점 평가 점수를 등록하는 쿼리
+ UPDATE rst_rate SET rate='rate' WHERE txt_id=restaurant_id;
+
+
+음식점을 추가하는 쿼리
+ INSERT INTO restaurant (restaurant_name,locate_latitude,locate_longitude,restaurant_desc,review_count,open_time,close_time) VALUES ('restaurant_name','locate_latitude','locate_longitude','restaurant_desc','0','open_time','close_time');
+
+restaurant_id 음식점 정보를 수정하는 쿼리
+ UPDATE restaurant SET restaurant_name='맘스 터치', locate_latitude='locate_latitude', locate_longitude='locate_longitude', restaurant_desc='restaurant_desc', open_time='open_time', close_time='close_time' WHERE restaurant_id=restaurant_id;
+ 
+restaurant_id 음식점의 리뷰 평균을 출력하는 쿼리
+ SELECT avg(rate) FROM rst_rate WHERE restaurant_id=restaurant_id;
+ 
+user_id 유저의 팔로우 id값을 저장하는 쿼리
+ INSERT INTO follow (user_id,follow_id,target_id,fdate) VALUES ('user_id','follow_id','target_id',NOW());
+ 
+user_id 유저의 팔로우 id값을 삭제하는 쿼리
+ DELETE FROM follow WHERE(user_id=user_id AND follow_id="follow_id");
+ 
+user_id 유저의 팔로우 목록 들고오는 쿼리
+ SELECT * FROM follow WHERE user_id=user_id;
+ 
+ 
+user_id 유저의 평가 항목 들고오는 쿼리
+ SELECT * FROM rst_rate WHERE user_id=user_id;
+ 
+user_id 유저의 평가한 음식점 목록을 들고오는 쿼리
+ SELECT restaurant_id FROM rst_rate WHERE user_id=user_id;
+
+ 
+음식점이 목록에 있는지 확인하는 쿼리
+이름으로 검색// SELECT restaurant_name FROM restaurant WHERE restaurant_name="restaurant_name";
+고유id로 검색// SELECT restaurant_id FROM restaurant WHERE restaurant_id=restaurant_id;
+좌표로 검색  // SELECT (locate_latitude AND locate_longitude) as exist FROM restaurant WHERE (locate_latitude="locate_latitude" AND locate_longitude="locate_longitude");
+
+
+restaurant_id 음식점의 이미지를 불러오는 쿼리
+ SELECT image FROM images WHERE 'restaurant_id' = restaurant_id;
+
+restaurant_id 음식점 이미지를 저장, 추가하는 쿼리
+ INSERT INTO images (restaurant_id, image) VALUES ('restaurant_id', 'image');
+
+restaurant_id 음식점의 img_id 이미지를 삭제하는 쿼리
+ DELETE FROM images WHERE img_id = img_id;
+ 
+u_num이 등록한 restaurant_id 음식점 이미지를 가져오는 쿼리
+ SELECT image FROM images WHERE (user_id = user_id AND restaurant_id = restaurant_id);
+ 
+u_num이 등록한 restaurant_id 음식점 이미지를 모두 삭제하는 쿼리
+ DELETE FROM images WHERE (user_id = user_id AND restaurant_id = restaurant_id);
+
+현재 ad 목록을 보여주는 쿼리
+ SELECT * FROM ad;
+ 
+ad_requester 가 등록한 restaurant_id 음식점을 출력하는 쿼리
+ SELECT restaurant_id FROM ad WHERE ad_requester = ad_requester;
+
+
+
