@@ -47,7 +47,7 @@ CREATE TABLE restaurant(
 );
 
 CREATE TABLE restaurant_rate(
-	txt_id INT(11) NOT NULL AUTO_INCREMENT,
+	review_id INT(11) NOT NULL AUTO_INCREMENT,
 	restaurant_id INT(11) NOT NULL,
 	user_id INT(11) NOT NULL,
 	img_id INT(11),

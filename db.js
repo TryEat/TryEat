@@ -1,4 +1,4 @@
-var mysql = require('mysql');
+var mysql = require('mysql'); 
 
 var dbConfig = {
     host: 'localhost',
@@ -7,9 +7,9 @@ var dbConfig = {
     database: 'tryeat',
     port: 3306,
     connectionLimit: 100,
-    insecureAuth : true
+    insecureAuth: true
 };
 
-var pool = mysql.createPool(dbConfig);
+var pool = mysql.createPool(dbConfig); 
 
 module.exports = pool;
