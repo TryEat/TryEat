@@ -66,9 +66,9 @@ public class RestaurantListAdapter extends BaseAdapter {
 
         RestaurantListItem item = mList.get(position);
 
-        holder.mIcon.setImageDrawable(item.mIcon);
-        holder.mName.setText(item.mName);
-        holder.mRate.setText(item.mRate);
+        holder.mIcon.setImageDrawable(item.getmIcon());
+        holder.mName.setText(item.getmName());
+        holder.mRate.setText(item.getmRate());
 
         return convertView;
     }

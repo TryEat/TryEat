@@ -12,6 +12,7 @@
     <string name="singin">회원가입</string>
     <string name="login">로그인</string>
     <string name="logout">로그아웃</string>
-
+    <!--타이틀-->
+    <string name="recommended_restaraunt">추천 음식점</string>
     <string name="action_settings">Settings</string>
 </resources>
