@@ -46,7 +46,8 @@ module.exports = function (_dbPool) {
         var query = 'INSERT INTO user (user_login_id ,user_pwd) VALUES (?,?)';
         dbPool.query(query, [user_login_id, user_pwd], function (err, rows, fields) {
             if (err) throw err;
-            res.end('가입성공');
+            if(rows.affectedRows!=0)res.end('가입 성공');
+            else res.end('가입 실패');
         });
     })
 

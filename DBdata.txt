@@ -28,6 +28,7 @@ CREATE TABLE follow (
 	target_id VARCHAR(100) NOT NULL,
 	PRIMARY KEY (follow_id),
 	FOREIGN KEY (user_id) REFERENCES user (user_id)
+	FOREIGN KEY (target_id) REFERENCES user (user_id)
 );
 
 CREATE TABLE restaurant(
