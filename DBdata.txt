@@ -9,7 +9,7 @@ CREATE TABLE user(
 	user_login_id VARCHAR(30) NOT NULL,
 	user_pwd VARCHAR(50) NOT NULL,
 	profile VARCHAR(100),
-	signdate DATETIME NOT NULL,
+	signdate TIMESTAMP NOT NULL DEFAULT now(),
 	PRIMARY KEY (user_id)
 );
 
@@ -22,7 +22,7 @@ CREATE TABLE images (
 	FOREIGN KEY (user_id) REFERENCES user (user_id)
 );
 
-CREATE TABLE follow(
+CREATE TABLE follow (
 	follow_id INT(11) NOT NULL AUTO_INCREMENT,
 	user_id INT(11) NOT NULL,
 	target_id VARCHAR(100) NOT NULL,
@@ -45,13 +45,13 @@ CREATE TABLE restaurant(
 	FOREIGN KEY (img_id) REFERENCES images (img_id)
 );
 
-CREATE TABLE rst_rate(
+CREATE TABLE restaurant_rate(
 	txt_id INT(11) NOT NULL AUTO_INCREMENT,
 	restaurant_id INT(11) NOT NULL,
 	user_id INT(11) NOT NULL,
 	img_id INT(11),
 	content TEXT,
-	date DATETIME NOT NULL,
+	date TIMESTAMP NOT NULL DEFAULT now(),
 	rate INT(11) NOT NULL,
 	PRIMARY KEY (txt_id),
 	FOREIGN KEY (restaurant_id) REFERENCES restaurant (restaurant_id),
@@ -63,7 +63,7 @@ CREATE TABLE ad(
 	ad_id INT(11) NOT NULL AUTO_INCREMENT,
 	restaurant_id INT(11) NOT NULL,
 	ad_requester VARCHAR(100) NOT NULL,
-	start_date DATETIME NOT NULL,
+	start_date TIMESTAMP NOT NULL DEFAULT now(),
 	ad_period INT(11) NOT NULL,
 	PRIMARY KEY (ad_id),
 	FOREIGN KEY (restaurant_id) REFERENCES restaurant (restaurant_id)
@@ -78,22 +78,22 @@ USE tryeat;
  SELECT restaurant_name FROM restaurant;
 
 restaurant_id 음식점 평가, 등록하는 쿼리
- INSERT INTO rst_rate (restaurant_id,title,content,rate,date) VALUES ('restaurant_id','title','content','rate',NOW());
+ INSERT INTO restaurant_rate (restaurant_id,title,content,rate) VALUES ('restaurant_id','title','content','rate');
  
 restaurant_id 음식점 평가 수정, 등록하는 쿼리
- UPDATE rst_rate SET title='title', content='content', rate='rate', date=NOW() WHERE txt_id=restaurant_id;
+ UPDATE restaurant_rate SET title='title', content='content', rate='rate' WHERE txt_id=restaurant_id;
  
 restaurant_id 음식점의 리뷰 갯수를 1 증가시키는 쿼리
  UPDATE restaurant SET review_count=review_count+1 WHERE restaurant_id=restaurant_id;
  
 restaurant_id 음식점 평가 삭제하는 쿼리
- DELETE FROM rst_rate WHERE txt_id=restaurant_id;
+ DELETE FROM restaurant_rate WHERE txt_id=restaurant_id;
  
 restaurant_id 음식점 평가 보여주는 쿼리
- SELECT * FROM rst_rate WHERE restaurant_id=restaurant_id;
+ SELECT * FROM restaurant_rate WHERE restaurant_id=restaurant_id;
 
 restaurant_id 음식점 평가 점수를 등록하는 쿼리
- UPDATE rst_rate SET rate='rate' WHERE txt_id=restaurant_id;
+ UPDATE restaurant_rate SET rate='rate' WHERE txt_id=restaurant_id;
 
 
 음식점을 추가하는 쿼리
@@ -103,10 +103,10 @@ restaurant_id 음식점 정보를 수정하는 쿼리
  UPDATE restaurant SET restaurant_name='맘스 터치', locate_latitude='locate_latitude', locate_longitude='locate_longitude', restaurant_desc='restaurant_desc', open_time='open_time', close_time='close_time' WHERE restaurant_id=restaurant_id;
  
 restaurant_id 음식점의 리뷰 평균을 출력하는 쿼리
- SELECT avg(rate) FROM rst_rate WHERE restaurant_id=restaurant_id;
+ SELECT avg(rate) FROM restaurant_rate WHERE restaurant_id=restaurant_id;
  
 user_id 유저의 팔로우 id값을 저장하는 쿼리
- INSERT INTO follow (user_id,target_id) VALUES ('user_id','target_id');
+ INSERT INTO follow (user_id,follow_id,target_id) VALUES ('user_id','follow_id','target_id');
  
 user_id 유저의 팔로우 id값을 삭제하는 쿼리
  DELETE FROM follow WHERE(user_id=user_id AND follow_id="follow_id");
@@ -116,10 +116,10 @@ user_id 유저의 팔로우 목록 들고오는 쿼리
  
  
 user_id 유저의 평가 항목 들고오는 쿼리
- SELECT * FROM rst_rate WHERE user_id=user_id;
+ SELECT * FROM restaurant_rate WHERE user_id=user_id;
  
 user_id 유저의 평가한 음식점 목록을 들고오는 쿼리
- SELECT restaurant_id FROM rst_rate WHERE user_id=user_id;
+ SELECT restaurant_id FROM restaurant_rate WHERE user_id=user_id;
 
  
 음식점이 목록에 있는지 확인하는 쿼리
