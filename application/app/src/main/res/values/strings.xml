@@ -1,3 +1,29 @@
 <resources>
-    <string name="app_name">TryEat</string>
+    <string name="app_name">TryEat_app</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!--메뉴에 쓰일 이름-->
+    <string name="menu1">나의 음식점 평가</string>
+    <string name="menu2">음식점 추천 목록</string>
+    <string name="menu3">팔로우 관리</string>
+    <string name="nickname">닉네임</string>
+    <string name="singin">회원가입</string>
+    <string name="login">로그인</string>
+    <string name="logout">로그아웃</string>
+    <!--타이틀-->
+    <string name="recommended_restaraunt">추천 음식점</string>
+    <!--restaurant_add_fragment-->
+    <string name="raf_name">이름 : </string>
+    <string name="raf_location">위치 : </string>
+    <string name="raf_tel">Tel : </string>
+    <string name="raf_hours">영업시간 : </string>
+    <!--restaurant_detail_fragment-->
+    <string name="rdf_name">맘스터치 금오공대점</string>
+    <string name="rdf_tel">000-000-0000</string>
+    <string name="rdf_hours">12:00 ~ 20:00</string>
+
+
+    <string name="action_settings">Settings</string>
 </resources>

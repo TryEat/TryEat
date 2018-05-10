@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <TextView
-        android:text="123123"
+        android:text="이 화면은 추천 리스트화면입니다."
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <ListView
