@@ -19,7 +19,6 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,14 +26,15 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                FragmentManager fm = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                fragmentTransaction.replace(R.id.frament_place, new RestaurantListFragment()).commit();
             }
-        });*/
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -44,7 +44,9 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.replace(R.id.frament_place, new RestaurantListFragment()).commit();
         //초기 추천 음식점 list 로드
     }
 
@@ -85,27 +87,24 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-
         if (id == R.id.nav_Add_Review) {
-            // Handle the camera action
-            RestaurantAddFragment_dialog mDialog = new RestaurantAddFragment_dialog(this);
-            mDialog.show();
-        } else if (id == R.id.nav_RestaurantList) {
-            Log.i("tag", "실행 실행");
+            fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right );
             fragmentTransaction.replace(R.id.frament_place, new ReviewLIstFragment());
+            fragmentTransaction.commit();
+        } else if (id == R.id.nav_RestaurantList) {
+            fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+            fragmentTransaction.replace(R.id.frament_place, new RestaurantListFragment());
+            fragmentTransaction.commit();
         } else if (id == R.id.nav_Fllow) {
-            RestaurantDetailFragment_dialog mDialog = new RestaurantDetailFragment_dialog(this);
+            ReviewAddDialog mDialog = new ReviewAddDialog(this);
             mDialog.show();
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
 
         }
-
-        fragmentTransaction.commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

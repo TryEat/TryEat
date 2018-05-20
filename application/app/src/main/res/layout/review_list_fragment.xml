@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageButton
+            android:id="@+id/review_add_btn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/ic_add_circle_outline_black_24dp"

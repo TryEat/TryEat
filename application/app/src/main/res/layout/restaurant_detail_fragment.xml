@@ -32,43 +32,63 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="30dp">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Img"/>
+        android:orientation="horizontal"
+        android:gravity="right">
+        <ImageView
+            android:layout_width="140dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_action_name"/>
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:orientation="horizontal">
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="right">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:textSize="20sp"
+                    android:text="Tel : "/>
+                <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/view_border"/>
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:src="@drawable/view_border"/>
+                android:textSize="25sp"
+                android:text="@string/rdf_tel"
+                android:gravity="center_vertical"
+                android:paddingVertical="15dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="right">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="20sp"
+                    android:gravity="center_vertical"
+                    android:text="Time : "/>
+                <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textSize="25sp"
+                android:text="@string/rdf_hours"
+                android:paddingVertical="15dp"
+                />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-    <TextView
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="25sp"
-        android:text="@string/rdf_tel"
-        android:gravity="center_vertical"
-        android:paddingVertical="15dp"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:textSize="25sp"
-        android:text="@string/rdf_hours"
-        android:paddingVertical="15dp"
-        />
+        android:layout_height="220dp"
+        android:id="@+id/review_list_in_detail">
+
+    </ListView>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

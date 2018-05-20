@@ -36,5 +36,6 @@ public class RestaurantListFragment extends Fragment {
 
         return view;
     }
+
 }
 
