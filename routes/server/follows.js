@@ -9,11 +9,8 @@ module.exports = function (_dbPool) {
         var query = 'SELECT * FROM follow WHERE user_id=?';
         dbPool.query(query, [user_id], function (err, rows, fields) {
             if (err) throw err;
-            if (rows.length != 0) {
-                var data = JSON.stringify(rows);
-                res.end(data);
-            } 
-            else res.end('0 명');
+            var data = JSON.stringify(rows);
+            res.status(200).end(data);
         });
     });
 
@@ -28,11 +25,11 @@ module.exports = function (_dbPool) {
                 query = 'INSERT INTO follow (user_id,target_id) VALUES (?,?)';
                 dbPool.query(query, [user_id, target_id], function (err, rows, fields) {
                     if (err) throw err;
-                    if (rows.affectedRows != 0) res.end('팔로우 성공');
-                    else res.end('팔로우 실패');
+                    if (rows.affectedRows != 0) res.status(201).json({message: "follow sueccess"})
+                    else res.status(400).json({message: "follow fail"})
                 });
             }
-            else res.end('대상 없음');
+            else  res.status(409).json({message: "target not exist"})
         });
     });
 
@@ -43,8 +40,8 @@ module.exports = function (_dbPool) {
         var query = 'DELETE FROM follow WHERE(user_id=? AND target_id=?)';
         dbPool.query(query, [user_id, target_id], function (err, rows, fields) {
             if (err) throw err;
-            if (rows.affectedRows != 0) res.end('팔로우 삭제 성공');
-            else res.end('팔로우 삭제 실패');
+            if (rows.affectedRows != 0)  res.status(201).json({message: "delete follow success"})
+            else res.status(400).json({message: "delete follow fail"})
         });
     });
 

@@ -42,7 +42,7 @@ CREATE TABLE restaurant(
 	open_time TIME,
 	close_time TIME,
 	review_count INT(11) NOT NULL,
-	average INT(11) NOT NULL,
+	total_rate INT(11) NOT NULL,
 	PRIMARY KEY (restaurant_id),
 	FOREIGN KEY (img_id) REFERENCES images (img_id) ON DELETE CASCADE
 );

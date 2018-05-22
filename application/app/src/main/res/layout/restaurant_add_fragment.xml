@@ -111,5 +111,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="음식점 등록"
+        android:id="@+id/addButton"
         />
 </LinearLayout>

@@ -48,7 +48,7 @@ module.exports = function (_dbPool) {
                     else res.status(401).json({message: "signup fail"})
                 });
             }else{
-                res.status(409).json({message: "signup fail"})
+                res.status(409).json({message: "id duplication"})
             }
         });
     })
