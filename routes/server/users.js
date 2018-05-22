@@ -44,12 +44,18 @@ module.exports = function (_dbPool) {
     router.post('/signup', function (req, res) {
         var user_login_id = req.body.user_login_id;
         var user_pwd = req.body.user_pwd;
-        //아이디 존재 확인
-        var query = 'INSERT INTO user (user_login_id ,user_pwd) VALUES (?,?)';
-        dbPool.query(query, [user_login_id, user_pwd], function (err, rows, fields) {
-            if (err) throw err;
-            if (rows.affectedRows != 0) res.end('가입 성공');
-            else res.end('가입 실패');
+        var query = 'SELECT * FROM user WHERE user_login_id=? LIMIT 1';
+        dbPool.query(query, [user_login_id],function(err,rows,fields){
+            if(rows.length ==0){
+                query = 'INSERT INTO user (user_login_id ,user_pwd) VALUES (?,?)';
+                dbPool.query(query, [user_login_id, user_pwd], function (err, rows, fields) {
+                    if (err) throw err;
+                    if (rows.affectedRows != 0) res.end('가입 성공');
+                    else res.end('가입 실패');
+                });
+            }else{
+                res.end('아이디가 존재합니다');
+            }
         });
     })
 

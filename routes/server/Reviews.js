@@ -44,7 +44,6 @@ module.exports = function (_dbPool) {
             if (err) throw err;
             if (rows.affectedRows != 0) {
                 var query = 'UPDATE restaurant SET review_count=review_count+1 WHERE restaurant_id=?';
-                //평균 구하는 거 넣어야됨 // 차선책 모든 평점만 저장 => 평균은 계산으로 도출
                 dbPool.query(query, [restaurant_id], function (err, rows, fields) {
                     if (err) throw err;
                     if (rows.changedRows != 0) res.end('리뷰 반영 성공');
