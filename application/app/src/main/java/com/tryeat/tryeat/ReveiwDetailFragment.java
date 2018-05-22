@@ -1,5 +1,4 @@
-package com.example.socce.tryeat_app;
-
+package com.tryeat.tryeat;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,22 +7,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.socce.tryeat_app.R;
 
-// Dialog 방식으로 대체
+
 /**
  * Created by socce on 2018-05-08.
  */
 
-public class RestaurantAddFragment extends Fragment{
+
+public class ReveiwDetailFragment extends Fragment{
     View view;
 
-    public RestaurantAddFragment(){
+    public ReveiwDetailFragment(){
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.restaurant_add_fragment,container,false);
+        view = inflater.inflate(R.layout.review_detail_fragment,container,false);
 
         return view;
     }

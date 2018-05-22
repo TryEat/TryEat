@@ -9,11 +9,19 @@ module.exports = function (_dbPool) {
         var query = 'SELECT * FROM restaurant_rate WHERE user_id=?';
         dbPool.query(query, [user_id], function (err, rows, fields) {
             if (err) throw err;
-            if (rows.length != 0) {
-                var data = JSON.stringify(rows);
-                res.end(data);
-            }
-            else res.end('없음');
+            var data = JSON.stringify(rows);
+            res.end(data);
+        });
+    });
+
+    router.get('/:restaurant_id', function (req, res) {
+        var restaurant_id = req.params.restaurant_id;
+
+        var query = 'SELECT * FROM restaurant_rate WHERE restaurant_id=?';
+        dbPool.query(query, [restaurant_id], function (err, rows, fields) {
+            if (err) throw err;
+            var data = JSON.stringify(rows);
+            res.end(data);
         });
     });
 
@@ -24,11 +32,8 @@ module.exports = function (_dbPool) {
         var query = 'SELECT * FROM restaurant_rate WHERE user_id=? AND restaurant_id=?';
         dbPool.query(query, [user_id, restaurant_id], function (err, rows, fields) {
             if (err) throw err;
-            if (rows.length != 0) {
-                var data = JSON.stringify(rows);
-                res.end(data);
-            }
-            else res.end('없음');
+            var data = JSON.stringify(rows);
+            res.end(data);
         });
     });
 

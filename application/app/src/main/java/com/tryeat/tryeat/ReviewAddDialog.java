@@ -1,34 +1,35 @@
-package com.example.socce.tryeat_app;
+package com.tryeat.tryeat;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.example.socce.tryeat_app.R;
+
 /**
- * Created by socce on 2018-05-11.
+ * Created by socce on 2018-05-20.
  */
 
-public class RestaurantAddFragment_dialog extends Dialog {
+public class ReviewAddDialog extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         super.onCreate(savedInstanceState);
         WindowManager.LayoutParams lpWindow = new WindowManager.LayoutParams();
         lpWindow.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
         lpWindow.dimAmount = 0.7f;
         lpWindow.width = WindowManager.LayoutParams.MATCH_PARENT;
-        lpWindow.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lpWindow.height = WindowManager.LayoutParams.MATCH_PARENT;
         getWindow().setAttributes(lpWindow);
     }
-    public RestaurantAddFragment_dialog(@NonNull Context context) {
+
+    public ReviewAddDialog(@NonNull Context context) {
         super(context);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setCanceledOnTouchOutside(true);
-        setContentView(R.layout.restaurant_add_fragment);
+        setContentView(R.layout.review_add_fragment);
     }
-
-
 }

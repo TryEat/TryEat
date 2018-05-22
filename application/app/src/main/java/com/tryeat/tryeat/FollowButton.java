@@ -1,7 +1,6 @@
-package com.example.socce.tryeat_app;
+package com.tryeat.tryeat;
 
 import android.content.Context;
-import android.widget.Button;
 
 /**
  * Created by socce on 2018-05-08.

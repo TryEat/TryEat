@@ -1,4 +1,4 @@
-package com.example.socce.tryeat_app;
+package com.tryeat.tryeat;
 
 import android.graphics.drawable.Drawable;
 

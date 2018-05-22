@@ -1,4 +1,4 @@
-package com.example.socce.tryeat_app;
+package com.tryeat.tryeat;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.example.socce.tryeat_app.R;
 
 /**
  * Created by socce on 2018-05-11.

@@ -47,15 +47,15 @@ CREATE TABLE restaurant(
 	FOREIGN KEY (img_id) REFERENCES images (img_id) ON DELETE CASCADE
 );
 
-CREATE TABLE restaurant_rate(
-	txt_id INT(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE review(
+	review_id INT(11) NOT NULL AUTO_INCREMENT,
 	restaurant_id INT(11) NOT NULL,
 	user_id INT(11) NOT NULL,
 	img_id INT(11),
 	content TEXT,
 	date TIMESTAMP NOT NULL DEFAULT now(),
 	rate INT(11) NOT NULL,
-	PRIMARY KEY (txt_id),
+	PRIMARY KEY (review_id),
 	KEY pkey (user_id),
 	FOREIGN KEY (restaurant_id) REFERENCES restaurant (restaurant_id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (user_id) REFERENCES user (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -93,84 +93,84 @@ CREATE TABLE rquest_delete_restaurant(
 	PRIMARY KEY (request_delete_id),
 	FOREIGN KEY (restaurant_id) REFERENCES restaurant (restaurant_id) ON DELETE CASCADE
 );
-
-Äõ¸®¹® ¿¹Á¦ (18.05.08.22:27 ¼öÁ¤)
+USE tryeat;
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (18.05.08.22:27 ï¿½ï¿½ï¿½ï¿½)
 
 USE tryeat;
 
-À½½ÄÁ¡ ÀÌ¸§ °Ë»öÇÏ´Â Äõ¸®
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ ï¿½Ë»ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
  SELECT restaurant_name FROM restaurant;
 
-restaurant_id À½½ÄÁ¡ Æò°¡, µî·ÏÇÏ´Â Äõ¸®
- INSERT INTO restaurant_rate (restaurant_id,title,content,rate) VALUES ('restaurant_id','title','content','rate');
+restaurant_id ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
+ INSERT INTO review (restaurant_id,title,content,rate) VALUES ('restaurant_id','title','content','rate');
  
-restaurant_id À½½ÄÁ¡ Æò°¡ ¼öÁ¤, µî·ÏÇÏ´Â Äõ¸®
- UPDATE restaurant_rate SET title='title', content='content', rate='rate' WHERE txt_id=restaurant_id;
+restaurant_id ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
+ UPDATE review SET title='title', content='content', rate='rate' WHERE review_id=restaurant_id;
  
-restaurant_id À½½ÄÁ¡ÀÇ ¸®ºä °¹¼ö¸¦ 1 Áõ°¡½ÃÅ°´Â Äõ¸®
+restaurant_id ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 1 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
  UPDATE restaurant SET review_count=review_count+1 WHERE restaurant_id=restaurant_id;
  
-restaurant_id À½½ÄÁ¡ Æò°¡ »èÁ¦ÇÏ´Â Äõ¸®
- DELETE FROM restaurant_rate WHERE txt_id=restaurant_id;
+restaurant_id ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
+ DELETE FROM review WHERE review_id=restaurant_id;
  
-restaurant_id À½½ÄÁ¡ Æò°¡ º¸¿©ÁÖ´Â Äõ¸®
- SELECT * FROM restaurant_rate WHERE restaurant_id=restaurant_id;
+restaurant_id ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½
+ SELECT * FROM review WHERE restaurant_id=restaurant_id;
 
-restaurant_id À½½ÄÁ¡ Æò°¡ Á¡¼ö¸¦ µî·ÏÇÏ´Â Äõ¸®
- UPDATE restaurant_rate SET rate='rate' WHERE txt_id=restaurant_id;
+restaurant_id ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
+ UPDATE review SET rate='rate' WHERE review_id=restaurant_id;
 
 
-À½½ÄÁ¡À» Ãß°¡ÇÏ´Â Äõ¸®
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
  INSERT INTO restaurant (restaurant_name,locate_latitude,locate_longitude,restaurant_desc,review_count,open_time,close_time) VALUES ('restaurant_name','locate_latitude','locate_longitude','restaurant_desc','0','open_time','close_time');
 
-restaurant_id À½½ÄÁ¡ Á¤º¸¸¦ ¼öÁ¤ÇÏ´Â Äõ¸®
- UPDATE restaurant SET restaurant_name='¸¾½º ÅÍÄ¡', locate_latitude='locate_latitude', locate_longitude='locate_longitude', restaurant_desc='restaurant_desc', open_time='open_time', close_time='close_time' WHERE restaurant_id=restaurant_id;
+restaurant_id ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
+ UPDATE restaurant SET restaurant_name='ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡', locate_latitude='locate_latitude', locate_longitude='locate_longitude', restaurant_desc='restaurant_desc', open_time='open_time', close_time='close_time' WHERE restaurant_id=restaurant_id;
  
-restaurant_id À½½ÄÁ¡ÀÇ ¸®ºä Æò±ÕÀ» Ãâ·ÂÇÏ´Â Äõ¸®
- SELECT avg(rate) FROM restaurant_rate WHERE restaurant_id=restaurant_id;
+restaurant_id ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
+ SELECT avg(rate) FROM review WHERE restaurant_id=restaurant_id;
  
-user_id À¯ÀúÀÇ ÆÈ·Î¿ì id°ªÀ» ÀúÀåÇÏ´Â Äõ¸®
+user_id ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½È·Î¿ï¿½ idï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
  INSERT INTO follow (user_id,follow_id,target_id) VALUES ('user_id','follow_id','target_id');
  
-user_id À¯ÀúÀÇ ÆÈ·Î¿ì id°ªÀ» »èÁ¦ÇÏ´Â Äõ¸®
+user_id ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½È·Î¿ï¿½ idï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
  DELETE FROM follow WHERE(user_id=user_id AND follow_id="follow_id");
  
-user_id À¯ÀúÀÇ ÆÈ·Î¿ì ¸ñ·Ï µé°í¿À´Â Äõ¸®
+user_id ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½È·Î¿ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
  SELECT * FROM follow WHERE user_id=user_id;
  
  
-user_id À¯ÀúÀÇ Æò°¡ Ç×¸ñ µé°í¿À´Â Äõ¸®
- SELECT * FROM restaurant_rate WHERE user_id=user_id;
+user_id ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½×¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+ SELECT * FROM review WHERE user_id=user_id;
  
-user_id À¯ÀúÀÇ Æò°¡ÇÑ À½½ÄÁ¡ ¸ñ·ÏÀ» µé°í¿À´Â Äõ¸®
- SELECT restaurant_id FROM restaurant_rate WHERE user_id=user_id;
+user_id ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+ SELECT restaurant_id FROM review WHERE user_id=user_id;
 
  
-À½½ÄÁ¡ÀÌ ¸ñ·Ï¿¡ ÀÖ´ÂÁö È®ÀÎÇÏ´Â Äõ¸®
-ÀÌ¸§À¸·Î °Ë»ö// SELECT restaurant_name FROM restaurant WHERE restaurant_name="restaurant_name";
-°íÀ¯id·Î °Ë»ö// SELECT restaurant_id FROM restaurant WHERE restaurant_id=restaurant_id;
-ÁÂÇ¥·Î °Ë»ö  // SELECT (locate_latitude AND locate_longitude) as exist FROM restaurant WHERE (locate_latitude="locate_latitude" AND locate_longitude="locate_longitude");
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ï¿ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
+ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½// SELECT restaurant_name FROM restaurant WHERE restaurant_name="restaurant_name";
+ï¿½ï¿½ï¿½ï¿½idï¿½ï¿½ ï¿½Ë»ï¿½// SELECT restaurant_id FROM restaurant WHERE restaurant_id=restaurant_id;
+ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½Ë»ï¿½  // SELECT (locate_latitude AND locate_longitude) as exist FROM restaurant WHERE (locate_latitude="locate_latitude" AND locate_longitude="locate_longitude");
 
 
-restaurant_id À½½ÄÁ¡ÀÇ ÀÌ¹ÌÁö¸¦ ºÒ·¯¿À´Â Äõ¸®
+restaurant_id ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
  SELECT image FROM images WHERE 'restaurant_id' = restaurant_id;
 
-restaurant_id À½½ÄÁ¡ ÀÌ¹ÌÁö¸¦ ÀúÀå, Ãß°¡ÇÏ´Â Äõ¸®
+restaurant_id ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ß°ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
  INSERT INTO images (restaurant_id, image) VALUES ('restaurant_id', 'image');
 
-restaurant_id À½½ÄÁ¡ÀÇ img_id ÀÌ¹ÌÁö¸¦ »èÁ¦ÇÏ´Â Äõ¸®
+restaurant_id ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ img_id ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
  DELETE FROM images WHERE img_id = img_id;
  
-u_numÀÌ µî·ÏÇÑ restaurant_id À½½ÄÁ¡ ÀÌ¹ÌÁö¸¦ °¡Á®¿À´Â Äõ¸®
+u_numï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ restaurant_id ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
  SELECT image FROM images WHERE (user_id = user_id AND restaurant_id = restaurant_id);
  
-u_numÀÌ µî·ÏÇÑ restaurant_id À½½ÄÁ¡ ÀÌ¹ÌÁö¸¦ ¸ðµÎ »èÁ¦ÇÏ´Â Äõ¸®
+u_numï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ restaurant_id ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
  DELETE FROM images WHERE (user_id = user_id AND restaurant_id = restaurant_id);
 
-ÇöÀç ad ¸ñ·ÏÀ» º¸¿©ÁÖ´Â Äõ¸®
+ï¿½ï¿½ï¿½ï¿½ ad ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½
  SELECT * FROM ad;
  
-ad_requester °¡ µî·ÏÇÑ restaurant_id À½½ÄÁ¡À» Ãâ·ÂÇÏ´Â Äõ¸®
+ad_requester ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ restaurant_id ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
  SELECT restaurant_id FROM ad WHERE ad_requester = ad_requester;
 
 

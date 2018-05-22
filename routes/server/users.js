@@ -7,11 +7,8 @@ module.exports = function (_dbPool) {
         var query = 'SELECT user_login_id FROM user';
         dbPool.query(query, [], function (err, rows, fields) {
             if (err) throw err;
-            if (rows.length != 0) {
-                var data = JSON.stringify(rows);
-                res.end(data);
-            }
-            else res.end('없음');
+            var data = JSON.stringify(rows);
+            res.status(200).json(data);
         });
     });
 
@@ -21,11 +18,8 @@ module.exports = function (_dbPool) {
         var query = 'SELECT * FROM user WHERE user_id=? LIMIT 1';
         dbPool.query(query, [user_id], function (err, rows, fields) {
             if (err) throw err;
-            if (rows.length != 0) {
-                var data = JSON.stringify(rows);
-                res.end(data);
-            }
-            else res.end('없음');
+            var data = JSON.stringify(rows);
+            res.status(200).json(data);
         });
     });
 
@@ -36,8 +30,8 @@ module.exports = function (_dbPool) {
         var query = 'SELECT * FROM user WHERE user_login_id=? AND user_pwd=? LIMIT 1';
         dbPool.query(query, [user_login_id, user_pwd], function (err, rows, fields) {
             if (err) throw err;
-            if (rows.length != 0) res.end('로그인 성공');
-            else res.end('로그인 실패');
+            if (rows.length != 0) res.status(200).json({message: "signin success"})
+            else res.status(401).json({message: "signin fail"})
         });
     })
 
@@ -50,11 +44,11 @@ module.exports = function (_dbPool) {
                 query = 'INSERT INTO user (user_login_id ,user_pwd) VALUES (?,?)';
                 dbPool.query(query, [user_login_id, user_pwd], function (err, rows, fields) {
                     if (err) throw err;
-                    if (rows.affectedRows != 0) res.end('가입 성공');
-                    else res.end('가입 실패');
+                    if (rows.affectedRows != 0)  res.status(201).json({message: "signup success"})
+                    else res.status(401).json({message: "signup fail"})
                 });
             }else{
-                res.end('아이디가 존재합니다');
+                res.status(409).json({message: "signup fail"})
             }
         });
     })
@@ -66,8 +60,8 @@ module.exports = function (_dbPool) {
         var query = 'UPDATE user SET profile=? WHERE user_id=?';
         dbPool.query(query, [profile, user_id], function (err, rows, fields) {
             if (err) throw err;
-            if (rows.changedRows != 0) res.end('프로필 수정 성공');
-            else res.end('프로필 수정 실패');
+            if (rows.changedRows != 0) res.status(201).json({message: "profile revise success"})
+            else res.status(400).json({message: "profile revise fail"})
         });
     });
 
@@ -78,8 +72,8 @@ module.exports = function (_dbPool) {
         var query = 'DELETE FROM user WHERE user_id=? AND user_pwd=?';
         dbPool.query(query, [user_id, user_pwd], function (err, rows, fields) {
             if (err) throw err;
-            if (rows.affectedRows != 0) res.end('삭제 성공');
-            else res.end('삭제 실패');
+            if (rows.affectedRows != 0) res.status(201).json({message: "delete user success"})
+            else res.status(400).json({message: "delete user fail"})
         });
     });
 

@@ -1,4 +1,4 @@
-package com.example.socce.tryeat_app;
+package com.tryeat.tryeat;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.socce.tryeat_app.R;
+
 import java.util.ArrayList;
 
 
@@ -15,10 +17,11 @@ import java.util.ArrayList;
  * Created by socce on 2018-05-08.
  */
 
-public class RestaurantListAdapter extends BaseAdapter {
+
+public class ReviewListAdapter extends BaseAdapter {
     private Context mContext = null;
     private int mLayout;
-    private ArrayList<RestaurantListItem> mList = new ArrayList<RestaurantListItem>();
+    private ArrayList<ReviewListItem> mList;
 
     private class ViewHolder{
         public ImageView mIcon;
@@ -26,10 +29,10 @@ public class RestaurantListAdapter extends BaseAdapter {
         public TextView mRate;
     }
 
-    public RestaurantListAdapter(Context mContext,int mLayout, ArrayList<RestaurantListItem> mList){
+    public ReviewListAdapter(Context mContext,int mLayout, ArrayList<ReviewListItem> mList){
         super();
         this.mContext = mContext;
-        this.mLayout=mLayout;
+        this.mLayout = mLayout;
         this.mList = mList;
     }
 
@@ -64,16 +67,16 @@ public class RestaurantListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        RestaurantListItem item = mList.get(position);
+        ReviewListItem item = mList.get(position);
 
-        holder.mIcon.setImageDrawable(item.getmIcon());
-        holder.mName.setText(item.getmName());
-        holder.mRate.setText(item.getmRate());
+        holder.mIcon.setImageDrawable(item.mIcon);
+        holder.mName.setText(item.mName);
+        holder.mRate.setText(item.mRate);
 
         return convertView;
     }
 
-    public void addItem(RestaurantListItem item){
+    public void addItem(ReviewListItem item){
         mList.add(item);
     }
 }
