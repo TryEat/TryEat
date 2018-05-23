@@ -20,12 +20,6 @@ public interface UserServiceInterface {
     @GET("users/{user_id}")
     Call<User> getUser(@Path("user_id") int userId);
 
-    @POST("users/signin")
-    Call<Status> signIn(@Body HashMap<String,Object> body);
-
-    @POST("users/signup")
-    Call<Status> signUp(@Body HashMap<String,Object> body);
-
     @POST("users/profile")
     Call<Status> updateProfile(@Body HashMap<String,Object> body);
 

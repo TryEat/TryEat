@@ -19,20 +19,6 @@ public class UserService {
         userServiceInterface.getUser(userId).enqueue(callback);
     }
 
-    public static void signIn(String id, String pwd, Callback<Status> callback) {
-        HashMap<String, Object> body = new HashMap<>();
-        body.put("user_login_id",id);
-        body.put("user_pwd",pwd);
-        userServiceInterface.signIn(body).enqueue(callback);
-    }
-
-    public static void signUp(String id, String pwd, Callback<Status> callback) {
-        HashMap<String, Object> body = new HashMap<>();
-        body.put("user_login_id",id);
-        body.put("user_pwd",pwd);
-        userServiceInterface.signUp(body).enqueue(callback);
-    }
-
     public static void updateProfile(int userId, String profile, Callback<Status> callback) {
         HashMap<String, Object> body = new HashMap<>();
         body.put("user_id",userId);

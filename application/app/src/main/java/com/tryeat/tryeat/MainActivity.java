@@ -56,7 +56,8 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.replace(R.id.frament_place, new RestaurantListFragment()).commit();
+        SignFragment signFragment = new SignFragment();
+        fragmentTransaction.replace(R.id.frament_place, signFragment).commit();
         //초기 추천 음식점 list 로드
 
     }

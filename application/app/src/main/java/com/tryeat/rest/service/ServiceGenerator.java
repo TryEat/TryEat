@@ -1,5 +1,7 @@
 package com.tryeat.rest.service;
 
+import com.tryeat.tryeat.LoginToken;
+
 import java.io.IOException;
 
 import okhttp3.Interceptor;
@@ -10,16 +12,17 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
-    //private static final String URL = "http://tryeat.homedns.tv:8080/";
-    private static final String URL = "http://192.168.1.20:8080/";
-    private static String mToken = "!@!#!";
+    private static final String URL = "http://tryeat.homedns.tv:8080/";
+    //private static final String URL = "http://192.168.1.20:8080/";
 
     private static Interceptor mTokenInterceptor = new Interceptor() {
         @Override
         public Response intercept(Chain chain) throws IOException {
             Request request = chain.request();
-            if (mToken != null) {
-                Request.Builder requestBuilder = request.newBuilder().addHeader("Authorization", mToken);
+            if (LoginToken.hasLoginToken()) {
+                Request.Builder requestBuilder = request.newBuilder()
+                        .addHeader("id", String.valueOf(LoginToken.getId()))
+                        .addHeader("Authorization", LoginToken.getToken());
                 Request newRequest = requestBuilder.build();
 
                 return chain.proceed(newRequest);

@@ -1,5 +1,6 @@
-module.exports = function (_dbPool,_userTokens) {
+module.exports = function (_dbPool) {
     var express = require('express');
+    var crypto = require('crypto');
     var router = express.Router();
     var dbPool = _dbPool;
 
@@ -13,52 +14,13 @@ module.exports = function (_dbPool,_userTokens) {
 
     router.get('/:user_id', function (req, res) {
         var user_id = req.params.user_id;
-        
+
         var query = 'SELECT * FROM user WHERE user_id=? LIMIT 1';
         dbPool.query(query, [user_id], function (err, rows, fields) {
             if (err) throw err;
             res.status(200).json(rows);
         });
     });
-
-    router.post('/signin', function (req, res) {
-        var user_login_id = req.body.user_login_id;
-        var user_pwd = req.body.user_pwd;
-
-        var query = 'SELECT * FROM user WHERE user_login_id=? AND user_pwd=? LIMIT 1';
-        dbPool.query(query, [user_login_id, user_pwd], function (err, rows, fields) {
-            if (err) throw err;
-            if (rows.length != 0) {
-                _userTokens[user_login_id] = 1;
-                res.status(200).json({ message: "signin success" , payLoadString : user_login_id})
-            }
-            else res.status(401).json({ message: "signin fail" })
-        });
-    })
-
-    router.post('/signout', function(req, res){
-        var userToken = req.headers["authorization"];
-        _userTokens[userToken] = undefined;
-    })
-    
-    router.post('/signup', function (req, res) {
-        var user_login_id = req.body.user_login_id;
-        var user_pwd = req.body.user_pwd;
-        var query = 'SELECT * FROM user WHERE user_login_id=? LIMIT 1';
-        dbPool.query(query, [user_login_id], function (err, rows, fields) {
-            if (err) throw err;
-            if (rows.length == 0) {
-                query = 'INSERT INTO user (user_login_id ,user_pwd) VALUES (?,?)';
-                dbPool.query(query, [user_login_id, user_pwd], function (err, rows, fields) {
-                    if (err) throw err;
-                    if (rows.affectedRows != 0) res.status(201).json({ message: "signup success" })
-                    else res.status(401).json({ message: "signup fail" })
-                });
-            } else {
-                res.status(409).json({ message: "id duplication" })
-            }
-        });
-    })
 
     router.put('/profile', function (req, res) {
         var user_id = req.body.user_id;

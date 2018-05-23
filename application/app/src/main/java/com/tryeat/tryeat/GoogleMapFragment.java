@@ -21,8 +21,7 @@ import com.google.android.gms.maps.model.LatLng;
 public class GoogleMapFragment extends MapFragment implements OnMapReadyCallback {
     GoogleMap gMap;
     GroundOverlayOptions videoMark;
-
-    Double latitude, longitude;
+    Location _location;
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -51,14 +50,20 @@ public class GoogleMapFragment extends MapFragment implements OnMapReadyCallback
         manager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, gpsListener, null);
     }
 
+    public Location get_location() {
+        return _location;
+    }
+
+    public void set_location(Location _location) {
+        this._location = _location;
+        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(_location.getLatitude(), _location.getLongitude()), 16));
+    }
+
     private class GPSListenter implements LocationListener{
 
         @Override
         public void onLocationChanged(Location location) {
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
-
-            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 16));
+            set_location(location);
         }
 
         @Override

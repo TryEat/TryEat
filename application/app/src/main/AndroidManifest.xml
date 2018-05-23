@@ -12,7 +12,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="APIKEY" />
+            android:value="MAPAPI" />
 
         <activity
             android:name="com.tryeat.tryeat.MainActivity"
