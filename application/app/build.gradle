@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.tryeat.tryeat"
+        applicationId "com.tryeat.team.tryeat_service"
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 1
@@ -32,4 +32,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
     implementation "com.squareup.okhttp3:okhttp:$rootProject.okhttpVersion"
+
+    implementation 'com.google.android.gms:play-services-maps:10.2.0'
+
 }

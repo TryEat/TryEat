@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-import com.example.socce.tryeat_app.R;
+import com.tryeat.team.tryeat_service.R;
 
 import java.util.ArrayList;
 

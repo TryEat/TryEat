@@ -1,15 +1,17 @@
 package com.tryeat.tryeat;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.example.socce.tryeat_app.R;
+import com.tryeat.team.tryeat_service.R;
 import com.tryeat.rest.model.User;
 import com.tryeat.rest.service.UserService;
 
@@ -31,6 +33,8 @@ public class RestaurantListFragment extends Fragment {
     RestaurantListAdapter rAdapter;
 
     ArrayList<RestaurantListItem> mList = new ArrayList<>();
+
+    GoogleMapFragment googleMapFragment;
 
     public RestaurantListFragment(){
 
@@ -57,7 +61,7 @@ public class RestaurantListFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ArrayList<User>> call, Throwable t) {
-
+                Log.d("sdfsdF","SDFsdF");
             }
         });
 

@@ -9,8 +9,7 @@ module.exports = function (_dbPool) {
         var query = 'SELECT * FROM follow WHERE user_id=?';
         dbPool.query(query, [user_id], function (err, rows, fields) {
             if (err) throw err;
-            var data = JSON.stringify(rows);
-            res.status(200).end(data);
+            res.status(200).json(rows);
         });
     });
 

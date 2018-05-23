@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.socce.tryeat_app.R;
+import com.tryeat.team.tryeat_service.R;
 
 
 /**

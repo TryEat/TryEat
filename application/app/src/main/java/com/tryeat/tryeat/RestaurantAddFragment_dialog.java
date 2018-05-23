@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.example.socce.tryeat_app.R;
+import com.tryeat.team.tryeat_service.R;
 
 /**
  * Created by socce on 2018-05-11.

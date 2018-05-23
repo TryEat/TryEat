@@ -12,8 +12,7 @@ module.exports = function (_dbPool) {
         var query = 'SELECT * FROM restaurant';
         dbPool.query(query, [], function (err, rows, fields) {
             if (err) throw err;
-            var data = JSON.stringify(rows);
-            res.end(data);
+            res.status(200).json(rows);
         });
     })
 
@@ -23,8 +22,7 @@ module.exports = function (_dbPool) {
         var query = 'SELECT * FROM restaurant WHERE restaurant_id=?';
         dbPool.query(query, [restaurant_id], function (err, rows, fields) {
             if (err) throw err;
-            var data = JSON.stringify(rows);
-            res.end(data);
+            res.status(200).json(rows);
         });
     })
 
@@ -34,8 +32,7 @@ module.exports = function (_dbPool) {
         var query = 'SELECT * FROM restaurant WHERE restaurant_name=?';
         dbPool.query(query, [restaurant_name], function (err, rows, fields) {
             if (err) throw err;
-            var data = JSON.stringify(rows);
-            res.end(data);
+            res.status(200).json(rows);
         });
     })
 
@@ -46,8 +43,7 @@ module.exports = function (_dbPool) {
         var query = 'SELECT * from restaurant where locate_latitude=? AND locate_longitude=?';
         dbPool.query(query, [locate_latitude, locate_longitude], function (err, rows, fields) {
             if (err) throw err;
-            var data = JSON.stringify(rows);
-            res.end(data);
+            res.status(200).json(rows);
         });
     })
 

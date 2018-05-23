@@ -9,8 +9,7 @@ module.exports = function (_dbPool) {
         var query = 'SELECT * FROM restaurant_rate WHERE user_id=?';
         dbPool.query(query, [user_id], function (err, rows, fields) {
             if (err) throw err;
-            var data = JSON.stringify(rows);
-            res.status(201).json(data);
+            res.status(200).json(rows);
         });
     });
 
@@ -20,8 +19,7 @@ module.exports = function (_dbPool) {
         var query = 'SELECT * FROM restaurant_rate WHERE restaurant_id=?';
         dbPool.query(query, [restaurant_id], function (err, rows, fields) {
             if (err) throw err;
-            var data = JSON.stringify(rows);
-            res.status(201).json(data);
+            res.status(200).json(rows);
         });
     });
 
@@ -32,8 +30,7 @@ module.exports = function (_dbPool) {
         var query = 'SELECT * FROM restaurant_rate WHERE user_id=? AND restaurant_id=?';
         dbPool.query(query, [user_id, restaurant_id], function (err, rows, fields) {
             if (err) throw err;
-            var data = JSON.stringify(rows);
-            res.status(201).json(data);
+            res.status(200).json(rows);
         });
     });
 

@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.socce.tryeat_app.R;
+import com.tryeat.team.tryeat_service.R;
 
 import java.util.ArrayList;
 

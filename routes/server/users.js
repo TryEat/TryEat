@@ -1,4 +1,4 @@
-module.exports = function (_dbPool) {
+module.exports = function (_dbPool,_userTokens) {
     var express = require('express');
     var router = express.Router();
     var dbPool = _dbPool;
@@ -7,19 +7,17 @@ module.exports = function (_dbPool) {
         var query = 'SELECT user_login_id FROM user';
         dbPool.query(query, [], function (err, rows, fields) {
             if (err) throw err;
-            var data = JSON.stringify(rows);
-            res.status(200).json(data);
+            res.status(200).json(rows);
         });
     });
 
     router.get('/:user_id', function (req, res) {
         var user_id = req.params.user_id;
-
+        
         var query = 'SELECT * FROM user WHERE user_id=? LIMIT 1';
         dbPool.query(query, [user_id], function (err, rows, fields) {
             if (err) throw err;
-            var data = JSON.stringify(rows);
-            res.status(200).json(data);
+            res.status(200).json(rows);
         });
     });
 
@@ -30,25 +28,34 @@ module.exports = function (_dbPool) {
         var query = 'SELECT * FROM user WHERE user_login_id=? AND user_pwd=? LIMIT 1';
         dbPool.query(query, [user_login_id, user_pwd], function (err, rows, fields) {
             if (err) throw err;
-            if (rows.length != 0) res.status(200).json({message: "signin success"})
-            else res.status(401).json({message: "signin fail"})
+            if (rows.length != 0) {
+                _userTokens[user_login_id] = 1;
+                res.status(200).json({ message: "signin success" , payLoadString : user_login_id})
+            }
+            else res.status(401).json({ message: "signin fail" })
         });
     })
 
+    router.post('/signout', function(req, res){
+        var userToken = req.headers["authorization"];
+        _userTokens[userToken] = undefined;
+    })
+    
     router.post('/signup', function (req, res) {
         var user_login_id = req.body.user_login_id;
         var user_pwd = req.body.user_pwd;
         var query = 'SELECT * FROM user WHERE user_login_id=? LIMIT 1';
-        dbPool.query(query, [user_login_id],function(err,rows,fields){
-            if(rows.length ==0){
+        dbPool.query(query, [user_login_id], function (err, rows, fields) {
+            if (err) throw err;
+            if (rows.length == 0) {
                 query = 'INSERT INTO user (user_login_id ,user_pwd) VALUES (?,?)';
                 dbPool.query(query, [user_login_id, user_pwd], function (err, rows, fields) {
                     if (err) throw err;
-                    if (rows.affectedRows != 0)  res.status(201).json({message: "signup success"})
-                    else res.status(401).json({message: "signup fail"})
+                    if (rows.affectedRows != 0) res.status(201).json({ message: "signup success" })
+                    else res.status(401).json({ message: "signup fail" })
                 });
-            }else{
-                res.status(409).json({message: "id duplication"})
+            } else {
+                res.status(409).json({ message: "id duplication" })
             }
         });
     })
@@ -60,8 +67,8 @@ module.exports = function (_dbPool) {
         var query = 'UPDATE user SET profile=? WHERE user_id=?';
         dbPool.query(query, [profile, user_id], function (err, rows, fields) {
             if (err) throw err;
-            if (rows.changedRows != 0) res.status(201).json({message: "profile revise success"})
-            else res.status(400).json({message: "profile revise fail"})
+            if (rows.changedRows != 0) res.status(201).json({ message: "profile revise success" })
+            else res.status(400).json({ message: "profile revise fail" })
         });
     });
 
@@ -72,8 +79,8 @@ module.exports = function (_dbPool) {
         var query = 'DELETE FROM user WHERE user_id=? AND user_pwd=?';
         dbPool.query(query, [user_id, user_pwd], function (err, rows, fields) {
             if (err) throw err;
-            if (rows.affectedRows != 0) res.status(201).json({message: "delete user success"})
-            else res.status(400).json({message: "delete user fail"})
+            if (rows.affectedRows != 0) res.status(201).json({ message: "delete user success" })
+            else res.status(400).json({ message: "delete user fail" })
         });
     });
 

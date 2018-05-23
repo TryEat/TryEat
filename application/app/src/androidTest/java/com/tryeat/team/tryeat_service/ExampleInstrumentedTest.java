@@ -1,4 +1,4 @@
-package com.example.socce.tryeat_app;
+package com.tryeat.team.tryeat_service;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
