@@ -5,15 +5,18 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.tryeat.rest.model.Restaurant;
+import com.tryeat.rest.service.RestaurantService;
 import com.tryeat.team.tryeat_service.R;
-import com.tryeat.rest.model.User;
-import com.tryeat.rest.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +35,6 @@ public class RestaurantListFragment extends Fragment {
     ListView lv;
     RestaurantListAdapter rAdapter;
 
-    ArrayList<RestaurantListItem> mList = new ArrayList<>();
-
-    GoogleMapFragment googleMapFragment;
-
     public RestaurantListFragment(){
 
     }
@@ -44,28 +43,56 @@ public class RestaurantListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.restaurant_list_fragment, container, false);
         lv = view.findViewById(R.id.listView);
-        rAdapter = new RestaurantListAdapter(view.getContext(), R.layout.restaurant_list_item, mList);
+        rAdapter = new RestaurantListAdapter(view.getContext(), R.layout.restaurant_list_item);
         lv.setAdapter(rAdapter);
+        lv.setOnItemClickListener(itemClick());
+        getRestaurantList();
 
-        UserService.getUsers(new Callback<ArrayList<User>>() {
+        return view;
+    }
+
+    public AdapterView.OnItemClickListener itemClick(){
+        return new AdapterView.OnItemClickListener() {
             @Override
-            public void onResponse(Call<ArrayList<User>> call, Response<ArrayList<User>> response) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                RestaurantDetailFragment fragment = new RestaurantDetailFragment();
+                Bundle bundle = new Bundle(2);
+                RestaurantListItem item = (RestaurantListItem)adapterView.getItemAtPosition(i);
+                bundle.putSerializable("item",item);
+                fragment.setArguments(bundle);
+                fragmentTransaction.replace(R.id.frament_place,fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        };
+    }
+
+    public void getRestaurantList(){
+        RestaurantService.getRestaurants(new Callback<ArrayList<Restaurant>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Restaurant>> call, Response<ArrayList<Restaurant>> response) {
                 if(response.isSuccessful()){
-                    List<User> users = response.body();
-                    for(int i =0 ;i<users.size();i++){
-                        mList.add(new RestaurantListItem(null,users.get(i).user_login_id+"",null));
+                    List<Restaurant> restaurants = response.body();
+                    int size = restaurants.size();
+                    for(int i =0 ;i<size;i++){
+                        Restaurant item = restaurants.get(i);
+                        rAdapter.addItem(new RestaurantListItem(null,item.restaurant_id,item.restaurant_name,safeDivide(item.total_rate,item.review_count)));
                     }
                     rAdapter.notifyDataSetChanged();
                 }
             }
-
             @Override
-            public void onFailure(Call<ArrayList<User>> call, Throwable t) {
-                Log.d("sdfsdF","SDFsdF");
+            public void onFailure(Call<ArrayList<Restaurant>> call, Throwable t) {
+                Log.d("debug","getRestaurantList onFailure"+t);
             }
         });
+    }
 
-        return view;
+    private double safeDivide(int a, int b){
+        if(a!=0&&b!=0)return a/b;
+        return 0;
     }
 }
 

@@ -15,10 +15,10 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface ReviewServiceInterface {
-    @GET("reviews/{user_id}")
+    @GET("reviews/{user_id}/user")
     Call<ArrayList<Review>> getUserReviews(@Path("user_id") int userId);
 
-    @GET("reviews/{restaurant_id}")
+    @GET("reviews/{restaurant_id}/restaurant")
     Call<ArrayList<Review>> getRestaurantReviews(@Path("restaurant_id") int restaurantId);
 
     @GET("reviews/{user_id}/{restaurant_id}")

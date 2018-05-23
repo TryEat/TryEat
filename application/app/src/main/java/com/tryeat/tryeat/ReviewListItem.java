@@ -11,5 +11,11 @@ public class ReviewListItem {
     public Drawable mIcon;
     public String mName;
     public String mRate;
+
+    public ReviewListItem(Drawable mIcon, String mName, String mRate) {
+        this.mIcon = mIcon;
+        this.mName = mName;
+        this.mRate = mRate;
+    }
 }
 

@@ -1,6 +1,6 @@
 package com.tryeat.rest.model;
 
-import java.sql.Time;
+import java.time.LocalTime;
 
 public class Restaurant {
     public int restaurant_id;
@@ -9,8 +9,8 @@ public class Restaurant {
     public String locate_latitude;
     public String locate_longitude;
     public String restaurant_desc;
-    public Time open_time;
-    public Time close_time;
+    public String open_time;
+    public String  close_time;
     public int review_count;
     public int total_rate;
 }

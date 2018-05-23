@@ -29,11 +29,11 @@ public class ReviewListAdapter extends BaseAdapter {
         public TextView mRate;
     }
 
-    public ReviewListAdapter(Context mContext,int mLayout, ArrayList<ReviewListItem> mList){
+    public ReviewListAdapter(Context mContext,int mLayout){
         super();
         this.mContext = mContext;
         this.mLayout = mLayout;
-        this.mList = mList;
+        this.mList = new ArrayList<>();
     }
 
     @Override

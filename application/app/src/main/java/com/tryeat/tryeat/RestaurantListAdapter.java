@@ -28,11 +28,11 @@ public class RestaurantListAdapter extends BaseAdapter {
         public TextView mRate;
     }
 
-    public RestaurantListAdapter(Context mContext,int mLayout, ArrayList<RestaurantListItem> mList){
+    public RestaurantListAdapter(Context mContext,int mLayout){
         super();
         this.mContext = mContext;
         this.mLayout=mLayout;
-        this.mList = mList;
+        this.mList = new ArrayList<>();
     }
 
     @Override
@@ -70,7 +70,7 @@ public class RestaurantListAdapter extends BaseAdapter {
 
         holder.mIcon.setImageDrawable(item.getmIcon());
         holder.mName.setText(item.getmName());
-        holder.mRate.setText(item.getmRate());
+        holder.mRate.setText(item.getmRate()+"");
 
         return convertView;
     }

@@ -51,6 +51,7 @@ public class SignFragment extends Fragment {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                signButton.setText("Sign In");
                 checkPasswordLayout.setVisibility(View.GONE);
             }
         });
@@ -61,6 +62,7 @@ public class SignFragment extends Fragment {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                signButton.setText("Sign Up");
                 checkPasswordLayout.setVisibility(View.VISIBLE);
             }
         });

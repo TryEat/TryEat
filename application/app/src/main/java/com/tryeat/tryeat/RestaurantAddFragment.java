@@ -46,12 +46,10 @@ public class RestaurantAddFragment extends Fragment{
                 RestaurantService.addRestaurant(new Callback< Status>(){
                     @Override
                     public void onResponse(Call<Status> call, Response<Status> response) {
-                        if(response.isSuccessful()){
-                            if(response.code() == StatusCode.ADD_RESTAURANT_SUCCESS){}
-                            else if(response.code() == StatusCode.ADD_RESTAURANT_FAIL){}
+                        if (response.code() == StatusCode.ADD_RESTAURANT_SUCCESS) {
+                        } else if (response.code() == StatusCode.ADD_RESTAURANT_FAIL) {
                         }
                     }
-
                     @Override
                     public void onFailure(Call<Status> call, Throwable t) {
                     }

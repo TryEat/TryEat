@@ -33,7 +33,7 @@ public class ReviewLIstFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.review_list_fragment,container,false);
         lv = view.findViewById(R.id.listView);
-        rAdapter = new ReviewListAdapter(view.getContext(),R.layout.review_list_item,mList);
+        rAdapter = new ReviewListAdapter(view.getContext(),R.layout.review_list_item);
         lv.setAdapter(rAdapter);
         //review_add 버튼 이벤트 - ReviewAddDialog
         button = (ImageButton) view.findViewById(R.id.review_add_btn);
