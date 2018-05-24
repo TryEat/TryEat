@@ -1,10 +1,8 @@
 package com.tryeat.tryeat;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,20 +12,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.tryeat.rest.model.User;
-import com.tryeat.rest.service.UserService;
 import com.tryeat.team.tryeat_service.R;
-
-import java.util.ArrayList;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
-    private final int REQUEST_FINE_LOCATION = 1234;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,8 +89,9 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.replace(R.id.frament_place, new RestaurantListFragment());
             fragmentTransaction.commit();
         } else if (id == R.id.nav_Fllow) {
-            ReviewAddDialog mDialog = new ReviewAddDialog(this);
-            mDialog.show();
+            fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+            fragmentTransaction.replace(R.id.frament_place, new RestaurantAddFragment());
+            fragmentTransaction.commit();
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {

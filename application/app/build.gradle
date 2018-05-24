@@ -18,7 +18,7 @@ android {
     }
 }
 
-
+apply plugin: 'com.android.application'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -33,6 +33,6 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
     implementation "com.squareup.okhttp3:okhttp:$rootProject.okhttpVersion"
 
-    implementation 'com.google.android.gms:play-services-maps:10.2.0'
-
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
+    implementation 'com.google.android.gms:play-services-places:15.0.1'
 }
