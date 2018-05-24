@@ -39,8 +39,11 @@ public class RestaurantService {
         userServiceInterface.getReviewCount(restaurantId).enqueue(callback);
     }
 
-    public static void addRestaurant(Callback<Status> callback) {
+    public static void addRestaurant(String name,String latitude,String longitude,Callback<Status> callback) {
         HashMap<String,Object> body = new HashMap<>();
+        body.put("restaurant_name",name);
+        body.put("locate_latitude",latitude);
+        body.put("locate_longitude",longitude);
         userServiceInterface.addRestaurant(body).enqueue(callback);
     }
 

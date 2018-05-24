@@ -23,9 +23,12 @@ public class ReviewService {
         userServiceInterface.getRestaurantReviews(userId,restaurantId).enqueue(callback);
     }
 
-    public static void writeReview(int userId,int restaurantId, Callback<Status> callback) {
+    public static void writeReview(int userId,int restaurantId,String content,int rate, Callback<Status> callback) {
         HashMap<String, Object> body = new HashMap<>();
-
+        body.put("user_id",userId);
+        body.put("restaurant_id",restaurantId);
+        body.put("content",content);
+        body.put("rate",rate);
         userServiceInterface.writeReview(body).enqueue(callback);
     }
 
