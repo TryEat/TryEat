@@ -18,11 +18,11 @@
             android:title="@string/menu3" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="@string/admin">
         <menu>
             <item
                 android:id="@+id/nav_share"
-                android:title="NULL" />
+                android:title="@string/login" />
             <item
                 android:id="@+id/nav_send"
                 android:title="NULL" />

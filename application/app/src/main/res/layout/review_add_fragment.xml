@@ -11,12 +11,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="제목 : "
+            android:text="음식점이름 : "
             android:gravity="center_vertical"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="34dp"/>
+            android:layout_marginLeft="5dp"
+            android:maxLines="1"
+            android:singleLine="true"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -73,7 +75,7 @@
             android:background="@drawable/view_border"
             android:layout_marginRight="3dp"
             android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp"/>
+            android:layout_marginBottom="3dp" />
     </LinearLayout>
     <Button
         android:layout_width="match_parent"

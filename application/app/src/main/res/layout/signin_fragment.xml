@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#4db6ac"
+    android:id="@+id/signinfragment">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="60dp"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/titlee" />
+
+        <EditText
+            android:id="@+id/id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="ID"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
+            android:textColorHighlight="@android:color/white"/>
+
+
+
+        <EditText
+            android:id="@id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:hint="Password"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
+            android:textColorHighlight="@android:color/white"/>
+
+        <Button
+            android:id="@+id/signinbutton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:padding="14dp"
+            android:text="Login"
+            android:textColor="@android:color/darker_gray"
+            android:background="@drawable/login_buttonshape"/>
+        <TextView
+            android:id="@+id/signup_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="@string/yetsignin"
+            android:gravity="center"
+            android:textSize="15sp"
+            android:textColor="@android:color/white"/>
+    </LinearLayout>
+</ScrollView>
