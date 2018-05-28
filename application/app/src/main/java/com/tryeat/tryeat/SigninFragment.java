@@ -62,6 +62,7 @@ public class SigninFragment extends Fragment {
                             String token = response.body().payLoadString;
                             LoginToken.setToken(id, token);
                             Log.d("debug", "로그인 성공" + token);
+                            getActivity().getSupportFragmentManager().popBackStackImmediate();
                         } else if (response.code() == StatusCode.SIGNIN_FAIL) {
                             AlertDialogBuilder.createAlert(getActivity(), "ID나 Password가 틀립니다.");
                             return;
@@ -81,7 +82,7 @@ public class SigninFragment extends Fragment {
         return new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                getFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right).replace(R.id.frament_place, new SignFragment()).addToBackStack(null).commit();
+                getFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right).replace(R.id.frament_place, new SignFragment(), "signup").addToBackStack(null).commit();
             }
         };
     };

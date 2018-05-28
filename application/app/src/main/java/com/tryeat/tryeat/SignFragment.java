@@ -1,6 +1,7 @@
 package com.tryeat.tryeat;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -70,6 +71,7 @@ public class SignFragment extends Fragment {
                             int id = response.body().payLoadInt;
                             String token = response.body().payLoadString;
                             LoginToken.setToken(id, token);
+                            getActivity().getSupportFragmentManager().popBackStackImmediate();
                         } else if (statusCode == StatusCode.SIGNIN_FAIL) {
                             AlertDialogBuilder.createAlert(getActivity(), "로그인 실패했습니다...");
                         }
@@ -83,4 +85,5 @@ public class SignFragment extends Fragment {
             }
         };
     }
+
 }

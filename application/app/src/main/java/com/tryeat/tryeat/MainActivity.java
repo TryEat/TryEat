@@ -115,7 +115,9 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.replace(R.id.frament_place, new SigninFragment());
             fragmentTransaction.addToBackStack(null).commit();
         } else if (id == R.id.nav_send) {
-
+            Intent intent = new Intent(MainActivity.this, ReviewAddActivity.class);
+            intent.putExtra("dd", "중간고사");
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -133,5 +135,10 @@ public class MainActivity extends AppCompatActivity
                 fragmentTransaction.replace(R.id.frament_place, new SignFragment());
                 fragmentTransaction.addToBackStack(null).commit();
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
