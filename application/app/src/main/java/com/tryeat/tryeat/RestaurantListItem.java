@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 public class RestaurantListItem implements Serializable {
     private Drawable mIcon;
-    public int restaurantId;
+    private int restaurantId;
     private String mName;
     private double mRate;
 
@@ -34,6 +34,10 @@ public class RestaurantListItem implements Serializable {
         return mRate;
     }
 
+    public int getRestaurantId() {
+        return restaurantId;
+    }
+
     public void setmIcon(Drawable mIcon) {
         this.mIcon = mIcon;
     }
@@ -44,6 +48,10 @@ public class RestaurantListItem implements Serializable {
 
     public void setmRate(double mRate) {
         this.mRate = mRate;
+    }
+
+    public void setRestaurantId(int restaurantId) {
+        this.restaurantId = restaurantId;
     }
 }
 

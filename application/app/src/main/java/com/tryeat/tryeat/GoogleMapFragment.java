@@ -1,7 +1,6 @@
 package com.tryeat.tryeat;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -12,16 +11,22 @@ import android.support.v4.app.ActivityCompat;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 
-public class GoogleMapFragment extends MapFragment implements OnMapReadyCallback {
+public class GoogleMapFragment extends SupportMapFragment implements OnMapReadyCallback {
     GoogleMap gMap;
     GroundOverlayOptions videoMark;
     Location _location;
+
+    @Override
+    public void onActivityCreated(Bundle bundle) {
+        super.onActivityCreated(bundle);
+        getMapAsync(this);
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -38,6 +43,8 @@ public class GoogleMapFragment extends MapFragment implements OnMapReadyCallback
                 gMap.addGroundOverlay(videoMark);
             }
         });
+
+        searchLocation();
     }
 
     public void searchLocation(){
@@ -50,11 +57,15 @@ public class GoogleMapFragment extends MapFragment implements OnMapReadyCallback
         manager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, gpsListener, null);
     }
 
-    public Location get_location() {
+    public Location getLocation() {
         return _location;
     }
 
-    public void set_location(Location _location) {
+    public void setLocation(String name){
+
+    }
+
+    public void setLocation(Location _location) {
         this._location = _location;
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(_location.getLatitude(), _location.getLongitude()), 16));
     }
@@ -63,7 +74,7 @@ public class GoogleMapFragment extends MapFragment implements OnMapReadyCallback
 
         @Override
         public void onLocationChanged(Location location) {
-            set_location(location);
+            setLocation(location);
         }
 
         @Override

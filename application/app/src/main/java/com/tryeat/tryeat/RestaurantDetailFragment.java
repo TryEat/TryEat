@@ -3,10 +3,13 @@ package com.tryeat.tryeat;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -45,8 +48,27 @@ public class RestaurantDetailFragment extends Fragment {
         lv = view.findViewById(R.id.review_list_in_detail);
         rAdapter = new ReviewListAdapter(view.getContext(),R.layout.review_list_item);
         lv.setAdapter(rAdapter);
-        getReviewList(item.restaurantId);
+        lv.setOnItemClickListener(itemClick());
+        getReviewList(item.getRestaurantId());
         return view;
+    }
+
+    public AdapterView.OnItemClickListener itemClick(){
+        return new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                ReviewDetailFragment fragment = new ReviewDetailFragment();
+                Bundle bundle = new Bundle(2);
+                ReviewListItem item = (ReviewListItem)adapterView.getItemAtPosition(i);
+                bundle.putSerializable("item",item);
+                fragment.setArguments(bundle);
+                fragmentTransaction.replace(R.id.frament_place,fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        };
     }
 
     public void getReviewList(int restaurantId){
@@ -58,7 +80,7 @@ public class RestaurantDetailFragment extends Fragment {
                     int size = reviews.size();
                     for(int i =0 ;i<size;i++){
                         Review item = reviews.get(i);
-                        rAdapter.addItem(new ReviewListItem(null,item.user_id+"",item.rate+""));
+                        rAdapter.addItem(new ReviewListItem(null,item.user_id+"","empty",item.content,item.rate+""));
                     }
                     rAdapter.notifyDataSetChanged();
                 }

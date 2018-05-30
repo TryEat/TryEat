@@ -19,7 +19,7 @@ android {
     buildToolsVersion '27.0.3'
 }
 
-
+apply plugin: 'com.android.application'
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -33,5 +33,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
     implementation "com.squareup.okhttp3:okhttp:$rootProject.okhttpVersion"
-    implementation 'com.google.android.gms:play-services-maps:10.2.0'
+
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
+    implementation 'com.google.android.gms:play-services-places:15.0.1'
 }

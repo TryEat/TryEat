@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent" >
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
+    android:orientation="vertical"
+    android:paddingRight="5px">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,6 +21,7 @@
             android:gravity="center_vertical"
             />
         <EditText
+            android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
@@ -33,15 +38,21 @@
         android:layout_height="wrap_content"
         android:layout_margin="17dp"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="@string/raf_location" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/raf_location" />
 
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="30dp"
+                android:layout_weight="4" />
         <EditText
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -50,13 +61,25 @@
             android:maxLines="1"
             android:singleLine="true"/>
 
-        <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:src="@drawable/ic_search" />
+            <ImageButton
+                android:id="@+id/searchButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_search"
+                android:contentDescription="TODO" />
         </LinearLayout>
 
+        <FrameLayout
+            android:id="@+id/place_autocomplete_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <FrameLayout
+            android:id="@+id/mapPlace"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 
@@ -94,7 +117,8 @@
             android:layout_weight="7"
             android:src="@drawable/view_border"
             android:layout_marginLeft="30dp"
-            />
+            android:layout_marginStart="30dp"
+            android:contentDescription="TODO" />
 
         <Button
             android:layout_width="0dp"
@@ -119,7 +143,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_marginLeft="30dp"/>
+            android:layout_marginLeft="30dp"
+            android:inputType=""
+            android:layout_marginStart="30dp" />
     </LinearLayout>
     <Button
         android:layout_width="match_parent"
@@ -128,3 +154,4 @@
         android:id="@+id/addButton"
         />
 </LinearLayout>
+</ScrollView>
