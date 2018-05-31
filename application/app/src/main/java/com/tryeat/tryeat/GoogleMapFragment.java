@@ -44,9 +44,13 @@ public class GoogleMapFragment extends SupportMapFragment implements OnMapReadyC
             }
         });
 
-        searchLocation();
+        update();
     }
 
+    public void update(){
+        if(gMap==null)return;
+        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(_location.getLatitude(), _location.getLongitude()), 16));
+    }
     public void searchLocation(){
         LocationManager manager = (LocationManager)getActivity().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         GPSListenter gpsListener = new GPSListenter();
@@ -65,16 +69,18 @@ public class GoogleMapFragment extends SupportMapFragment implements OnMapReadyC
 
     }
 
-    public void setLocation(Location _location) {
-        this._location = _location;
-        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(_location.getLatitude(), _location.getLongitude()), 16));
+    public void setLocation(double latitude, double longitude) {
+        if(_location==null)_location=new Location(LocationManager.NETWORK_PROVIDER);
+        this._location.setLatitude(latitude);
+        this._location.setLongitude(longitude);
+        update();
     }
 
     private class GPSListenter implements LocationListener{
 
         @Override
         public void onLocationChanged(Location location) {
-            setLocation(location);
+            setLocation(location.getLatitude(),location.getLongitude());
         }
 
         @Override

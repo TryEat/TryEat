@@ -10,17 +10,25 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="음식점이름 : "
+            android:layout_weight="0.5"
             android:gravity="center_vertical"/>
         <EditText
-            android:id="@+id/header"
-            android:layout_width="match_parent"
+            android:id="@+id/restaurant_name"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
             android:maxLines="1"
+            android:layout_weight="1"
             android:singleLine="true"/>
+        <ImageButton
+            android:id="@+id/rest_search"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:src="@drawable/rest_search" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

@@ -27,6 +27,7 @@
             android:layout_weight="4"
             android:layout_marginLeft="30dp"/>
         <ImageButton
+            android:id="@+id/name_search"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -47,27 +48,6 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:text="@string/raf_location" />
-
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="30dp"
-                android:layout_weight="4" />
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="30dp"
-            android:layout_weight="4"
-            android:maxLines="1"
-            android:singleLine="true"/>
-
-            <ImageButton
-                android:id="@+id/searchButton"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:src="@drawable/ic_search"
-                android:contentDescription="TODO" />
         </LinearLayout>
 
         <FrameLayout

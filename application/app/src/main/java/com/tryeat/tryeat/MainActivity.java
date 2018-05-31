@@ -1,13 +1,10 @@
 package com.tryeat.tryeat;
 
-import android.app.Fragment;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,9 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.Toast;
+import android.view.View;
 
 import com.tryeat.team.tryeat_service.R;
 
@@ -104,9 +99,9 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.replace(R.id.frament_place, new SigninFragment());
             fragmentTransaction.addToBackStack(null).commit();
         } else if (id == R.id.nav_send) {
-            Intent intent = new Intent(MainActivity.this, ReviewAddActivity.class);
-            intent.putExtra("dd", "중간고사");
-            startActivity(intent);
+            fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+            fragmentTransaction.replace(R.id.frament_place, new RestaurantAddFragment());
+            fragmentTransaction.addToBackStack(null).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -114,20 +109,17 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.signstart:
-                FragmentManager fm = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right );
-                fragmentTransaction.replace(R.id.frament_place, new SignFragment());
-                fragmentTransaction.addToBackStack(null).commit();
-        }
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void onClick(View view) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+        fragmentTransaction.replace(R.id.frament_place, new SigninFragment());
+        fragmentTransaction.addToBackStack(null).commit();
     }
 }

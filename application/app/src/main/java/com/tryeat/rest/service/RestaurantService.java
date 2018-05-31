@@ -23,7 +23,7 @@ public class RestaurantService {
         userServiceInterface.getRestaurant(name).enqueue(callback);
     }
 
-    public static void getRestaurant(String lat, String ion, Callback<ArrayList<Restaurant>> callback) {
+    public static void getRestaurant(double lat, double ion, Callback<ArrayList<Restaurant>> callback) {
         userServiceInterface.getRestaurant(lat,ion).enqueue(callback);
     }
 
@@ -31,7 +31,7 @@ public class RestaurantService {
         userServiceInterface.isExistRestaurant(name).enqueue(callback);
     }
 
-    public static void isExistRestaurant(String lat, String ion,Callback<ArrayList<Restaurant>> callback) {
+    public static void isExistRestaurant(double lat, double ion,Callback<ArrayList<Restaurant>> callback) {
         userServiceInterface.isExistRestaurant(lat,ion).enqueue(callback);
     }
 
@@ -39,7 +39,7 @@ public class RestaurantService {
         userServiceInterface.getReviewCount(restaurantId).enqueue(callback);
     }
 
-    public static void addRestaurant(String name,String latitude,String longitude,Callback<Status> callback) {
+    public static void addRestaurant(String name,double latitude,double longitude,Callback<Status> callback) {
         HashMap<String,Object> body = new HashMap<>();
         body.put("restaurant_name",name);
         body.put("locate_latitude",latitude);

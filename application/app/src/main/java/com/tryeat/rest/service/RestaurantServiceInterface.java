@@ -25,13 +25,13 @@ public interface RestaurantServiceInterface {
     Call<ArrayList<Restaurant>> getRestaurant(@Path("name") String name);
 
     @GET("restaurants/{lat}/{ion}/bylocation")
-    Call<ArrayList<Restaurant>> getRestaurant(@Path("lat") String lat, @Path("ion") String ion);
+    Call<ArrayList<Restaurant>> getRestaurant(@Path("lat") double lat, @Path("ion") double ion);
 
     @GET("restaurants/is_exist/{name}/byname")
     Call<Status> isExistRestaurant(@Path("name") String name);
 
     @GET("restaurants/is_exist/{lat}/{ion}/bylocation")
-    Call<ArrayList<Restaurant>> isExistRestaurant(@Path("lat") String lat, @Path("ion") String ion);
+    Call<ArrayList<Restaurant>> isExistRestaurant(@Path("lat") double lat, @Path("ion") double ion);
 
     @GET("restaurants/count/{id}")
     Call<Status> getReviewCount(@Path("id") int restaurantId);

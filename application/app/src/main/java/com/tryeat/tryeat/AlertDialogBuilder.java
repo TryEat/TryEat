@@ -1,7 +1,6 @@
 package com.tryeat.tryeat;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 
@@ -17,4 +16,6 @@ public class AlertDialogBuilder {
         alert.setMessage(message);
         alert.show();
     }
+
+
 }

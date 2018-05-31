@@ -4,8 +4,6 @@ package com.tryeat.tryeat;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,7 +69,7 @@ public class SigninFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<Status> call, Throwable t) {
-
+                        Log.d("debug",t.toString());
                     }
                 });
             }
