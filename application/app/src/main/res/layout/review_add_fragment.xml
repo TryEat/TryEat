@@ -1,28 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="15dp"
     android:theme="@style/Theme.AppCompat.DayNight.Dialog">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="음식점이름 : "
             android:layout_weight="0.5"
-            android:gravity="center_vertical"/>
+            android:gravity="center_vertical"
+            android:text="음식점이름 : " />
+
         <EditText
             android:id="@+id/restaurant_name"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
-            android:maxLines="1"
             android:layout_weight="1"
-            android:singleLine="true"/>
+            android:maxLines="1"
+            android:singleLine="true" />
+
         <ImageButton
             android:id="@+id/rest_search"
             android:layout_width="0dp"
@@ -30,72 +34,82 @@
             android:layout_weight="0.5"
             android:src="@drawable/rest_search" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="점수 : "
-            android:gravity="center_vertical"/>
-        <RatingBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/rate"
-            android:numStars="5"
-            android:stepSize="0.5"
-            android:layout_marginLeft="25dp"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="사진 : "/>
+            android:text="점수 : " />
+
+        <RatingBar
+            android:id="@+id/rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:numStars="5"
+            android:stepSize="0.5" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="사진 : " />
+
         <ImageView
             android:id="@+id/res_image"
             android:layout_width="0dp"
             android:layout_height="100dp"
-            android:layout_weight="7"
-            android:src="@drawable/view_border"
             android:layout_marginLeft="34dp"
+            android:layout_weight="7"
             android:adjustViewBounds="true"
-            />
+            android:src="@drawable/view_border" />
+
         <Button
             android:id="@+id/image_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:text="첨부"/>
+            android:text="첨부" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="8"
         android:orientation="horizontal">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="comment : "/>
+            android:text="comment : " />
+
         <EditText
             android:id="@+id/desc"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/view_border"
+            android:layout_marginBottom="3dp"
             android:layout_marginRight="3dp"
             android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp" />
+            android:background="@drawable/view_border" />
     </LinearLayout>
+
     <Button
         android:id="@+id/addButton"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
-        android:text="등록"/>
+        android:text="등록" />
 
 </LinearLayout>

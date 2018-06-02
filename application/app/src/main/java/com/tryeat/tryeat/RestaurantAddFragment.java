@@ -40,6 +40,7 @@ import retrofit2.Response;
 public class RestaurantAddFragment extends Fragment{
     View view;
     EditText name;
+    EditText tel;
     GoogleMapFragment fragment;
     public RestaurantAddFragment(){
 
@@ -53,7 +54,8 @@ public class RestaurantAddFragment extends Fragment{
         ImageButton searchButton = view.findViewById(R.id.name_search);
         searchButton.setOnClickListener(searchName());
         name = view.findViewById(R.id.name);
-
+        tel = view.findViewById(R.id.tel_number);
+        updateMap(31.1412,131.21414);
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         SupportPlaceAutocompleteFragment supportPlaceAutocompleteFragment = new SupportPlaceAutocompleteFragment();
@@ -62,6 +64,7 @@ public class RestaurantAddFragment extends Fragment{
             public void onPlaceSelected(Place place) {
                 name.getText().clear();
                 name.setText(place.getName());
+                tel.setText(place.getPhoneNumber());
                 updateMap(place.getLatLng().latitude,place.getLatLng().longitude);
                 Log.i("jkl", "Place: " + place.getName());
             }
@@ -82,7 +85,7 @@ public class RestaurantAddFragment extends Fragment{
         if(fragment==null) {
             FragmentManager fm = getFragmentManager();
             FragmentTransaction fragmentTransaction = fm.beginTransaction();
-            fragment = new GoogleMapFragment();
+            fragment = (GoogleMapFragment)FragmentLoader.getFragmentInstance(GoogleMapFragment.class);
             fragmentTransaction.replace(R.id.mapPlace, fragment);
             fragmentTransaction.commit();
         }
@@ -99,8 +102,8 @@ public class RestaurantAddFragment extends Fragment{
                        if(response.code() == StatusCode.RESTAURANT_IS_EXIST){
                            ArrayList<Restaurant> items = response.body();
                            if(!items.isEmpty()){
-                               Location location = new Location(String.valueOf(new LatLng(items.get(0).locate_latitude,items.get(0).locate_longitude)));
-                               fragment.setLocation(items.get(0).locate_latitude,items.get(0).locate_latitude);
+                               Log.d("location",items.get(0).getLat()+""+items.get(0).getLon()+"");
+                               fragment.setLocation(items.get(0).getLat(),items.get(0).getLon());
                            }
                        }
                    }

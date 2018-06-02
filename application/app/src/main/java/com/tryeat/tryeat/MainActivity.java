@@ -1,5 +1,6 @@
 package com.tryeat.tryeat;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -10,14 +11,24 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.tryeat.rest.model.Status;
+import com.tryeat.rest.model.StatusCode;
+import com.tryeat.rest.service.SignService;
 import com.tryeat.team.tryeat_service.R;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    MenuItem item;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,13 +45,20 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu menuNav = navigationView.getMenu();
+        item = menuNav.findItem(R.id.nav_sign);
+
         navigationView.setNavigationItemSelectedListener(this);
+
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+        fragmentTransaction.replace(R.id.frament_place, FragmentLoader.getFragmentInstance(RestaurantListFragment.class));
+        fragmentTransaction.addToBackStack(null).commit();
 
         //초기 추천 음식점 list 로드
         //로그인&회원가입 fragment로 전환하기 위한 버튼
-
     }
-
 
     @Override
     public void onBackPressed() {
@@ -84,27 +102,39 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         if (id == R.id.nav_Add_Review) {
             fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right );
-            fragmentTransaction.replace(R.id.frament_place, new ReviewLIstFragment());
+            fragmentTransaction.replace(R.id.frament_place, FragmentLoader.getFragmentInstance(ReviewLIstFragment.class));
             fragmentTransaction.addToBackStack(null).commit();
         } else if (id == R.id.nav_RestaurantList) {
             fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right );
-            fragmentTransaction.replace(R.id.frament_place, new RestaurantListFragment());
+            fragmentTransaction.replace(R.id.frament_place, FragmentLoader.getFragmentInstance(RestaurantListFragment.class));
             fragmentTransaction.addToBackStack(null).commit();
         } else if (id == R.id.nav_Fllow) {
-            fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right );
-            fragmentTransaction.replace(R.id.frament_place, new RestaurantAddFragment());
-            fragmentTransaction.commit();
-        } else if (id == R.id.nav_share) {
-            fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right );
-            fragmentTransaction.replace(R.id.frament_place, new SigninFragment());
-            fragmentTransaction.addToBackStack(null).commit();
+            //fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+            //fragmentTransaction.replace(R.id.frament_place, FragmentLoader.getFragmentInstance(RestaurantAddFragment.class));
+            //fragmentTransaction.commit();
+        } else if (id == R.id.nav_sign) {
+            SignService.signOut(new Callback<Status>() {
+                    @Override
+                    public void onResponse(Call<Status> call, Response<Status> response) {
+                        LoginToken.removeToken();
+                        Intent intent =new Intent(getApplicationContext(),SignInActivity.class);
+                        startActivity(intent);
+                        finish();
+                        overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Status> call, Throwable t) {
+
+                    }
+                });
         } else if (id == R.id.nav_send) {
             fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right );
-            fragmentTransaction.replace(R.id.frament_place, new RestaurantAddFragment());
+            fragmentTransaction.replace(R.id.frament_place, FragmentLoader.getFragmentInstance(RestaurantAddFragment.class));
             fragmentTransaction.addToBackStack(null).commit();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -116,10 +146,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onClick(View view) {
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right );
-        fragmentTransaction.replace(R.id.frament_place, new SigninFragment());
-        fragmentTransaction.addToBackStack(null).commit();
+
     }
 }

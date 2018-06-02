@@ -19,6 +19,10 @@ public class RestaurantService {
         userServiceInterface.getRestaurant(restaurantId).enqueue(callback);
     }
 
+    public static void getRestaurants(String idList, Callback<ArrayList<Restaurant>> callback) {
+        userServiceInterface.getRestaurants(idList).enqueue(callback);
+    }
+
     public static void getRestaurant(String name, Callback<ArrayList<Restaurant>> callback) {
         userServiceInterface.getRestaurant(name).enqueue(callback);
     }

@@ -5,13 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.tryeat.team.tryeat_service.com.example.socce.tryeat.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
     <FrameLayout
-    android:id="@+id/frament_place"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+        android:id="@+id/frament_place"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
     <!--android:name="RestaurantListFragment"-->
 
 </android.support.constraint.ConstraintLayout>

@@ -9,6 +9,13 @@ var port = process.env.PORT || 8080;
 
 var userTokens = [];
 
+var printMessage = function(req,res,next){
+  console.log();
+  console.log(req);
+  console.log(req.body);
+  next();
+}
+
 var verifyUser = function (req, res, next) {
   if (userTokens[req.headers["id"]] == undefined || userTokens[req.headers["id"]] != req.headers["authorization"]) {
     console.log("need");
@@ -20,6 +27,7 @@ var verifyUser = function (req, res, next) {
 
 var pool = require('./db');
 
+app.use(printMessage);
 app.use('/sign', require('./routes/server/sign')(pool, userTokens));
 //app.use(verifyUser);
 app.use('/users', require('./routes/server/users')(pool, userTokens));

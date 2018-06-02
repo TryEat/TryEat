@@ -16,10 +16,30 @@ module.exports = function (_dbPool) {
         });
     })
 
+    router.get('/list/:id_list/byid', function (req, res) {
+        var id_list = req.params.id_list;
+
+        var query = 'SELECT * FROM restaurant WHERE restaurant_id IN (?)';
+        dbPool.query(query, [id_list], function (err, rows, fields) {
+            if (err) throw err;
+            res.status(200).json(rows);
+        });
+    })
+
     router.get('/:id/byid', function (req, res) {
         var restaurant_id = req.params.id;
 
         var query = 'SELECT * FROM restaurant WHERE restaurant_id=?';
+        dbPool.query(query, [restaurant_id], function (err, rows, fields) {
+            if (err) throw err;
+            res.status(200).json(rows[0]);
+        });
+    })
+
+    router.get('/image/:id', function (req, res) {
+        var restaurant_id = req.params.id;
+
+        var query = 'SELECT img FROM restaurant WHERE restaurant_id=?';
         dbPool.query(query, [restaurant_id], function (err, rows, fields) {
             if (err) throw err;
             res.status(200).json(rows);
@@ -27,12 +47,13 @@ module.exports = function (_dbPool) {
     })
 
     router.get('/:name/byname', function (req, res) {
-        var restaurant_name = req.params.name;
+        var restaurant_name = "%"+req.params.name+"%";
 
-        var query = 'SELECT * FROM restaurant WHERE restaurant_name=?';
+        var query = 'SELECT * FROM restaurant WHERE restaurant_name LIKE ?';
         dbPool.query(query, [restaurant_name], function (err, rows, fields) {
             if (err) throw err;
-            res.status(200).json(rows);
+            if(rows.length!=0)res.status(200).json(rows);
+            else res.status(400).json({message: 'is not exist'});
         });
     })
 
@@ -87,7 +108,7 @@ module.exports = function (_dbPool) {
     });
 
     router.post('/', function (req, res) {
-        var img_id = req.body.img_id;
+        var img = req.body.img;
         var restaurant_name = req.body.restaurant_name;
         var locate_latitude = req.body.locate_latitude;
         var locate_longitude = req.body.locate_longitude;
@@ -95,8 +116,8 @@ module.exports = function (_dbPool) {
         var open_time = req.body.open_time;
         var close_time = req.body.close_time;
 
-        var query = 'INSERT INTO restaurant (img_id,restaurant_name,locate_latitude,locate_longitude,restaurant_desc,open_time,close_time,review_count,total_rate) VALUES (?,?,?,?,?,?,?,0,0)';
-        dbPool.query(query, [img_id, restaurant_name, locate_latitude, locate_longitude, restaurant_desc, open_time, close_time, 0, 0], function (err, rows, fields) {
+        var query = 'INSERT INTO restaurant (img,restaurant_name,locate_latitude,locate_longitude,restaurant_desc,open_time,close_time,review_count,total_rate) VALUES (?,?,?,?,?,?,?,0,0)';
+        dbPool.query(query, [img, restaurant_name, locate_latitude, locate_longitude, restaurant_desc, open_time, close_time, 0, 0], function (err, rows, fields) {
             if (err) throw err;
             if (rows.affectedRows != 0) res.status(201).json({ message: "Add Restaurant Success" })
             else res.status(400).json({ message: "Add Restaurant Fail" })
@@ -105,7 +126,7 @@ module.exports = function (_dbPool) {
 
     router.put('/', function (req, res) {
         var restaurant_id = req.body.restaurant_id;
-        var img_id = req.body.img_id;
+        var img = req.body.img;
         var restaurant_name = req.body.restaurant_name;
         var locate_latitude = req.body.locate_latitude;
         var locate_longitude = req.body.locate_longitude;
@@ -113,8 +134,8 @@ module.exports = function (_dbPool) {
         var open_time = req.body.open_time;
         var close_time = req.body.close_time;
 
-        var query = 'UPDATE restaurant SET img_id=?,restaurant_name=?,locate_latitude=?,locate_longitude=?,restaurant_desc=?,open_time=?,close_time=? WHERE restaurant_id=?';
-        dbPool.query(query, [img_id, restaurant_name, locate_latitude, locate_longitude, restaurant_desc, open_time, close_time, restaurant_id], function (err, rows, fields) {
+        var query = 'UPDATE restaurant SET img=?,restaurant_name=?,locate_latitude=?,locate_longitude=?,restaurant_desc=?,open_time=?,close_time=? WHERE restaurant_id=?';
+        dbPool.query(query, [img, restaurant_name, locate_latitude, locate_longitude, restaurant_desc, open_time, close_time, restaurant_id], function (err, rows, fields) {
             if (err) throw err;
             if (rows.changedRows != 0) res.status(201).json({ message: "Restaurant Revise Success" })
             else res.status(400).json({ message: "Restaurant Revise Fail" })

@@ -24,6 +24,9 @@ public interface RestaurantServiceInterface {
     @GET("restaurants/{name}/byname")
     Call<ArrayList<Restaurant>> getRestaurant(@Path("name") String name);
 
+    @GET("restaurants/list/{id_list}/byid")
+    Call<ArrayList<Restaurant>> getRestaurants(@Path("id_list") String name);
+
     @GET("restaurants/{lat}/{ion}/bylocation")
     Call<ArrayList<Restaurant>> getRestaurant(@Path("lat") double lat, @Path("ion") double ion);
 

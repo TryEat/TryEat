@@ -34,7 +34,7 @@ CREATE TABLE follow(
 
 CREATE TABLE restaurant(
 	restaurant_id INT(11) NOT NULL AUTO_INCREMENT,
-	img_id INT(10),
+	img MEDIUMBLOB,
 	restaurant_name VARCHAR(30) NOT NULL,
 	locate_latitude DOUBLE NOT NULL,
 	locate_longitude DOUBLE NOT NULL,
@@ -42,24 +42,22 @@ CREATE TABLE restaurant(
 	open_time TIME,
 	close_time TIME,
 	review_count INT(11) NOT NULL,
-	total_rate INT(11) NOT NULL,
-	PRIMARY KEY (restaurant_id),
-	FOREIGN KEY (img_id) REFERENCES images (img_id) ON DELETE CASCADE
+	total_rate decimal(5,1) NOT NULL,
+	PRIMARY KEY (restaurant_id)
 );
 
 CREATE TABLE review(
 	review_id INT(11) NOT NULL AUTO_INCREMENT,
 	restaurant_id INT(11) NOT NULL,
 	user_id INT(11) NOT NULL,
-	img_id INT(11),
+	img MEDIUMBLOB,
 	content TEXT,
 	date TIMESTAMP NOT NULL DEFAULT now(),
-	rate INT(11) NOT NULL,
+	rate DECIMAL(2,1) NOT NULL,
 	PRIMARY KEY (review_id),
 	KEY pkey (user_id),
 	FOREIGN KEY (restaurant_id) REFERENCES restaurant (restaurant_id) ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY (user_id) REFERENCES user (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY (img_id) REFERENCES images (img_id)
+	FOREIGN KEY (user_id) REFERENCES user (user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE ad(

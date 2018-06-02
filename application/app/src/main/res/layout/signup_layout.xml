@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#4db6ac"
+    android:orientation="vertical"
+    android:paddingLeft="25dp"
+    android:paddingRight="25dp"
+    android:gravity="center">
+
+    <EditText
+        android:id="@+id/id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="ID"
+        android:inputType="text"
+        android:maxLines="1"
+        android:paddingBottom="25dp"
+        android:paddingTop="25dp"
+        android:singleLine="true"
+        android:textColor="@android:color/white"
+        android:textColorHighlight="@android:color/white"
+        android:textColorHint="@android:color/white" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:maxLines="1"
+        android:paddingBottom="25dp"
+        android:paddingTop="25dp"
+        android:singleLine="true"
+        android:textColor="@android:color/white"
+        android:textColorHighlight="@android:color/white"
+        android:textColorHint="@android:color/white" />
+
+    <EditText
+        android:id="@+id/check_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password 확인"
+        android:inputType="textPassword"
+        android:maxLines="1"
+        android:paddingBottom="25dp"
+        android:paddingTop="25dp"
+        android:singleLine="true"
+        android:textColor="@android:color/white"
+        android:textColorHighlight="@android:color/white"
+        android:textColorHint="@android:color/white" />
+
+    <Button
+        android:id="@+id/signup_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/login_buttonshape"
+        android:padding="14dp"
+        android:text="@string/singin"
+        android:textColor="@android:color/darker_gray" />
+
+    <TextView
+        android:id="@+id/signin_bnt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"
+        android:text="로그인 하러 가기"
+        android:textColor="@android:color/white"
+        android:textSize="15sp" />
+</LinearLayout>

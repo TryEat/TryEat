@@ -37,6 +37,7 @@ public class GoogleMapFragment extends SupportMapFragment implements OnMapReadyC
         gMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng point) {
+                setLocation(point.latitude,point.longitude);
                 videoMark = new GroundOverlayOptions().image(
                         BitmapDescriptorFactory.fromResource(android.R.drawable.presence_video_busy))
                         .position(point, 100f, 100f);

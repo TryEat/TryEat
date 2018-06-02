@@ -1,18 +1,17 @@
 package com.tryeat.tryeat;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.tryeat.rest.model.Restaurant;
 import com.tryeat.rest.service.RestaurantService;
@@ -30,43 +29,44 @@ import retrofit2.Response;
  */
 
 
-public class RestaurantListFragment extends Fragment {
+public class RestaurantListFragment extends Fragment{
     View view;
-    ListView lv;
+    RecyclerView lv;
+    RecyclerView.LayoutManager mLayoutManager;
     RestaurantListAdapter rAdapter;
 
-    public RestaurantListFragment(){
-
-    }
+    ArrayList<Restaurant> mListItem1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.restaurant_list_fragment, container, false);
-        lv = view.findViewById(R.id.listView);
-        rAdapter = new RestaurantListAdapter(view.getContext(), R.layout.restaurant_list_item);
-        lv.setAdapter(rAdapter);
-        lv.setOnItemClickListener(itemClick());
-        getRestaurantList();
+        if(view==null) {
 
+            mListItem1 = new ArrayList<>();
+
+            view = inflater.inflate(R.layout.restaurant_list_fragment, container, false);
+            lv = view.findViewById(R.id.listView);
+            lv.setHasFixedSize(true);
+            mLayoutManager = new LinearLayoutManager(getContext());
+            lv.setLayoutManager(mLayoutManager);
+            lv = view.findViewById(R.id.listView);
+            rAdapter = new RestaurantListAdapter(mListItem1);
+            rAdapter.setOnItemClickListener(new RestaurantListAdapter.ClickListener() {
+                @Override
+                public void onItemClick(int position, View v) {
+                    itemClick(position);
+                }
+            });
+            lv.setAdapter(rAdapter);
+
+        }
         return view;
     }
 
-    public AdapterView.OnItemClickListener itemClick(){
-        return new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                RestaurantDetailFragment fragment = new RestaurantDetailFragment();
-                Bundle bundle = new Bundle(2);
-                RestaurantListItem item = (RestaurantListItem)adapterView.getItemAtPosition(i);
-                bundle.putSerializable("item",item);
-                fragment.setArguments(bundle);
-                fragmentTransaction.replace(R.id.frament_place,fragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-            }
-        };
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        getRestaurantList();
     }
 
     public void getRestaurantList(){
@@ -78,7 +78,7 @@ public class RestaurantListFragment extends Fragment {
                     int size = restaurants.size();
                     for(int i =0 ;i<size;i++){
                         Restaurant item = restaurants.get(i);
-                        rAdapter.addItem(new RestaurantListItem(null,item.restaurant_id,item.restaurant_name,safeDivide(item.total_rate,item.review_count)));
+                        mListItem1.add(item);
                     }
                     rAdapter.notifyDataSetChanged();
                 }
@@ -90,9 +90,17 @@ public class RestaurantListFragment extends Fragment {
         });
     }
 
-    private double safeDivide(int a, int b){
-        if(a!=0&&b!=0)return a/b;
-        return 0;
+    public void itemClick(int position) {
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        Fragment fragment = FragmentLoader.getFragmentInstance(RestaurantDetailFragment.class);
+        Bundle bundle = new Bundle(2);
+        Restaurant item =  mListItem1.get(position);
+        bundle.putSerializable("item",item);
+        fragment.setArguments(bundle);
+        fragmentTransaction.replace(R.id.frament_place,fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }
 

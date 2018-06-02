@@ -1,36 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <TextView
-        android:text="자신의 리뷰 리스트입니다."
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageButton
-            android:id="@+id/review_add_btn"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_add_circle_outline_black_24dp"
-            />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="추가"
-            android:gravity="center_vertical"
-            android:textAlignment="textEnd"
-            android:paddingRight="150dp"/>
-    </FrameLayout>
+        android:layout_height="wrap_content"
+        android:text="자신의 리뷰 리스트입니다." />
 
-    <ListView
+    <ImageButton
+        android:id="@+id/review_add_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_add_circle_outline_black_24dp" />
+
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/listView"
+        android:scrollbars="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </ListView>
-
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

@@ -17,5 +17,16 @@ public class AlertDialogBuilder {
         alert.show();
     }
 
-
+    public static void createChoiceAlert(Activity activity, String message, DialogInterface.OnClickListener clickEvent) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+        alert.setPositiveButton("YES",clickEvent);
+        alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        alert.setMessage(message);
+        alert.show();
+    }
 }

@@ -11,29 +11,31 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
     <ImageButton
         android:id="@+id/signstart"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:src="@drawable/title"
+        android:clickable="true"
         android:onClick="onClick"
-        android:clickable="true"/>
+        android:src="@drawable/title" />
+
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:layout_weight="1"
         android:gravity="center"
-        >
+        android:orientation="vertical">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/nav_header_vertical_spacing"
             android:text="@string/nickname"
-            android:textSize="20dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:visibility="invisible"/>
+            android:textSize="20dp"
+            android:visibility="invisible" />
 
     </LinearLayout>
 </LinearLayout>

@@ -10,6 +10,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContentResolverCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -54,6 +56,8 @@ public class ReviewAddFragment extends Fragment {
 
     Bitmap image_bitmap;
 
+    int restaurantId;
+
     private static final int PICK_FROM_CAMERA =0;
     private static final int PICK_FROM_ALBUM =1;
     private static final int CROP_FROM_iMAGE =2;
@@ -66,7 +70,6 @@ public class ReviewAddFragment extends Fragment {
         view = inflater.inflate(R.layout.review_add_fragment,container,false);
         Button addButton = view.findViewById(R.id.addButton);
         addButton.setOnClickListener(addReview());
-        header = view.findViewById(R.id.header);
         desc = view.findViewById(R.id.desc);
         rate = view.findViewById(R.id.rate);
 
@@ -77,15 +80,27 @@ public class ReviewAddFragment extends Fragment {
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RestaurantService.getRestaurant(restaurantName.toString(), new Callback<ArrayList<Restaurant>>() {
+                RestaurantService.getRestaurant(restaurantName.getText().toString(), new Callback<ArrayList<Restaurant>>() {
                     @Override
                     public void onResponse(Call<ArrayList<Restaurant>> call, Response<ArrayList<Restaurant>> response) {
-                        AlertDialogBuilder.createAlert(getActivity(), "있습니다.");
+                        int status = response.code();
+                        if(status == StatusCode.RESTAURANT_IS_EXIST) {
+                            AlertDialogBuilder.createAlert(getActivity(), "있습니다.");
+                            restaurantId = response.body().get(0).getId();
+                        }else if(status == StatusCode.RESTAURANT_IS_NOT_EXIST) {
+                            AlertDialogBuilder.createAlert(getActivity(), "없습니다.");
+                            AlertDialogBuilder.createChoiceAlert(getActivity(), "음식점을 등록하시겠습니까?", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    startAddRestaurant();
+                                }
+                            });
+                        }
                     }
 
                     @Override
                     public void onFailure(Call<ArrayList<Restaurant>> call, Throwable t) {
-                        AlertDialogBuilder.createAlert(getActivity(), "없습니다.");
+
                     }
                 });
             }
@@ -133,6 +148,14 @@ public class ReviewAddFragment extends Fragment {
         return view;
     }
 
+    private void startAddRestaurant(){
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+        fragmentTransaction.replace(R.id.frament_place, FragmentLoader.getFragmentInstance(RestaurantAddFragment.class));
+        fragmentTransaction.addToBackStack(null).commit();
+    }
+
     public View.OnClickListener addReview(){
         return new View.OnClickListener() {
             @Override
@@ -151,7 +174,7 @@ public class ReviewAddFragment extends Fragment {
 
                 File file = new File(filePath);
 
-                ReviewService.writeReview(1, 1, desc.getText().toString(),image_bitmap,rate.getNumStars(), new Callback<Status>() {
+                ReviewService.writeReview(LoginToken.getId(), restaurantId, desc.getText().toString(),image_bitmap,rate.getNumStars(), new Callback<Status>() {
                     @Override
                     public void onResponse(Call<Status> call, Response<Status> response) {
                         int code = response.code();
