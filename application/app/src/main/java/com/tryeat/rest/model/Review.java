@@ -1,5 +1,7 @@
 package com.tryeat.rest.model;
 
+import android.graphics.Bitmap;
+
 import com.google.gson.annotations.SerializedName;
 
 import org.json.JSONArray;
@@ -26,6 +28,7 @@ public class Review implements Serializable {
     private Timestamp date;
     @SerializedName("rate")
     private float rate;
+    private Bitmap bitmap;
 
     public String getRestaurantName() {
         return restaurantName;

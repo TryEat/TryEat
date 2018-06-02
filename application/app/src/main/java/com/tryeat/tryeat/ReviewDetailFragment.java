@@ -72,22 +72,16 @@ public class ReviewDetailFragment extends Fragment{
         modify = view.findViewById(R.id.modify);
         image = view.findViewById(R.id.image);
 
-        byte[] bytes= item.getImage().data;
-        image.setImageBitmap(BitmapFactory.decodeByteArray(bytes,0,bytes.length));
+        BitmapLoader bitmapLoader = new BitmapLoader(image);
+        bitmapLoader.execute(item.getImage());
 
         Button open = view.findViewById(R.id.view_restaurant_button);
         open.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                Fragment fragment = FragmentLoader.getFragmentInstance(RestaurantDetailFragment.class);
                 Bundle bundle = new Bundle(2);
                 bundle.putInt("id",item.getRestaurantId());
-                fragment.setArguments(bundle);
-                fragmentTransaction.replace(R.id.frament_place,fragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                FragmentLoader.startFragment(R.id.frament_place,RestaurantDetailFragment.class,bundle);
             }
         });
 

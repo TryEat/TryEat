@@ -3,6 +3,7 @@ package com.tryeat.tryeat;
 import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -50,14 +51,15 @@ public class MainActivity extends AppCompatActivity
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right );
-        fragmentTransaction.replace(R.id.frament_place, FragmentLoader.getFragmentInstance(RestaurantListFragment.class));
-        fragmentTransaction.addToBackStack(null).commit();
-
         //초기 추천 음식점 list 로드
         //로그인&회원가입 fragment로 전환하기 위한 버튼
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        FragmentLoader.setActivity(this);
+        FragmentLoader.startFragment(R.id.frament_place,RestaurantListFragment.class);
     }
 
     @Override
@@ -98,20 +100,12 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
         if (id == R.id.nav_Add_Review) {
-            fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right );
-            fragmentTransaction.replace(R.id.frament_place, FragmentLoader.getFragmentInstance(ReviewLIstFragment.class));
-            fragmentTransaction.addToBackStack(null).commit();
+            FragmentLoader.startFragment(R.id.frament_place,ReviewLIstFragment.class);
         } else if (id == R.id.nav_RestaurantList) {
-            fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right );
-            fragmentTransaction.replace(R.id.frament_place, FragmentLoader.getFragmentInstance(RestaurantListFragment.class));
-            fragmentTransaction.addToBackStack(null).commit();
+            FragmentLoader.startFragment(R.id.frament_place,RestaurantListFragment.class);
         } else if (id == R.id.nav_Fllow) {
-            //fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right );
-            //fragmentTransaction.replace(R.id.frament_place, FragmentLoader.getFragmentInstance(RestaurantAddFragment.class));
-            //fragmentTransaction.commit();
+            FragmentLoader.startFragment(R.id.frament_place,FollowListFragment.class);
         } else if (id == R.id.nav_sign) {
             SignService.signOut(new Callback<Status>() {
                     @Override
@@ -129,9 +123,7 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
         } else if (id == R.id.nav_send) {
-            fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right );
-            fragmentTransaction.replace(R.id.frament_place, FragmentLoader.getFragmentInstance(RestaurantAddFragment.class));
-            fragmentTransaction.addToBackStack(null).commit();
+            FragmentLoader.startFragment(R.id.frament_place,RestaurantAddFragment.class);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

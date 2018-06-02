@@ -75,45 +75,22 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ViewHolder myViewHolder = (ViewHolder) holder;
+        ViewHolder viewHolder = (ViewHolder) holder;
         Restaurant item = mList.get(position);
 
-        myViewHolder.rate.setRating(safeDivide(item.getTotalRate(), item.getReviewCount()));
-        myViewHolder.count.setText(item.getReviewCount() + "");
+        viewHolder.rate.setRating(safeDivide(item.getTotalRate(), item.getReviewCount()));
+        viewHolder.count.setText(item.getReviewCount() + "");
 
+        if(item.getImage()!=null) {
+            BitmapLoader bitmapLoader = new BitmapLoader(viewHolder.image);
+            bitmapLoader.execute(item.getImage());
+        }
 
-        //task ta = new task(myViewHolder);
-        //ta.execute(item.getImage().data);
-
-        //holder.image.setImageBitmap(bm);
-        myViewHolder.name.setText(item.getName());
-        //holder.desc.setText(item.getDesc());
-
+        viewHolder.name.setText(item.getName());
     }
 
     @Override
     public int getItemCount() {
         return mList.size();
-    }
-
-    private static class task extends AsyncTask<byte[], Void, Bitmap> {
-        private ViewHolder mHolder;
-
-        public task(ViewHolder holder) {
-            mHolder = holder;
-        }
-
-        @Override
-        protected Bitmap doInBackground(byte[]... bytes) {
-            byte[] v = bytes[0];
-            Bitmap bm = BitmapFactory.decodeByteArray(v, 0, v.length);
-            return bm;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            mHolder.image.setImageBitmap(bitmap);
-        }
     }
 }

@@ -29,7 +29,7 @@ var pool = require('./db');
 
 app.use(printMessage);
 app.use('/sign', require('./routes/server/sign')(pool, userTokens));
-//app.use(verifyUser);
+app.use(verifyUser);
 app.use('/users', require('./routes/server/users')(pool, userTokens));
 app.use('/restaurants', require('./routes/server/restaurants')(pool));
 app.use('/follows', require('./routes/server/follows')(pool));

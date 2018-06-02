@@ -71,15 +71,9 @@ public class RestaurantDetailFragment extends Fragment {
         more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                Fragment fragment = FragmentLoader.getFragmentInstance(ReviewLIstFragment.class);
                 Bundle bundle = new Bundle(2);
                 bundle.putSerializable("restaurant",restaurantId);
-                fragment.setArguments(bundle);
-                fragmentTransaction.replace(R.id.frament_place,fragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                FragmentLoader.startFragment(R.id.frament_place,ReviewLIstFragment.class,bundle);
             }
         });
 
@@ -123,24 +117,6 @@ public class RestaurantDetailFragment extends Fragment {
 
         if(!init)getData(restaurantId);
         getReviewList(restaurantId,0);
-    }
-
-    public AdapterView.OnItemClickListener itemClick(){
-        return new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                Fragment fragment = FragmentLoader.getFragmentInstance(ReviewDetailFragment.class);
-                Bundle bundle = new Bundle(2);
-                Review item = (Review)adapterView.getItemAtPosition(i);
-                bundle.putSerializable("item",item);
-                fragment.setArguments(bundle);
-                fragmentTransaction.replace(R.id.frament_place,fragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-            }
-        };
     }
 
     public void getData(int restaurantId){

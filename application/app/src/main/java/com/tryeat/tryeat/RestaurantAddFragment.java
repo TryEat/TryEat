@@ -56,6 +56,7 @@ public class RestaurantAddFragment extends Fragment{
         name = view.findViewById(R.id.name);
         tel = view.findViewById(R.id.tel_number);
         updateMap(31.1412,131.21414);
+
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         SupportPlaceAutocompleteFragment supportPlaceAutocompleteFragment = new SupportPlaceAutocompleteFragment();
@@ -83,11 +84,8 @@ public class RestaurantAddFragment extends Fragment{
 
     public void updateMap (double latitude, double longitude){
         if(fragment==null) {
-            FragmentManager fm = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fm.beginTransaction();
+            FragmentLoader.startFragment(R.id.mapPlace,GoogleMapFragment.class);
             fragment = (GoogleMapFragment)FragmentLoader.getFragmentInstance(GoogleMapFragment.class);
-            fragmentTransaction.replace(R.id.mapPlace, fragment);
-            fragmentTransaction.commit();
         }
         fragment.setLocation(latitude,longitude);
     }

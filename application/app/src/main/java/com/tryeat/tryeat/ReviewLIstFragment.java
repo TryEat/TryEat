@@ -71,11 +71,12 @@ public class ReviewLIstFragment extends Fragment {
         lv.setLayoutManager(mLayoutManager);
         rAdapter = new ReviewListAdapter(mListItem1);
         if(getArguments()==null){getReviewList();}
-        else if (getArguments().containsKey("restaurant")) {
+        else if (getArguments().containsKey("restaurant")||restaurantId!=-1) {
             restaurantId = getArguments().getInt("restaurant");
             getArguments().remove("restaurant");
             getReviewList(restaurantId);
         }else{
+            restaurantId=-1;
             getReviewList();
         }
         rAdapter.setOnItemClickListener(new ReviewListAdapter.ClickListener() {
@@ -89,7 +90,6 @@ public class ReviewLIstFragment extends Fragment {
             @Override
             public void onScrollChange(View view, int i, int i1, int i2, int i3) {
                 if(!lv.canScrollVertically(1)) {
-                    Log.d("scroll","sdfsdf");
                     getReviewList(restaurantId);
                 }
             }
@@ -101,27 +101,15 @@ public class ReviewLIstFragment extends Fragment {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                Fragment fragment = FragmentLoader.getFragmentInstance(ReviewAddFragment.class);
-                fragmentTransaction.replace(R.id.frament_place, fragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                FragmentLoader.startFragment(R.id.frament_place,ReviewAddFragment.class);
             }
         };
     }
 
     public void itemClick(int position) {
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        Fragment fragment = FragmentLoader.getFragmentInstance(ReviewDetailFragment.class);
         Bundle bundle = new Bundle(2);
-        Review item = mListItem1.get(position);
-        bundle.putSerializable("item", item);
-        fragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.frament_place, fragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        bundle.putSerializable("item", mListItem1.get(position));
+        FragmentLoader.startFragment(R.id.frament_place,ReviewDetailFragment.class,bundle);
     }
 
     public void getReviewList() {

@@ -6,7 +6,9 @@ module.exports = function (_dbPool) {
     router.get('/:user_id', function (req, res) {
         var user_id = req.params.user_id;
 
-        var query = 'SELECT * FROM follow WHERE user_id=?';
+        var query = 'SELECT target_id, user_login_id FROM tryeat.follow \
+         INNER JOIN tryeat.user ON tryeat.user.user_id = tryeat.follow.target_id \
+         WHERE tryeat.follow.user_id = ? LIMIT 0,3';
         dbPool.query(query, [user_id], function (err, rows, fields) {
             if (err) throw err;
             res.status(200).json(rows);

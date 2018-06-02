@@ -149,11 +149,7 @@ public class ReviewAddFragment extends Fragment {
     }
 
     private void startAddRestaurant(){
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right );
-        fragmentTransaction.replace(R.id.frament_place, FragmentLoader.getFragmentInstance(RestaurantAddFragment.class));
-        fragmentTransaction.addToBackStack(null).commit();
+        FragmentLoader.startFragment(R.id.frament_place,RestaurantAddFragment.class);
     }
 
     public View.OnClickListener addReview(){
