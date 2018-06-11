@@ -36,9 +36,9 @@ CREATE TABLE restaurant(
 	restaurant_id INT(11) NOT NULL AUTO_INCREMENT,
 	img MEDIUMBLOB,
 	restaurant_name VARCHAR(30) NOT NULL,
+	phone VARCHAR(20),
 	locate_latitude DOUBLE NOT NULL,
 	locate_longitude DOUBLE NOT NULL,
-	restaurant_desc VARCHAR(100),
 	open_time TIME,
 	close_time TIME,
 	review_count INT(11) NOT NULL,
@@ -91,7 +91,21 @@ CREATE TABLE rquest_delete_restaurant(
 	PRIMARY KEY (request_delete_id),
 	FOREIGN KEY (restaurant_id) REFERENCES restaurant (restaurant_id) ON DELETE CASCADE
 );
+
+CREATE TABLE counting(
+	target INT(11),
+	user INT(11),
+	restaurant INT(11),
+	review INT(11)
+);
+
 USE tryeat;
+
+INSERT INTO tryeat.counting (target,user,restaurant,review) VALUES (0,0,0,0);
+
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '1234';
+flush privileges;
+
 ������ ���� (18.05.08.22:27 ����)
 
 USE tryeat;

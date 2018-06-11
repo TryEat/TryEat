@@ -59,36 +59,46 @@ public class RestaurantDetailFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.restaurant_detail_fragment,container,false);
+        if(view==null) {
+            view = inflater.inflate(R.layout.restaurant_detail_fragment, container, false);
 
-        name = view.findViewById(R.id.name);
-        rate = view.findViewById(R.id.rate);
-        count = view.findViewById(R.id.count);
-        tel = view.findViewById(R.id.tel_number);
-        date = view.findViewById(R.id.date);
+            name = view.findViewById(R.id.name);
+            rate = view.findViewById(R.id.rate);
+            count = view.findViewById(R.id.count);
+            tel = view.findViewById(R.id.tel_number);
+            date = view.findViewById(R.id.date);
 
-        more = view.findViewById(R.id.more);
-        more.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle bundle = new Bundle(2);
-                bundle.putSerializable("restaurant",restaurantId);
-                FragmentLoader.startFragment(R.id.frament_place,ReviewLIstFragment.class,bundle);
-            }
-        });
+            more = view.findViewById(R.id.more);
+            more.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Bundle bundle = new Bundle(2);
+                    bundle.putSerializable("restaurant", restaurantId);
+                    FragmentLoader.startFragment(R.id.frament_place, ReviewLIstFragment.class, bundle, true);
+                }
+            });
+        }
+        return view;
+    }
 
-        if(getArguments().containsKey("id")){
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (getArguments().containsKey("id")) {
             restaurantId = getArguments().getInt("id");
-            getArguments().remove("id");
-        }else if(getArguments().containsKey("item")) {
+            //getArguments().remove("id");
+        }
+
+        if (getArguments().containsKey("item")) {
             restaurant = (Restaurant) getArguments().getSerializable("item");
-            getArguments().remove("item");
+            //getArguments().remove("item");
             name.setText(restaurant.getName());
-            rate.setRating(Utils.safeDivide(restaurant.getTotalRate(),restaurant.getReviewCount()));
-            count.setText(restaurant.getReviewCount()+"");
+            rate.setRating(Utils.safeDivide(restaurant.getTotalRate(), restaurant.getReviewCount()));
+            count.setText(restaurant.getReviewCount() + "");
             //tel.setText(restaurant);
-            if(restaurant.getOpenTime()!=null&&restaurant.getCloseTime()!=null)
-                date.setText(restaurant.getOpenTime()+'~'+restaurant.getCloseTime());
+            if (restaurant.getOpenTime() != null && restaurant.getCloseTime() != null)
+                date.setText(restaurant.getOpenTime() + '~' + restaurant.getCloseTime());
             restaurantId = restaurant.getId();
             init = true;
         }
@@ -107,13 +117,6 @@ public class RestaurantDetailFragment extends Fragment {
             }
         });
         lv.setAdapter(rAdapter);
-
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
         if(!init)getData(restaurantId);
         getReviewList(restaurantId,0);

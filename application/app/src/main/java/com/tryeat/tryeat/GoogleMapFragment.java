@@ -16,10 +16,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class GoogleMapFragment extends SupportMapFragment implements OnMapReadyCallback {
     GoogleMap gMap;
-    GroundOverlayOptions videoMark;
+    Marker marker;
     Location _location;
 
     @Override
@@ -38,36 +40,28 @@ public class GoogleMapFragment extends SupportMapFragment implements OnMapReadyC
             @Override
             public void onMapClick(LatLng point) {
                 setLocation(point.latitude,point.longitude);
-                videoMark = new GroundOverlayOptions().image(
-                        BitmapDescriptorFactory.fromResource(android.R.drawable.presence_video_busy))
-                        .position(point, 100f, 100f);
-                gMap.addGroundOverlay(videoMark);
+                if(marker!=null)marker.remove();
+                marker = gMap.addMarker(new MarkerOptions()
+                        .position(point)
+                        .title("Here!!"));
             }
         });
 
-        update();
+        setLocation(MyLocation.getLocation());
     }
 
     public void update(){
-        if(gMap==null)return;
+        if(_location==null)return;
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(_location.getLatitude(), _location.getLongitude()), 16));
-    }
-    public void searchLocation(){
-        LocationManager manager = (LocationManager)getActivity().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-        GPSListenter gpsListener = new GPSListenter();
-
-        if (ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-            ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 0);
-
-        manager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, gpsListener, null);
     }
 
     public Location getLocation() {
         return _location;
     }
 
-    public void setLocation(String name){
-
+    public void setLocation(Location location) {
+        _location=location;
+        update();
     }
 
     public void setLocation(double latitude, double longitude) {
@@ -77,26 +71,4 @@ public class GoogleMapFragment extends SupportMapFragment implements OnMapReadyC
         update();
     }
 
-    private class GPSListenter implements LocationListener{
-
-        @Override
-        public void onLocationChanged(Location location) {
-            setLocation(location.getLatitude(),location.getLongitude());
-        }
-
-        @Override
-        public void onStatusChanged(String s, int i, Bundle bundle) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String s) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String s) {
-
-        }
-    }
 }

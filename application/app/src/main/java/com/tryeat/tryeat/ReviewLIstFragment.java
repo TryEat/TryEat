@@ -57,9 +57,8 @@ public class ReviewLIstFragment extends Fragment {
 
             button = (ImageButton) view.findViewById(R.id.review_add_btn);
             button.setOnClickListener(showAddReviewFragment());
+            Log.d("aa", "onCreateView");
         }
-        Log.d("aa", "onCreateView");
-
         return view;
     }
 
@@ -70,14 +69,16 @@ public class ReviewLIstFragment extends Fragment {
         mListItem1 = new ArrayList<>();
         lv.setLayoutManager(mLayoutManager);
         rAdapter = new ReviewListAdapter(mListItem1);
-        if(getArguments()==null){getReviewList();}
-        else if (getArguments().containsKey("restaurant")||restaurantId!=-1) {
-            restaurantId = getArguments().getInt("restaurant");
-            getArguments().remove("restaurant");
-            getReviewList(restaurantId);
-        }else{
-            restaurantId=-1;
+
+        if(getArguments().containsKey("user")){
+            //getArguments().remove("restaurant");
             getReviewList();
+        }
+
+        if (getArguments().containsKey("restaurant")) {
+            restaurantId = getArguments().getInt("restaurant");
+            //getArguments().remove("user");
+            getReviewList(restaurantId);
         }
         rAdapter.setOnItemClickListener(new ReviewListAdapter.ClickListener() {
             @Override
@@ -101,7 +102,9 @@ public class ReviewLIstFragment extends Fragment {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentLoader.startFragment(R.id.frament_place,ReviewAddFragment.class);
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                AutoSearchFragment dialogFragment = new AutoSearchFragment();
+                dialogFragment.show(fm, "frament_place");
             }
         };
     }
@@ -109,7 +112,7 @@ public class ReviewLIstFragment extends Fragment {
     public void itemClick(int position) {
         Bundle bundle = new Bundle(2);
         bundle.putSerializable("item", mListItem1.get(position));
-        FragmentLoader.startFragment(R.id.frament_place,ReviewDetailFragment.class,bundle);
+        FragmentLoader.startFragment(R.id.frament_place,ReviewDetailFragment.class,bundle,true);
     }
 
     public void getReviewList() {

@@ -49,7 +49,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             who = itemView.findViewById(R.id.who);
             rate = itemView.findViewById(R.id.rate);
             count = itemView.findViewById(R.id.count);
-            image = itemView.findViewById(R.id.icon);
+            image = itemView.findViewById(R.id.image);
             name = itemView.findViewById(R.id.name);
         }
 

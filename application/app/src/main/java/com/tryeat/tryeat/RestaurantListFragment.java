@@ -40,7 +40,6 @@ public class RestaurantListFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if(view==null) {
-
             mListItem1 = new ArrayList<>();
 
             view = inflater.inflate(R.layout.restaurant_list_fragment, container, false);
@@ -57,7 +56,14 @@ public class RestaurantListFragment extends Fragment{
                 }
             });
             lv.setAdapter(rAdapter);
-
+            lv.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+                    if(!lv.canScrollVertically(1)) {
+                        //getRestaurantList();
+                    }
+                }
+            });
         }
         return view;
     }
@@ -66,7 +72,8 @@ public class RestaurantListFragment extends Fragment{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        getRestaurantList();
+        if(mListItem1.size()==0)
+            getRestaurantList();
 
     }
 
@@ -95,7 +102,7 @@ public class RestaurantListFragment extends Fragment{
         Bundle bundle = new Bundle(2);
         Restaurant item =  mListItem1.get(position);
         bundle.putSerializable("item",item);
-        FragmentLoader.startFragment(R.id.frament_place,RestaurantDetailFragment.class,bundle);
+        FragmentLoader.startFragment(R.id.frament_place,RestaurantDetailFragment.class,bundle,true);
     }
 }
 

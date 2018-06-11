@@ -12,12 +12,12 @@ public class Restaurant implements Serializable {
     private Image image;
     @SerializedName("restaurant_name")
     private String name;
+    @SerializedName("phone")
+    private String phone;
     @SerializedName("locate_latitude")
     private double lat;
     @SerializedName("locate_longitude")
     private double lon;
-    @SerializedName("restaurant_desc")
-    private String desc;
     @SerializedName("open_time")
     private String openTime;
     @SerializedName("close_time")
@@ -65,14 +65,6 @@ public class Restaurant implements Serializable {
 
     public void setLon(double lon) {
         this.lon = lon;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
     }
 
     public String getOpenTime() {

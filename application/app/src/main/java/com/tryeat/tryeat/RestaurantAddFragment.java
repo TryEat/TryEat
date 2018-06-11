@@ -1,24 +1,34 @@
 package com.tryeat.tryeat;
 
 
+import android.app.ProgressDialog;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 
+import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlacePhotoMetadata;
+import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
+import com.google.android.gms.location.places.PlacePhotoMetadataResponse;
+import com.google.android.gms.location.places.PlacePhotoResponse;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.tryeat.rest.model.Restaurant;
 import com.tryeat.rest.model.Status;
 import com.tryeat.rest.model.StatusCode;
@@ -41,78 +51,130 @@ public class RestaurantAddFragment extends Fragment{
     View view;
     EditText name;
     EditText tel;
-    GoogleMapFragment fragment;
-    public RestaurantAddFragment(){
 
-    }
+    GoogleMapFragment fragment;
+    ImageAddFragment imageFragment;
+    SupportPlaceAutocompleteFragment supportPlaceAutocompleteFragment;
+
+    GeoDataClient geoDataClient;
+
+    ProgressDialog progressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.restaurant_add_fragment,container,false);
-        Button addButton = view.findViewById(R.id.addButton);
-        addButton.setOnClickListener(addRestaurant());
-        ImageButton searchButton = view.findViewById(R.id.name_search);
-        searchButton.setOnClickListener(searchName());
-        name = view.findViewById(R.id.name);
-        tel = view.findViewById(R.id.tel_number);
-        updateMap(31.1412,131.21414);
+        if(view==null) {
+            view = inflater.inflate(R.layout.restaurant_add_fragment, container, false);
+            Button addButton = view.findViewById(R.id.addButton);
+            addButton.setOnClickListener(addRestaurant());
 
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        SupportPlaceAutocompleteFragment supportPlaceAutocompleteFragment = new SupportPlaceAutocompleteFragment();
+            name = view.findViewById(R.id.name);
+            tel = view.findViewById(R.id.tel_number);
+
+            geoDataClient = Places.getGeoDataClient(getActivity());
+
+            fragment =  (GoogleMapFragment)getChildFragmentManager().findFragmentById(R.id.map_fragment);
+            imageFragment = (ImageAddFragment) getChildFragmentManager().findFragmentById(R.id.image_fragment);
+            updateMap();
+        }
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        supportPlaceAutocompleteFragment = (SupportPlaceAutocompleteFragment)getChildFragmentManager().findFragmentById(R.id.place_fragment);
+
+        Location location = MyLocation.getLocation();
+        if (location != null) {
+            supportPlaceAutocompleteFragment.setBoundsBias(new LatLngBounds(
+                    new LatLng(location.getLatitude() - 0.3, location.getLongitude() - 0.3),
+                    new LatLng(location.getLatitude() + 0.3, location.getLongitude() + 0.3)));
+        }
         supportPlaceAutocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                name.getText().clear();
-                name.setText(place.getName());
-                tel.setText(place.getPhoneNumber());
-                updateMap(place.getLatLng().latitude,place.getLatLng().longitude);
-                Log.i("jkl", "Place: " + place.getName());
+  @Override
+            public void onPlaceSelected(final Place place) {
+                progressDialog = new ProgressDialog(getContext(), R.style.AppTheme_Dark_Dialog);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("음식점 확인 중...");
+                progressDialog.show();
+
+                new android.os.Handler().postDelayed(
+                        new Runnable() {
+                            public void run() {
+                                RestaurantService.getRestaurant(place.getName().toString(), place.getLatLng().latitude, place.getLatLng().longitude, new Callback<ArrayList<Restaurant>>() {
+                                    @Override
+                                    public void onResponse(Call<ArrayList<Restaurant>> call, Response<ArrayList<Restaurant>> response) {
+                                        if(response.body().size()!=0){
+                                            //restaurantId = response.body().get(0).getId();
+                                            progressDialog.dismiss();
+                                        }else{
+                                            addNewRestaurant(place);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<ArrayList<Restaurant>> call, Throwable t) {
+                                        progressDialog.dismiss();
+                                    }
+                                });
+                            }
+                        },0
+                );
             }
 
             @Override
             public void onError(com.google.android.gms.common.api.Status status) {
-                // TODO: Handle the error.
-                Log.i("kl;", "An error occurred: " + status);
+
             }
         });
-        fragmentTransaction.replace(R.id.place_autocomplete_fragment,supportPlaceAutocompleteFragment);
-        fragmentTransaction.commit();
-
-        return view;
     }
 
-    public void updateMap (double latitude, double longitude){
-        if(fragment==null) {
-            FragmentLoader.startFragment(R.id.mapPlace,GoogleMapFragment.class);
-            fragment = (GoogleMapFragment)FragmentLoader.getFragmentInstance(GoogleMapFragment.class);
-        }
-        fragment.setLocation(latitude,longitude);
+    public void addNewRestaurant(final Place place){
+        geoDataClient = Places.getGeoDataClient(getActivity());
+
+        Task<PlacePhotoMetadataResponse> photoResponse =
+                geoDataClient.getPlacePhotos(place.getId());
+
+        photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
+                PlacePhotoMetadataResponse photos = task.getResult();
+                PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
+
+                if (photoMetadataBuffer.getCount() != 0) {
+                    PlacePhotoMetadata metadata = photoMetadataBuffer.get(0).freeze();
+                    Task<PlacePhotoResponse> photoResponse = geoDataClient.getPhoto(metadata);
+                    photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
+                        @Override
+                        public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
+                            PlacePhotoResponse photo = task.getResult();
+                            Bitmap photoBitmap = photo.getBitmap();
+                            String phone = place.getPhoneNumber().toString();
+                            phone.replace("+82 ","0");
+                            RestaurantService.addRestaurant(place.getName().toString(), phone, photoBitmap, place.getLatLng().latitude, place.getLatLng().longitude, new Callback<Status>() {
+                                @Override
+                                public void onResponse(Call<Status> call, Response<Status> response) {
+                                    //restaurantId = response.body().payLoadInt;
+                                    progressDialog.dismiss();
+                                }
+
+                                @Override
+                                public void onFailure(Call<Status> call, Throwable t) {
+                                    progressDialog.dismiss();
+                                }
+                            });
+                        }
+                    });
+                }
+
+                photoMetadataBuffer.release();
+            }
+        });
     }
 
-    public View.OnClickListener searchName(){
-       return new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               RestaurantService.getRestaurant(name.getText().toString(), new Callback<ArrayList<Restaurant>>() {
-                   @Override
-                   public void onResponse(Call<ArrayList<Restaurant>> call, Response<ArrayList<Restaurant>> response) {
-                       if(response.code() == StatusCode.RESTAURANT_IS_EXIST){
-                           ArrayList<Restaurant> items = response.body();
-                           if(!items.isEmpty()){
-                               Log.d("location",items.get(0).getLat()+""+items.get(0).getLon()+"");
-                               fragment.setLocation(items.get(0).getLat(),items.get(0).getLon());
-                           }
-                       }
-                   }
 
-                   @Override
-                   public void onFailure(Call<ArrayList<Restaurant>> call, Throwable t) {
-
-                   }
-               });
-           }
-       } ;
+    public void updateMap (){
+        MyLocation.searchLocation();
     }
 
     public View.OnClickListener addRestaurant(){
@@ -120,7 +182,8 @@ public class RestaurantAddFragment extends Fragment{
             @Override
             public void onClick(View view) {
                 Location location = fragment.getLocation();
-                RestaurantService.addRestaurant(name.getText().toString(),location.getLatitude(),location.getLongitude(),new Callback< Status>(){
+                if(location == null){AlertDialogBuilder.createAlert(getActivity(),"음식점 위치를 지정해 주세요."); return; }
+                RestaurantService.addRestaurant(name.getText().toString(),tel.getText().toString(),imageFragment.getImageBitmap(),location.getLatitude(),location.getLongitude(),new Callback< Status>(){
                     @Override
                     public void onResponse(Call<Status> call, Response<Status> response) {
                         if (response.code() == StatusCode.ADD_RESTAURANT_SUCCESS) {
@@ -137,5 +200,4 @@ public class RestaurantAddFragment extends Fragment{
             }
         };
     }
-
 }

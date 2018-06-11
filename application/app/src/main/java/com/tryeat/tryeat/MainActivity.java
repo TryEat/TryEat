@@ -51,15 +51,14 @@ public class MainActivity extends AppCompatActivity
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        //초기 추천 음식점 list 로드
-        //로그인&회원가입 fragment로 전환하기 위한 버튼
+        MyLocation.setActivity(this);
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         FragmentLoader.setActivity(this);
-        FragmentLoader.startFragment(R.id.frament_place,RestaurantListFragment.class);
+        FragmentLoader.startFragment(R.id.frament_place,RestaurantListFragment.class,true);
     }
 
     @Override
@@ -101,11 +100,13 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.nav_Add_Review) {
-            FragmentLoader.startFragment(R.id.frament_place,ReviewLIstFragment.class);
+            Bundle bundle = new Bundle(2);
+            bundle.putSerializable("user",LoginToken.getId());
+            FragmentLoader.startFragment(R.id.frament_place,ReviewLIstFragment.class,bundle,true);
         } else if (id == R.id.nav_RestaurantList) {
-            FragmentLoader.startFragment(R.id.frament_place,RestaurantListFragment.class);
+            FragmentLoader.startFragment(R.id.frament_place,RestaurantListFragment.class,true);
         } else if (id == R.id.nav_Fllow) {
-            FragmentLoader.startFragment(R.id.frament_place,FollowListFragment.class);
+            FragmentLoader.startFragment(R.id.frament_place,FollowListFragment.class,true);
         } else if (id == R.id.nav_sign) {
             SignService.signOut(new Callback<Status>() {
                     @Override
@@ -123,7 +124,7 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
         } else if (id == R.id.nav_send) {
-            FragmentLoader.startFragment(R.id.frament_place,RestaurantAddFragment.class);
+            FragmentLoader.startFragment(R.id.frament_place,RestaurantAddFragment.class,true);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
