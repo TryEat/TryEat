@@ -4,26 +4,19 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ImageButton;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 
-import com.tryeat.rest.model.Restaurant;
 import com.tryeat.rest.model.Review;
-import com.tryeat.rest.service.RestaurantService;
 import com.tryeat.rest.service.ReviewService;
 import com.tryeat.team.tryeat_service.R;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import retrofit2.Call;
@@ -40,7 +33,7 @@ public class ReviewLIstFragment extends Fragment {
     RecyclerView lv;
     RecyclerView.LayoutManager mLayoutManager;
     ReviewListAdapter rAdapter;
-    ImageButton button;
+    LinearLayout button;
 
     ArrayList<Review> mListItem1;
 
@@ -55,7 +48,7 @@ public class ReviewLIstFragment extends Fragment {
             lv.setHasFixedSize(true);
             mLayoutManager = new LinearLayoutManager(getContext());
 
-            button = (ImageButton) view.findViewById(R.id.review_add_btn);
+            button = view.findViewById(R.id.review_add_btn);
             button.setOnClickListener(showAddReviewFragment());
             Log.d("aa", "onCreateView");
         }
@@ -98,6 +91,8 @@ public class ReviewLIstFragment extends Fragment {
         Log.d("aa", "onViewCreated");
     }
 
+
+
     public View.OnClickListener showAddReviewFragment() {
         return new View.OnClickListener() {
             @Override
@@ -116,6 +111,23 @@ public class ReviewLIstFragment extends Fragment {
     }
 
     public void getReviewList() {
+        Review review = new Review();
+        review.setReviewId(1);
+        review.setRestaurantId(0);
+        review.setRate(4);
+        review.setUserId(1);
+        review.setText("ADSfadsF");
+        mListItem1.add(review);
+        mListItem1.add(review);
+        mListItem1.add(review);
+        mListItem1.add(review);
+        mListItem1.add(review);
+        mListItem1.add(review);
+        mListItem1.add(review);
+        mListItem1.add(review);
+        mListItem1.add(review);
+        rAdapter.notifyDataSetChanged();
+        /*
         Log.d("aa", "getReviewList");
         ReviewService.getUserReviews(LoginToken.getId(), rAdapter.getItemCount(), new Callback<ArrayList<Review>>() {
             @Override
@@ -136,6 +148,7 @@ public class ReviewLIstFragment extends Fragment {
                 Log.d("sadf", "dfg");
             }
         });
+        */
     }
 
     public void getReviewList(int restaurantId) {

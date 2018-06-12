@@ -49,9 +49,9 @@ module.exports = function (_dbPool) {
 
     router.get('/:name/byname', function (req, res) {
         var restaurant_name = "%" + req.params.name + "%";
-
-        var query = 'SELECT restaurant_id, restaurant_name FROM restaurant WHERE restaurant_name LIKE ?';
-        dbPool.query(query, [restaurant_name], function (err, rows, fields) {
+        var restaurant_name2 = "%" + req.params.name.slice(0,-1)+"%";
+        var query = 'SELECT restaurant_id, restaurant_name FROM restaurant WHERE restaurant_name LIKE ? OR restaurant_name LIKE ? LIMIT 30';
+        dbPool.query(query, [restaurant_name,restaurant_name2], function (err, rows, fields) {
             if (err) throw err;
             if (rows.length != 0) res.status(200).json(rows);
             else res.status(400).json({ message: 'is not exist' });

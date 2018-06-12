@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,13 +28,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.tryeat.rest.model.Restaurant;
 import com.tryeat.rest.model.Status;
 import com.tryeat.rest.model.StatusCode;
 import com.tryeat.rest.service.RestaurantService;
 import com.tryeat.team.tryeat_service.R;
-
-import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -90,6 +86,7 @@ public class RestaurantAddFragment extends Fragment{
                     new LatLng(location.getLatitude() - 0.3, location.getLongitude() - 0.3),
                     new LatLng(location.getLatitude() + 0.3, location.getLongitude() + 0.3)));
         }
+
         supportPlaceAutocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
   @Override
             public void onPlaceSelected(final Place place) {
@@ -98,28 +95,7 @@ public class RestaurantAddFragment extends Fragment{
                 progressDialog.setMessage("음식점 확인 중...");
                 progressDialog.show();
 
-                new android.os.Handler().postDelayed(
-                        new Runnable() {
-                            public void run() {
-                                RestaurantService.getRestaurant(place.getName().toString(), place.getLatLng().latitude, place.getLatLng().longitude, new Callback<ArrayList<Restaurant>>() {
-                                    @Override
-                                    public void onResponse(Call<ArrayList<Restaurant>> call, Response<ArrayList<Restaurant>> response) {
-                                        if(response.body().size()!=0){
-                                            //restaurantId = response.body().get(0).getId();
-                                            progressDialog.dismiss();
-                                        }else{
-                                            addNewRestaurant(place);
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<ArrayList<Restaurant>> call, Throwable t) {
-                                        progressDialog.dismiss();
-                                    }
-                                });
-                            }
-                        },0
-                );
+                addNewRestaurant(place);
             }
 
             @Override

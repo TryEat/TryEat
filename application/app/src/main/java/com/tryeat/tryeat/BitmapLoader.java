@@ -16,6 +16,7 @@ public class BitmapLoader extends AsyncTask<Image,Void,Bitmap> {
 
     @Override
     protected Bitmap doInBackground(Image... images) {
+        if(images[0]==null)return null;
         if(images[0].bitmap==null) {
             byte[] v = images[0].data;
             images[0].data = null;

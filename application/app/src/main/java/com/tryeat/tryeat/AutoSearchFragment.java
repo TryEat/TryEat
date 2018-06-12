@@ -17,7 +17,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.FilterQueryProvider;
 import android.widget.SimpleCursorAdapter;
 
+import com.tryeat.rest.model.GoogleAutoComplete;
 import com.tryeat.rest.model.Restaurant;
+import com.tryeat.rest.service.GoogleApiService;
 import com.tryeat.rest.service.RestaurantService;
 import com.tryeat.team.tryeat_service.R;
 
@@ -28,14 +30,17 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AutoSearchFragment extends DialogFragment {
+
     View view;
     AutoCompleteTextView autoCompleteTextView;
     SimpleCursorAdapter simpleCursorAdapter;
     MatrixCursor matrixCursor;
 
-    String[] from = {"name"};
-    int[] to = {android.R.id.text1};
-    String[] columnNames = {BaseColumns._ID, "id", "name"};
+    String[] from = {"name", "address"};
+    int[] to = {android.R.id.text1, android.R.id.text2};
+    String[] columnNames = {BaseColumns._ID, "id", "name", "address"};
+
+    boolean prgresing = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -45,14 +50,19 @@ public class AutoSearchFragment extends DialogFragment {
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                MatrixCursor matrix = (MatrixCursor)adapterView.getItemAtPosition(i);
-                Bundle bundle = new Bundle(2);
-                bundle.putSerializable("id",matrix.getInt(1));
-                bundle.putSerializable("name",matrix.getString(2));
-                FragmentLoader.startFragment(R.id.frament_place,ReviewAddFragment.class,bundle,true);
+                MatrixCursor matrix = (MatrixCursor) adapterView.getItemAtPosition(i);
+                if (matrix.getInt(0) == 99) {
+                    FragmentLoader.startFragment(R.id.frament_place, RestaurantAddFragment.class, true);
+                } else {
+                    Bundle bundle = new Bundle(2);
+                    bundle.putSerializable("id", matrix.getInt(1));
+                    bundle.putSerializable("name", matrix.getString(2));
+                    FragmentLoader.startFragment(R.id.frament_place, ReviewAddFragment.class, bundle, true);
+                }
                 selfDismiss();
             }
         });
+
         autoCompleteTextView.setThreshold(1);
         simpleCursorAdapter = new SimpleCursorAdapter(getContext(), android.R.layout.simple_list_item_2, null, from, to, 0);
         simpleCursorAdapter.setStringConversionColumn(2);
@@ -61,32 +71,64 @@ public class AutoSearchFragment extends DialogFragment {
             @Override
             public Cursor runQuery(CharSequence constraint) {
                 if (constraint == null) return null;
-                RestaurantService.getRestaurant(constraint.toString(), new Callback<ArrayList<Restaurant>>() {
-                    @Override
-                    public void onResponse(Call<ArrayList<Restaurant>> call, Response<ArrayList<Restaurant>> response) {
-                        if (response.body() != null) {
-                            matrixCursor = new MatrixCursor(columnNames);
-                            ArrayList<Restaurant> items = response.body();
-                            int i;
-                            for (i = 0; i < items.size(); i++) {
-                                matrixCursor.newRow().add(i).add(items.get(i).getId()).add(items.get(i).getName());
-                            }
-                            matrixCursor.newRow().add(i).add(-1).add("원하는 음식점이 없습니다.");
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ArrayList<Restaurant>> call, Throwable t) {
-
-                    }
-                });
+                if (prgresing == false) {
+                    prgresing=true;
+                    if (matrixCursor != null) matrixCursor.close();
+                    matrixCursor = new MatrixCursor(columnNames);
+                    getItem(constraint);
+                }
                 return matrixCursor;
             }
         };
         simpleCursorAdapter.setFilterQueryProvider(provider);
         autoCompleteTextView.setAdapter(simpleCursorAdapter);
-
         return view;
+    }
+
+    public void getItem(final CharSequence constraint) {
+        RestaurantService.getRestaurant(constraint.toString(), new Callback<ArrayList<Restaurant>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Restaurant>> call, Response<ArrayList<Restaurant>> response) {
+                if (response.body() != null) {
+                    ArrayList<Restaurant> items = response.body();
+                    for (int i = 0; i < items.size(); i++) {
+                        Log.d("asdf", items.get(i).getName());
+                        matrixCursor.newRow().add(i).add(items.get(i).getId()).add(items.get(i).getName()).add("주소지");
+                    }
+                }
+                getItem2(constraint);
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Restaurant>> call, Throwable t) {
+
+            }
+        });
+
+    }
+
+    public void getItem2(CharSequence constraint) {
+        GoogleApiService.getRestaurant(constraint.toString(), MyLocation.getLocation().getLatitude(), MyLocation.getLocation().getLongitude(), 2000, new Callback<GoogleAutoComplete>() {
+            @Override
+            public void onResponse(Call<GoogleAutoComplete> call, Response<GoogleAutoComplete> response) {
+                if (response.body() != null) {
+                    GoogleAutoComplete items = response.body();
+                    for (int i = 0; i < items.size(); i++) {
+                        Log.d("asdf", items.get(i).getName());
+                        matrixCursor.newRow().add(i).add(items.get(i).getId()).add(items.get(i).getName()).add(items.get(i).getAddress());
+                    }
+                }
+                matrixCursor.newRow().add(99).add(-1).add("원하는 음식점이 없습니다.").add("추가하겠습니다.");
+                simpleCursorAdapter.changeCursor(matrixCursor);
+                simpleCursorAdapter.notifyDataSetChanged();
+                prgresing=false;
+            }
+
+            @Override
+            public void onFailure(Call<GoogleAutoComplete> call, Throwable t) {
+                Log.d("asdf", t.toString());
+            }
+        });
     }
 
     @Override
@@ -102,7 +144,7 @@ public class AutoSearchFragment extends DialogFragment {
         }
     }
 
-    public void selfDismiss(){
+    public void selfDismiss() {
         this.dismiss();
     }
 }
