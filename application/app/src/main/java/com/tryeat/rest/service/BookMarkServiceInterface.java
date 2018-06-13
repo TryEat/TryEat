@@ -18,6 +18,10 @@ public interface BookMarkServiceInterface {
     @GET("bookmarks/{user_id}/{position}")
     Call<ArrayList<Restaurant>> getBookMarks(@Path("user_id") int userId,@Path("position") int position);
 
+    @GET("bookmarks/isExist/{user_id}/{rasturant_id}")
+    Call<Status> isExistBookMarks(@Path("user_id") int userId,@Path("rasturant_id") int rasturantId);
+
+
     @POST("bookmarks/")
     Call<Status> addBookMark(@Body HashMap<String,Object> body);
 

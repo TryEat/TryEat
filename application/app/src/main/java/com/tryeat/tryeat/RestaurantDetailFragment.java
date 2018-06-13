@@ -9,9 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.tryeat.rest.model.BookMark;
 import com.tryeat.rest.model.Restaurant;
 import com.tryeat.rest.model.Review;
 import com.tryeat.rest.model.Status;
@@ -44,7 +47,9 @@ public class RestaurantDetailFragment extends Fragment {
     TextView count;
     TextView address;
     TextView tel;
-    TextView date;
+    TextView bookmark;
+
+    ImageView bookmarkimg;
 
     int restaurantId;
 
@@ -57,6 +62,7 @@ public class RestaurantDetailFragment extends Fragment {
     LinearLayout followBnt;
     LinearLayout addReviewBnt;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if(view==null) {
@@ -67,7 +73,8 @@ public class RestaurantDetailFragment extends Fragment {
             count = view.findViewById(R.id.count);
             tel = view.findViewById(R.id.tel_number);
             address = view.findViewById(R.id.address);
-            date = view.findViewById(R.id.date);
+            bookmark = view.findViewById(R.id.bookmark);
+            bookmarkimg = view.findViewById(R.id.bookmark_img);
 
             followBnt = view.findViewById(R.id.addbookmark);
             followBnt.setOnClickListener(new View.OnClickListener() {
@@ -124,7 +131,7 @@ public class RestaurantDetailFragment extends Fragment {
             name.setText(restaurant.getName());
             rate.setText(String.valueOf(Utils.safeDivide(restaurant.getTotalRate(), restaurant.getReviewCount())));
             count.setText(restaurant.getReviewCount() + "");
-
+            Utils.safeSetObject(bookmark,restaurant.getTotalBookMark());
             Utils.safeSetObject(address,restaurant.getAddress());
             Utils.safeSetObject(tel,restaurant.getPhone());
 
@@ -149,6 +156,28 @@ public class RestaurantDetailFragment extends Fragment {
 
         if(!init)getData(restaurantId);
         getReviewList(restaurantId,0);
+
+        settingBookmarkIcon(restaurantId);
+    }
+
+    public void settingBookmarkIcon(int restaurantId){
+        BookMarkService.isExistBookMarks(LoginToken.getId(), restaurantId, new Callback<Status>() {
+            @Override
+            public void onResponse(Call<Status> call, Response<Status> response) {
+                if(response.isSuccessful()){
+                    if(response.code()==201){
+                        Glide.with(getActivity())
+                                .load(R.drawable.bookmark_off)
+                                .into(bookmarkimg);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Status> call, Throwable t) {
+
+            }
+        });
     }
 
     public void getData(int restaurantId){
@@ -159,6 +188,9 @@ public class RestaurantDetailFragment extends Fragment {
                 name.setText(restaurant.getName());
                 rate.setText(String.valueOf(Utils.safeDivide(restaurant.getTotalRate(), restaurant.getReviewCount())));
                 count.setText(restaurant.getReviewCount()+"");
+                Utils.safeSetObject(bookmark,restaurant.getTotalBookMark());
+                Utils.safeSetObject(address,restaurant.getAddress());
+                Utils.safeSetObject(tel,restaurant.getPhone());
             }
 
             @Override

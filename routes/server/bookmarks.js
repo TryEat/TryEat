@@ -16,6 +16,21 @@ module.exports = function (_dbPool) {
         });
     });
 
+    router.get('/isExist/:user_id/:restaurant_id', function (req, res) {
+        var user_id = req.params.user_id;
+        var restaurant_id = req.params.restaurant_id;
+
+        var query = 'SELECT EXISTS (select * from bookmark where user_id=? AND restaurant_id=?) as success';
+        dbPool.query(query, [user_id,restaurant_id], function (err, rows, fields) {
+            if (err) throw err;
+            if (rows[0].success == 1) {
+                res.status(201).json({message: "bookmark is Exist"}) 
+            }else{
+                res.status(400).json({message: "bookmark is not Exist"})
+            }
+        });
+    });
+
     router.post('/', function (req, res) {
         var user_id = req.body.user_id;
         var restaurant_id = req.body.restaurant_id;
