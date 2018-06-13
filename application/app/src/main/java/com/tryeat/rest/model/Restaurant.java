@@ -12,16 +12,14 @@ public class Restaurant implements Serializable {
     private Image image;
     @SerializedName("restaurant_name")
     private String name;
+    @SerializedName("address")
+    private String address;
     @SerializedName("phone")
     private String phone;
     @SerializedName("locate_latitude")
     private double lat;
     @SerializedName("locate_longitude")
     private double lon;
-    @SerializedName("open_time")
-    private String openTime;
-    @SerializedName("close_time")
-    private String  closeTime;
     @SerializedName("review_count")
     private int reviewCount;
     @SerializedName("total_rate")
@@ -67,20 +65,24 @@ public class Restaurant implements Serializable {
         this.lon = lon;
     }
 
-    public String getOpenTime() {
-        return openTime;
+    public String getAddress() {
+        return address;
     }
 
-    public void setOpenTime(String openTime) {
-        this.openTime = openTime;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public String getCloseTime() {
-        return closeTime;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setCloseTime(String closeTime) {
-        this.closeTime = closeTime;
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setTotalRate(float totalRate) {
+        this.totalRate = totalRate;
     }
 
     public int getReviewCount() {
@@ -98,4 +100,5 @@ public class Restaurant implements Serializable {
     public void setTotalRate(int totalRate) {
         this.totalRate = totalRate;
     }
+
 }

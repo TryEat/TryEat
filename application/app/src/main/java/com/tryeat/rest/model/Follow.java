@@ -7,10 +7,10 @@ public class Follow {
     private int followId;
     @SerializedName("user_id")
     private int userId;
-    @SerializedName("target_id")
-    private int targetId;
-    @SerializedName("user_login_id")
-    private String targetName;
+    @SerializedName("restaurant_id")
+    private int restaurantId;
+    @SerializedName("restaurant_name")
+    private String restaurantName;
 
     public int getFollowId() {
         return followId;
@@ -28,19 +28,19 @@ public class Follow {
         this.userId = userId;
     }
 
-    public int getTargetId() {
-        return targetId;
+    public int getRestaurantId() {
+        return restaurantId;
     }
 
-    public void setTargetId(int targetId) {
-        this.targetId = targetId;
+    public void setRestaurantId(int restaurantId) {
+        this.restaurantId = restaurantId;
     }
 
-    public String getTargetName() {
-        return targetName;
+    public String getRestaurantName() {
+        return restaurantName;
     }
 
-    public void setTargetName(String targetName) {
-        this.targetName = targetName;
+    public void setRestaurantName(String restaurantName) {
+        this.restaurantName = restaurantName;
     }
 }

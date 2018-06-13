@@ -1,13 +1,18 @@
 package com.tryeat.rest.service;
 
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 
 import com.tryeat.rest.model.Restaurant;
 import com.tryeat.rest.model.Status;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -17,8 +22,8 @@ import retrofit2.Callback;
 public class RestaurantService {
     private static RestaurantServiceInterface restaurantServiceInterface = ServiceGenerator.createService(RestaurantServiceInterface.class);
 
-    public static void getRestaurants(Callback<ArrayList<Restaurant>> callback) {
-        restaurantServiceInterface.getRestaurants().enqueue(callback);
+    public static void getRestaurants(int position, Callback<ArrayList<Restaurant>> callback) {
+        restaurantServiceInterface.getRestaurants(position).enqueue(callback);
     }
 
     public static void getRestaurant(int restaurantId, Callback<Restaurant> callback) {
@@ -53,18 +58,19 @@ public class RestaurantService {
         restaurantServiceInterface.getReviewCount(restaurantId).enqueue(callback);
     }
 
-    public static void addRestaurant(String name, String phone, Bitmap file, double latitude, double longitude, Callback<Status> callback) {
-        RequestBody reqFile = null;
+    public static void addRestaurant(String name, String address,String phone, Bitmap file, double latitude, double longitude, Callback<Status> callback){
+        byte[] byteArray = new byte[]{};
         if (file != null) {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             file.compress(Bitmap.CompressFormat.WEBP, 75, stream);
-            byte[] byteArray = stream.toByteArray();
-
-            reqFile = RequestBody.create(MediaType.parse("image/*"), byteArray);
+            byteArray = stream.toByteArray();
         }
+        RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), byteArray);
         MultipartBody.Part imageBody = MultipartBody.Part.createFormData("upload", "image", reqFile);
+
         HashMap<String, Object> body = new HashMap<>();
         body.put("restaurant_name", name);
+        body.put("address", address);
         body.put("phone", phone);
         body.put("locate_latitude", latitude);
         body.put("locate_longitude", longitude);

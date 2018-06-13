@@ -41,24 +41,21 @@ public class ReviewService {
     }
 
     public static void writeReview(final int userId, final int restaurantId, final String content, final Bitmap file, final float rate, final Callback<Status> callback) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                file.compress(Bitmap.CompressFormat.WEBP, 75, stream);
-                byte[] byteArray = stream.toByteArray();
+        byte[] byteArray = new byte[]{};
+        if (file != null) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            file.compress(Bitmap.CompressFormat.WEBP, 75, stream);
+            byteArray = stream.toByteArray();
+        }
+        RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), byteArray);
+        MultipartBody.Part imageBody = MultipartBody.Part.createFormData("upload", "image", reqFile);
 
-                RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), byteArray);
-                MultipartBody.Part imageBody = MultipartBody.Part.createFormData("upload", "image", reqFile);
-
-                HashMap<String, Object> body = new HashMap<>();
-                body.put("user_id", userId);
-                body.put("restaurant_id", restaurantId);
-                body.put("content", content);
-                body.put("rate", rate);
-                userServiceInterface.writeReview(imageBody, body).enqueue(callback);
-            }
-        }).start();
+        HashMap<String, Object> body = new HashMap<>();
+        body.put("user_id", userId);
+        body.put("restaurant_id", restaurantId);
+        body.put("content", content);
+        body.put("rate", rate);
+        userServiceInterface.writeReview(imageBody, body).enqueue(callback);
     }
 
     public static void updateReview(int userId, int restaurantId, Callback<Status> callback) {

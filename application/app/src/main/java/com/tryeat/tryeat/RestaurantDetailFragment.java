@@ -3,22 +3,19 @@ package com.tryeat.tryeat;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.RatingBar;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tryeat.rest.model.Restaurant;
 import com.tryeat.rest.model.Review;
+import com.tryeat.rest.model.Status;
+import com.tryeat.rest.service.FollowService;
 import com.tryeat.rest.service.RestaurantService;
 import com.tryeat.rest.service.ReviewService;
 import com.tryeat.team.tryeat_service.R;
@@ -43,8 +40,9 @@ public class RestaurantDetailFragment extends Fragment {
     Restaurant restaurant;
     ReviewListAdapter rAdapter;
     TextView name;
-    RatingBar rate;
+    TextView rate;
     TextView count;
+    TextView address;
     TextView tel;
     TextView date;
 
@@ -54,8 +52,10 @@ public class RestaurantDetailFragment extends Fragment {
 
     Boolean init = false;
 
-    Button more ;
+    TextView more ;
 
+    LinearLayout followBnt;
+    LinearLayout addReviewBnt;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -66,7 +66,37 @@ public class RestaurantDetailFragment extends Fragment {
             rate = view.findViewById(R.id.rate);
             count = view.findViewById(R.id.count);
             tel = view.findViewById(R.id.tel_number);
+            address = view.findViewById(R.id.address);
             date = view.findViewById(R.id.date);
+
+            followBnt = view.findViewById(R.id.followbnt);
+            followBnt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FollowService.addFollower(LoginToken.getId(), restaurantId, new Callback<Status>() {
+                        @Override
+                        public void onResponse(Call<Status> call, Response<Status> response) {
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<Status> call, Throwable t) {
+
+                        }
+                    });
+                }
+            });
+
+            addReviewBnt = view.findViewById(R.id.goriew);
+            addReviewBnt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle(2);
+                    bundle.putSerializable("id", restaurantId);
+                    bundle.putSerializable("name", name.getText().toString());
+                    FragmentLoader.startFragment(R.id.frament_place, ReviewAddFragment.class, bundle, true);
+                }
+            });
 
             more = view.findViewById(R.id.more);
             more.setOnClickListener(new View.OnClickListener() {
@@ -94,11 +124,12 @@ public class RestaurantDetailFragment extends Fragment {
             restaurant = (Restaurant) getArguments().getSerializable("item");
             //getArguments().remove("item");
             name.setText(restaurant.getName());
-            rate.setRating(Utils.safeDivide(restaurant.getTotalRate(), restaurant.getReviewCount()));
+            rate.setText(String.valueOf(Utils.safeDivide(restaurant.getTotalRate(), restaurant.getReviewCount())));
             count.setText(restaurant.getReviewCount() + "");
-            //tel.setText(restaurant);
-            if (restaurant.getOpenTime() != null && restaurant.getCloseTime() != null)
-                date.setText(restaurant.getOpenTime() + '~' + restaurant.getCloseTime());
+
+            Utils.safeSetObject(address,restaurant.getAddress());
+            Utils.safeSetObject(tel,restaurant.getPhone());
+
             restaurantId = restaurant.getId();
             init = true;
         }
@@ -128,11 +159,8 @@ public class RestaurantDetailFragment extends Fragment {
             public void onResponse(Call<Restaurant> call, Response<Restaurant> response) {
                 restaurant = response.body();
                 name.setText(restaurant.getName());
-                rate.setRating(Utils.safeDivide(restaurant.getTotalRate(),restaurant.getReviewCount()));
+                rate.setText(String.valueOf(Utils.safeDivide(restaurant.getTotalRate(), restaurant.getReviewCount())));
                 count.setText(restaurant.getReviewCount()+"");
-                //tel.setText(restaurant);
-                if(restaurant.getOpenTime()!=null&&restaurant.getCloseTime()!=null)
-                    date.setText(restaurant.getOpenTime()+'~'+restaurant.getCloseTime());
             }
 
             @Override
@@ -149,6 +177,7 @@ public class RestaurantDetailFragment extends Fragment {
                 if(response.isSuccessful()){
                     List<Review> reviews = response.body();
                     int size = reviews.size();
+                    if(size==0)more.setText("리뷰가 없습니다.");
                     for(int i =0 ;i<size;i++){
                         Review item = reviews.get(i);
                         mListItem1.add(item);

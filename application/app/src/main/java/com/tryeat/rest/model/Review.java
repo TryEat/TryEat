@@ -4,11 +4,7 @@ import android.graphics.Bitmap;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.json.JSONArray;
-
 import java.io.Serializable;
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 
 public class Review implements Serializable {
@@ -16,8 +12,12 @@ public class Review implements Serializable {
     private int reviewId;
     @SerializedName("restaurant_id")
     private int restaurantId;
+    @SerializedName("user_login_id")
+    private String writer;
     @SerializedName("restaurant_name")
     private String restaurantName;
+    @SerializedName("address")
+    private String address;
     @SerializedName("user_id")
     private int userId;
     @SerializedName("img")
@@ -93,4 +93,25 @@ public class Review implements Serializable {
     public void setRate(int rate) {
         this.rate = rate;
     }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setRate(float rate) {
+        this.rate = rate;
+    }
+
+    public String getWriter() {
+        return writer;
+    }
+
+    public void setWriter(String writer) {
+        this.writer = writer;
+    }
+
 }

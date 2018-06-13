@@ -17,14 +17,14 @@ module.exports = function (_dbPool) {
 
     router.post('/', function (req, res) {
         var user_id = req.body.user_id;
-        var target_id = req.body.target_id;
+        var restaurant_id = req.body.restaurant_id;
 
         var query = 'SELECT EXISTS (select * from user where user_id=?) as success';
         dbPool.query(query, [target_id], function (err, rows, fields) {
             if (err) throw err;
             if (rows[0].success == 1) {
-                query = 'INSERT INTO follow (user_id,target_id) VALUES (?,?)';
-                dbPool.query(query, [user_id, target_id], function (err, rows, fields) {
+                query = 'INSERT INTO follow (user_id,restaurant_id) VALUES (?,?)';
+                dbPool.query(query, [user_id, restaurant_id], function (err, rows, fields) {
                     if (err) throw err;
                     if (rows.affectedRows != 0) res.status(201).json({message: "follow sueccess"})
                     else res.status(400).json({message: "follow fail"})
@@ -36,10 +36,10 @@ module.exports = function (_dbPool) {
 
     router.delete('/', function (req, res) {
         var user_id = req.body.user_id;
-        var target_id = req.body.target_id;
+        var restaurant_id = req.body.restaurant_id;
 
-        var query = 'DELETE FROM follow WHERE(user_id=? AND target_id=?)';
-        dbPool.query(query, [user_id, target_id], function (err, rows, fields) {
+        var query = 'DELETE FROM follow WHERE(user_id=? AND restaurant_id=?)';
+        dbPool.query(query, [user_id, restaurant_id], function (err, rows, fields) {
             if (err) throw err;
             if (rows.affectedRows != 0)  res.status(201).json({message: "delete follow success"})
             else res.status(400).json({message: "delete follow fail"})

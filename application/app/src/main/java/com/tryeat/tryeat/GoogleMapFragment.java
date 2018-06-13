@@ -3,6 +3,9 @@ package com.tryeat.tryeat;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.HorizontalScrollView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,6 +28,7 @@ public class GoogleMapFragment extends SupportMapFragment implements OnMapReadyC
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         gMap = googleMap;
         gMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         gMap.getUiSettings().setZoomControlsEnabled(true);

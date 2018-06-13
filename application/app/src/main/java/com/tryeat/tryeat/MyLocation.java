@@ -16,7 +16,6 @@ public class MyLocation {
 
     public static void setActivity(Activity activity){
         mActivity = activity;
-        MyLocation.searchLocation();
     }
 
     public static void searchLocation() {

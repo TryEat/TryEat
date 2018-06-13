@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.tryeat.rest.model.Status;
 import com.tryeat.rest.model.StatusCode;
 import com.tryeat.rest.service.SignService;
@@ -35,15 +36,16 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        setSupportActionBar(toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        toolbar.setNavigationIcon(R.mipmap.menu_btn);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu menuNav = navigationView.getMenu();
@@ -109,24 +111,21 @@ public class MainActivity extends AppCompatActivity
             FragmentLoader.startFragment(R.id.frament_place,FollowListFragment.class,true);
         } else if (id == R.id.nav_sign) {
             SignService.signOut(new Callback<Status>() {
-                    @Override
-                    public void onResponse(Call<Status> call, Response<Status> response) {
-                        LoginToken.removeToken();
-                        Intent intent =new Intent(getApplicationContext(),SignInActivity.class);
-                        startActivity(intent);
-                        finish();
-                        overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-                    }
+                @Override
+                public void onResponse(Call<Status> call, Response<Status> response) {
+                    LoginToken.removeToken();
+                    Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+                    startActivity(intent);
+                    finish();
+                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                }
 
-                    @Override
-                    public void onFailure(Call<Status> call, Throwable t) {
+                @Override
+                public void onFailure(Call<Status> call, Throwable t) {
 
-                    }
-                });
-        } else if (id == R.id.nav_send) {
-            FragmentLoader.startFragment(R.id.frament_place,RestaurantAddFragment.class,true);
+                }
+            });
         }
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

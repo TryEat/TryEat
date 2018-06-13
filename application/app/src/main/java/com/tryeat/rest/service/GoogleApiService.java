@@ -1,6 +1,7 @@
 package com.tryeat.rest.service;
 
 import com.tryeat.rest.model.GoogleAutoComplete;
+import com.tryeat.rest.model.GoogleDetail;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,9 +25,15 @@ public class GoogleApiService {
         googleApiService.getRestaurant(name,"ko", location,radius,GOOGLE_API_KEY).enqueue(callback);
     }
 
+    public static void getDetail(String placeId, Callback<GoogleDetail> callback) {
+        googleApiService.getDetail(placeId,"ko",GOOGLE_API_KEY).enqueue(callback);
+    }
+
     public interface GooApiServiewInterface{
         @GET("maps/api/place/autocomplete/json")
         Call<GoogleAutoComplete> getRestaurant(@Query("input") String name,@Query("language") String language,@Query("location") String location, @Query("radius") int radius, @Query("key") String key);
 
+        @GET("maps/api/place/details/json")
+        Call<GoogleDetail> getDetail(@Query("placeid") String placeId, @Query("language") String language,@Query("key") String key);
     }
 }

@@ -13,37 +13,27 @@ CREATE TABLE user(
 	PRIMARY KEY (user_id)
 );
 
-CREATE TABLE images (
-	img_id INT(11) NOT NULL AUTO_INCREMENT,
-	restaurant_id INT(11) NOT NULL,
-	user_id INT(11) NOT NULL,
-	image MEDIUMBLOB NOT NULL,
-	PRIMARY KEY (img_id),
-	FOREIGN KEY (user_id) REFERENCES user (user_id)
+CREATE TABLE restaurant(
+	restaurant_id INT(11) NOT NULL AUTO_INCREMENT,
+	img MEDIUMBLOB,
+	restaurant_name VARCHAR(30) NOT NULL,
+	address VARCHAR(100),
+	phone VARCHAR(20),
+	locate_latitude DOUBLE NOT NULL,
+	locate_longitude DOUBLE NOT NULL,
+	review_count INT(11) NOT NULL,
+	total_rate decimal(5,1) NOT NULL,
+	PRIMARY KEY (restaurant_id)
 );
 
 CREATE TABLE follow(
 	follow_id INT(11) NOT NULL AUTO_INCREMENT,
 	user_id INT(11) NOT NULL,
-	target_id INT(11) NOT NULL,
+	restaurant_id INT(11) NOT NULL,
 	PRIMARY KEY (follow_id),
-	KEY pkey (target_id),
+	KEY pkey (restaurant_id),
 	FOREIGN KEY (user_id) REFERENCES user (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY (target_id) REFERENCES user (user_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE restaurant(
-	restaurant_id INT(11) NOT NULL AUTO_INCREMENT,
-	img MEDIUMBLOB,
-	restaurant_name VARCHAR(30) NOT NULL,
-	phone VARCHAR(20),
-	locate_latitude DOUBLE NOT NULL,
-	locate_longitude DOUBLE NOT NULL,
-	open_time TIME,
-	close_time TIME,
-	review_count INT(11) NOT NULL,
-	total_rate decimal(5,1) NOT NULL,
-	PRIMARY KEY (restaurant_id)
+	FOREIGN KEY (restaurant_id) REFERENCES restaurant (restaurant_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE review(
@@ -58,38 +48,6 @@ CREATE TABLE review(
 	KEY pkey (user_id),
 	FOREIGN KEY (restaurant_id) REFERENCES restaurant (restaurant_id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (user_id) REFERENCES user (user_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE ad(
-	ad_id INT(11) NOT NULL AUTO_INCREMENT,
-	restaurant_id INT(11) NOT NULL,
-	ad_requester VARCHAR(100) NOT NULL,
-	start_date TIMESTAMP NOT NULL DEFAULT now(),
-	ad_period INT(11) NOT NULL,
-	PRIMARY KEY (ad_id),
-	FOREIGN KEY (restaurant_id) REFERENCES restaurant (restaurant_id)
-);
-
-CREATE TABLE rquest_update_restaurant(
-	request_update_id INT(11) NOT NULL AUTO_INCREMENT,
-	restaurant_id INT(11) NOT NULL,
-	img_id INT(10),
-	restaurant_name VARCHAR(30) NOT NULL,
-	locate_latitude DOUBLE NOT NULL,
-	locate_longitude DOUBLE NOT NULL,
-	restaurant_desc VARCHAR(100),
-	open_time TIME,
-	close_time TIME,
-	PRIMARY KEY (request_update_id),
-	FOREIGN KEY (restaurant_id) REFERENCES restaurant (restaurant_id) ON DELETE CASCADE
-);
-
-CREATE TABLE rquest_delete_restaurant(
-	request_delete_id INT(11) NOT NULL AUTO_INCREMENT,
-	restaurant_id INT(11) NOT NULL,
-	delete_content TEXT NOT NULL,
-	PRIMARY KEY (request_delete_id),
-	FOREIGN KEY (restaurant_id) REFERENCES restaurant (restaurant_id) ON DELETE CASCADE
 );
 
 CREATE TABLE counting(

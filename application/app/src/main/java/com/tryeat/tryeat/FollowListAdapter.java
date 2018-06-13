@@ -63,11 +63,11 @@ public class FollowListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ViewHolder viewHolder = (ViewHolder) holder;
         Follow item = mList.get(position);
 
-        viewHolder.name.setText(item.getTargetName());
+        viewHolder.name.setText(item.getRestaurantName());
 
         ArrayList<Review> listItem = new ArrayList<>();
 
-        FollowListItemAdapter adapter = new FollowListItemAdapter(item.getTargetId(),listItem);
+        FollowListItemAdapter adapter = new FollowListItemAdapter(item.getRestaurantId(),listItem);
         adapter.setOnItemClickListener(new FollowListItemAdapter.ClickListener() {
             @Override
             public void onItemClick(int position, View v) {

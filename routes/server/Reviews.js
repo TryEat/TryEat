@@ -7,10 +7,11 @@ module.exports = function (_dbPool) {
     router.get('/:user_id/:position/user', function (req, res) {
         var user_id = req.params.user_id;
         var position = req.params.position;
-
-        var query = 'Select review.*, restaurant_name from review \
-         inner join restaurant On review.restaurant_id = restaurant.restaurant_id where user_id=? \
-         LIMIT ?,10';
+        
+        var query = 'SELECT review.*, restaurant_name, address, user_login_id FROM \
+        review INNER JOIN restaurant ON review.restaurant_id = restaurant.restaurant_id \
+        INNER JOIN user ON review.user_id = user.user_id WHERE review.user_id = ? LIMIT ?,5';
+        
         dbPool.query(query, [user_id,parseInt(position)], function (err, rows, fields) {
             if (err) throw err;
             res.status(200).json(rows);
@@ -21,7 +22,7 @@ module.exports = function (_dbPool) {
         var restaurant_id = req.params.restaurant_id;
         var position = req.params.position;
 
-        var query = 'SELECT * FROM review WHERE restaurant_id=? LIMIT ?,1';
+        var query = 'SELECT * FROM review WHERE restaurant_id=? LIMIT ?,5';
         dbPool.query(query, [restaurant_id,parseInt(position)], function (err, rows, fields) {
             if (err) throw err;
             res.status(200).json(rows);
@@ -56,6 +57,8 @@ module.exports = function (_dbPool) {
         var img = req.file.buffer;
         var content = req.body.content;
         var rate = req.body.rate;
+
+        if(img.length==0)img=null;
 
         var query = 'INSERT INTO review (restaurant_id,user_id,img,content,rate) VALUES (?,?,?,?,?)';
         dbPool.query(query, [restaurant_id, user_id, img, content, rate], function (err, rows, fields) {

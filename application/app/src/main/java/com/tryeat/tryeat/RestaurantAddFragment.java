@@ -3,6 +3,8 @@ package com.tryeat.tryeat;
 
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,10 +12,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ScrollView;
 
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
@@ -33,32 +38,36 @@ import com.tryeat.rest.model.StatusCode;
 import com.tryeat.rest.service.RestaurantService;
 import com.tryeat.team.tryeat_service.R;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 
 // Dialog 방식으로 대체
+
 /**
  * Created by socce on 2018-05-08.
  */
 
-public class RestaurantAddFragment extends Fragment{
+public class RestaurantAddFragment extends Fragment {
     View view;
     EditText name;
     EditText tel;
 
     GoogleMapFragment fragment;
     ImageAddFragment imageFragment;
-    SupportPlaceAutocompleteFragment supportPlaceAutocompleteFragment;
 
-    GeoDataClient geoDataClient;
-
-    ProgressDialog progressDialog;
+    ScrollView mainScrollView;
+    ImageView transparentImageView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if(view==null) {
+        if (view == null) {
             view = inflater.inflate(R.layout.restaurant_add_fragment, container, false);
             Button addButton = view.findViewById(R.id.addButton);
             addButton.setOnClickListener(addRestaurant());
@@ -66,111 +75,68 @@ public class RestaurantAddFragment extends Fragment{
             name = view.findViewById(R.id.name);
             tel = view.findViewById(R.id.tel_number);
 
-            geoDataClient = Places.getGeoDataClient(getActivity());
+            mainScrollView = (ScrollView) view.findViewById(R.id.scrollView);
+            transparentImageView = (ImageView) view.findViewById(R.id.transparent_image);
 
-            fragment =  (GoogleMapFragment)getChildFragmentManager().findFragmentById(R.id.map_fragment);
+            transparentImageView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    int action = event.getAction();
+                    switch (action) {
+                        case MotionEvent.ACTION_DOWN:
+                            mainScrollView.requestDisallowInterceptTouchEvent(true);
+                            return false;
+                        case MotionEvent.ACTION_UP:
+                            mainScrollView.requestDisallowInterceptTouchEvent(false);
+                            return true;
+                        case MotionEvent.ACTION_MOVE:
+                            mainScrollView.requestDisallowInterceptTouchEvent(true);
+                            return false;
+                        default:
+                            return true;
+                    }
+                }
+            });
+
+            fragment = (GoogleMapFragment) getChildFragmentManager().findFragmentById(R.id.map_fragment);
             imageFragment = (ImageAddFragment) getChildFragmentManager().findFragmentById(R.id.image_fragment);
-            updateMap();
         }
         return view;
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        supportPlaceAutocompleteFragment = (SupportPlaceAutocompleteFragment)getChildFragmentManager().findFragmentById(R.id.place_fragment);
-
-        Location location = MyLocation.getLocation();
-        if (location != null) {
-            supportPlaceAutocompleteFragment.setBoundsBias(new LatLngBounds(
-                    new LatLng(location.getLatitude() - 0.3, location.getLongitude() - 0.3),
-                    new LatLng(location.getLatitude() + 0.3, location.getLongitude() + 0.3)));
-        }
-
-        supportPlaceAutocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-  @Override
-            public void onPlaceSelected(final Place place) {
-                progressDialog = new ProgressDialog(getContext(), R.style.AppTheme_Dark_Dialog);
-                progressDialog.setIndeterminate(true);
-                progressDialog.setMessage("음식점 확인 중...");
-                progressDialog.show();
-
-                addNewRestaurant(place);
-            }
-
-            @Override
-            public void onError(com.google.android.gms.common.api.Status status) {
-
-            }
-        });
-    }
-
-    public void addNewRestaurant(final Place place){
-        geoDataClient = Places.getGeoDataClient(getActivity());
-
-        Task<PlacePhotoMetadataResponse> photoResponse =
-                geoDataClient.getPlacePhotos(place.getId());
-
-        photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
-            @Override
-            public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
-                PlacePhotoMetadataResponse photos = task.getResult();
-                PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
-
-                if (photoMetadataBuffer.getCount() != 0) {
-                    PlacePhotoMetadata metadata = photoMetadataBuffer.get(0).freeze();
-                    Task<PlacePhotoResponse> photoResponse = geoDataClient.getPhoto(metadata);
-                    photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
-                        @Override
-                        public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
-                            PlacePhotoResponse photo = task.getResult();
-                            Bitmap photoBitmap = photo.getBitmap();
-                            String phone = place.getPhoneNumber().toString();
-                            phone.replace("+82 ","0");
-                            RestaurantService.addRestaurant(place.getName().toString(), phone, photoBitmap, place.getLatLng().latitude, place.getLatLng().longitude, new Callback<Status>() {
-                                @Override
-                                public void onResponse(Call<Status> call, Response<Status> response) {
-                                    //restaurantId = response.body().payLoadInt;
-                                    progressDialog.dismiss();
-                                }
-
-                                @Override
-                                public void onFailure(Call<Status> call, Throwable t) {
-                                    progressDialog.dismiss();
-                                }
-                            });
-                        }
-                    });
-                }
-
-                photoMetadataBuffer.release();
-            }
-        });
-    }
-
-
-    public void updateMap (){
-        MyLocation.searchLocation();
-    }
-
-    public View.OnClickListener addRestaurant(){
+    public View.OnClickListener addRestaurant() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Location location = fragment.getLocation();
-                if(location == null){AlertDialogBuilder.createAlert(getActivity(),"음식점 위치를 지정해 주세요."); return; }
-                RestaurantService.addRestaurant(name.getText().toString(),tel.getText().toString(),imageFragment.getImageBitmap(),location.getLatitude(),location.getLongitude(),new Callback< Status>(){
+                if (location == null) {
+                    AlertDialogBuilder.createAlert(getActivity(), "음식점 위치를 지정해 주세요.");
+                    return;
+                }
+
+                Geocoder myLocation = new Geocoder(getActivity(), Locale.getDefault());
+                List<Address> myList = new ArrayList<>();
+
+                try {
+                    myList = myLocation.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                RestaurantService.addRestaurant(name.getText().toString(), "", tel.getText().toString(), imageFragment.getImageBitmap(), location.getLatitude(), location.getLongitude(), new Callback<Status>() {
                     @Override
                     public void onResponse(Call<Status> call, Response<Status> response) {
                         if (response.code() == StatusCode.ADD_RESTAURANT_SUCCESS) {
-                            Log.d("debug",response.toString());
+                            Log.d("debug", response.toString());
                         } else if (response.code() == StatusCode.ADD_RESTAURANT_FAIL) {
-                            Log.d("debug",response.toString());
+                            Log.d("debug", response.toString());
                         }
+                        getFragmentManager().popBackStackImmediate();
                     }
+
                     @Override
                     public void onFailure(Call<Status> call, Throwable t) {
-                        Log.d("debug",t.toString());
+                        Log.d("debug", t.toString());
                     }
                 });
             }

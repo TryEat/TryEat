@@ -17,6 +17,10 @@ public class GoogleAutoComplete{
             return id;
         }
 
+        public String getPlaceId(){
+            return place_id;
+        }
+
         public String getName(){
             return structured_formatting.main_text;
         }

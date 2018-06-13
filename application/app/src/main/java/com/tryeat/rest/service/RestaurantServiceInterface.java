@@ -19,8 +19,8 @@ import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 
 public interface RestaurantServiceInterface {
-    @GET("restaurants/")
-    Call<ArrayList<Restaurant>> getRestaurants();
+    @GET("restaurants/{position}")
+    Call<ArrayList<Restaurant>> getRestaurants(@Path("position") int position);
 
     @GET("restaurants/{id}/byid")
     Call<Restaurant> getRestaurant(@Path("id") int restaurantId);

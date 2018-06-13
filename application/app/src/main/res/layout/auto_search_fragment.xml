@@ -8,6 +8,7 @@
     <AutoCompleteTextView
         android:id="@+id/auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:hint="리뷰할 음식점을 검색하세요."/>
 
 </LinearLayout>

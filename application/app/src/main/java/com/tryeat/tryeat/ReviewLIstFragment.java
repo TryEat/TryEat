@@ -10,8 +10,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.Glide;
 import com.tryeat.rest.model.Review;
 import com.tryeat.rest.service.ReviewService;
 import com.tryeat.team.tryeat_service.R;
@@ -37,6 +39,8 @@ public class ReviewLIstFragment extends Fragment {
 
     ArrayList<Review> mListItem1;
 
+    ImageView header;
+
     int restaurantId;
 
     @Override
@@ -44,13 +48,31 @@ public class ReviewLIstFragment extends Fragment {
         if (view == null) {
             view = inflater.inflate(R.layout.review_list_fragment, container, false);
 
-            lv = view.findViewById(R.id.listView);
-            lv.setHasFixedSize(true);
-            mLayoutManager = new LinearLayoutManager(getContext());
+            mListItem1 = new ArrayList<>();
+
+
+
+            header = view.findViewById(R.id.header);
 
             button = view.findViewById(R.id.review_add_btn);
             button.setOnClickListener(showAddReviewFragment());
-            Log.d("aa", "onCreateView");
+
+            Glide.with(view)
+                    .load(R.drawable.list_header_image1)
+                    .into(header);
+
+            lv = view.findViewById(R.id.listView);
+            lv.setHasFixedSize(true);
+            mLayoutManager = new LinearLayoutManager(getContext());
+            lv.setLayoutManager(mLayoutManager);
+            rAdapter = new ReviewListAdapter(mListItem1);
+            rAdapter.setOnItemClickListener(new ReviewListAdapter.ClickListener() {
+                @Override
+                public void onItemClick(int position, View v) {
+                    itemClick(position);
+                }
+            });
+            lv.setAdapter(rAdapter);
         }
         return view;
     }
@@ -59,35 +81,33 @@ public class ReviewLIstFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mListItem1 = new ArrayList<>();
-        lv.setLayoutManager(mLayoutManager);
-        rAdapter = new ReviewListAdapter(mListItem1);
-
         if(getArguments().containsKey("user")){
             //getArguments().remove("restaurant");
             getReviewList();
+            lv.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+                    if(!lv.canScrollVertically(1)) {
+                        getReviewList();
+                    }
+                }
+            });
         }
 
         if (getArguments().containsKey("restaurant")) {
             restaurantId = getArguments().getInt("restaurant");
             //getArguments().remove("user");
             getReviewList(restaurantId);
-        }
-        rAdapter.setOnItemClickListener(new ReviewListAdapter.ClickListener() {
-            @Override
-            public void onItemClick(int position, View v) {
-                itemClick(position);
-            }
-        });
-        lv.setAdapter(rAdapter);
-        lv.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-                if(!lv.canScrollVertically(1)) {
-                    getReviewList(restaurantId);
+            lv.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+                    if(!lv.canScrollVertically(1)) {
+                        getReviewList(restaurantId);
+                    }
                 }
-            }
-        });
+            });
+        }
+
         Log.d("aa", "onViewCreated");
     }
 
@@ -111,23 +131,6 @@ public class ReviewLIstFragment extends Fragment {
     }
 
     public void getReviewList() {
-        Review review = new Review();
-        review.setReviewId(1);
-        review.setRestaurantId(0);
-        review.setRate(4);
-        review.setUserId(1);
-        review.setText("ADSfadsF");
-        mListItem1.add(review);
-        mListItem1.add(review);
-        mListItem1.add(review);
-        mListItem1.add(review);
-        mListItem1.add(review);
-        mListItem1.add(review);
-        mListItem1.add(review);
-        mListItem1.add(review);
-        mListItem1.add(review);
-        rAdapter.notifyDataSetChanged();
-        /*
         Log.d("aa", "getReviewList");
         ReviewService.getUserReviews(LoginToken.getId(), rAdapter.getItemCount(), new Callback<ArrayList<Review>>() {
             @Override
@@ -138,17 +141,16 @@ public class ReviewLIstFragment extends Fragment {
                     for (int i = 0; i < size; i++) {
                         Review item = reviews.get(i);
                         mListItem1.add(item);
-                        rAdapter.notifyItemInserted(rAdapter.getItemCount() - 1);
                     }
+                    rAdapter.notifyDataSetChanged();
                 }
             }
 
             @Override
             public void onFailure(Call<ArrayList<Review>> call, Throwable t) {
-                Log.d("sadf", "dfg");
+                Log.d("sadf", t.toString());
             }
         });
-        */
     }
 
     public void getReviewList(int restaurantId) {

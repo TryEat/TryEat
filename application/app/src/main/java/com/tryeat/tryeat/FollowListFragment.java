@@ -10,8 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.Glide;
 import com.tryeat.rest.model.Follow;
 import com.tryeat.rest.service.FollowService;
 import com.tryeat.team.tryeat_service.R;
@@ -31,6 +33,8 @@ public class FollowListFragment extends Fragment{
 
     ArrayList<Follow> mListItem;
 
+    ImageView header;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -38,6 +42,12 @@ public class FollowListFragment extends Fragment{
             view = inflater.inflate(R.layout.follow_list_fragment, container, false);
 
             mListItem = new ArrayList<>();
+
+            header = view.findViewById(R.id.header);
+
+            Glide.with(view)
+                    .load(R.drawable.list_header_image3)
+                    .into(header);
 
             recyclerView = view.findViewById(R.id.listView);
             recyclerView.setHasFixedSize(true);

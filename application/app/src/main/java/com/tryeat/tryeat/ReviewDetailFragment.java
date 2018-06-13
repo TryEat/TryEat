@@ -8,16 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.tryeat.rest.model.Review;
-import com.tryeat.rest.model.Status;
-import com.tryeat.rest.service.ReviewService;
 import com.tryeat.team.tryeat_service.R;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 /**
@@ -31,10 +27,15 @@ public class ReviewDetailFragment extends Fragment{
     int reviewId;
     Review item;
     Button delete,modify;
-    ImageView image;
-    public ReviewDetailFragment(){
 
-    }
+
+    TextView writer;
+    TextView date;
+    RatingBar rate;
+    ImageView image;
+    TextView review;
+    TextView name;
+    TextView address;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -42,53 +43,35 @@ public class ReviewDetailFragment extends Fragment{
             view = inflater.inflate(R.layout.review_detail_fragment, container, false);
             item = (Review) getArguments().getSerializable("item");
 
-            TextView name = view.findViewById(R.id.name);
-            name.setText(item.getRestaurantName());
-            TextView rate = view.findViewById(R.id.rate);
-            rate.setText(item.getRate() + "");
-            TextView desc = view.findViewById(R.id.review);
-            desc.setText(item.getText());
-            TextView date = view.findViewById(R.id.date);
-            date.setText(item.getDate().toString());
+            writer = view.findViewById(R.id.writer);
+            Utils.safeSetObject(writer,item.getWriter());
 
-            delete = view.findViewById(R.id.delete);
-            modify = view.findViewById(R.id.modify);
+            name = view.findViewById(R.id.name);
+            Utils.safeSetObject(name,item.getRestaurantName());
+
+            rate = view.findViewById(R.id.rate);
+            Utils.safeSetObject(rate,item.getRate());
+
+            review = view.findViewById(R.id.review);
+            Utils.safeSetObject(review,item.getText());
+
+            date = view.findViewById(R.id.date);
+            Utils.safeSetObject(date,item.getDate().toString());
+
+            address = view.findViewById(R.id.address);
+            Utils.safeSetObject(address,item.getAddress());
+
             image = view.findViewById(R.id.image);
-
             BitmapLoader bitmapLoader = new BitmapLoader(image);
             bitmapLoader.execute(item.getImage());
 
-            Button open = view.findViewById(R.id.view_restaurant_button);
+            LinearLayout open = view.findViewById(R.id.view_restaurant_button);
             open.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Bundle bundle = new Bundle(2);
                     bundle.putInt("id", item.getRestaurantId());
                     FragmentLoader.startFragment(R.id.frament_place, RestaurantDetailFragment.class, bundle, false);
-                }
-            });
-
-            delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ReviewService.deleteReview(reviewId, new Callback<Status>() {
-                        @Override
-                        public void onResponse(Call<Status> call, Response<Status> response) {
-
-                        }
-
-                        @Override
-                        public void onFailure(Call<Status> call, Throwable t) {
-
-                        }
-                    });
-                }
-            });
-
-            modify.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
                 }
             });
         }

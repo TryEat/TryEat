@@ -12,7 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.tryeat.rest.model.Restaurant;
 import com.tryeat.rest.service.RestaurantService;
 import com.tryeat.team.tryeat_service.R;
@@ -37,17 +39,25 @@ public class RestaurantListFragment extends Fragment{
 
     ArrayList<Restaurant> mListItem1;
 
+    ImageView header;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if(view==null) {
             mListItem1 = new ArrayList<>();
 
             view = inflater.inflate(R.layout.restaurant_list_fragment, container, false);
+
+            header = view.findViewById(R.id.header);
+
+            Glide.with(view)
+                    .load(R.drawable.list_header_image2)
+                    .into(header);
+
             lv = view.findViewById(R.id.listView);
             lv.setHasFixedSize(true);
             mLayoutManager = new LinearLayoutManager(getContext());
             lv.setLayoutManager(mLayoutManager);
-            lv = view.findViewById(R.id.listView);
             rAdapter = new RestaurantListAdapter(mListItem1);
             rAdapter.setOnItemClickListener(new RestaurantListAdapter.ClickListener() {
                 @Override
@@ -55,12 +65,13 @@ public class RestaurantListFragment extends Fragment{
                     itemClick(position);
                 }
             });
+
             lv.setAdapter(rAdapter);
             lv.setOnScrollChangeListener(new View.OnScrollChangeListener() {
                 @Override
                 public void onScrollChange(View view, int i, int i1, int i2, int i3) {
                     if(!lv.canScrollVertically(1)) {
-                        //getRestaurantList();
+                        getRestaurantList();
                     }
                 }
             });
@@ -78,7 +89,7 @@ public class RestaurantListFragment extends Fragment{
     }
 
     public void getRestaurantList(){
-        RestaurantService.getRestaurants(new Callback<ArrayList<Restaurant>>() {
+        RestaurantService.getRestaurants(rAdapter.getItemCount(),new Callback<ArrayList<Restaurant>>() {
             @Override
             public void onResponse(Call<ArrayList<Restaurant>> call, Response<ArrayList<Restaurant>> response) {
                 if(response.isSuccessful()){

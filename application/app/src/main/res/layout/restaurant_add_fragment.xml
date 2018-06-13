@@ -1,65 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingRight="5px"
-    android:weightSum="1">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.7">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingRight="5px">
+
+        <RelativeLayout
+            android:id="@+id/map_layout"
+            android:layout_width="match_parent"
+            android:layout_height="300dp">
+
+            <fragment
+                android:id="@+id/map_fragment"
+                android:name="com.tryeat.tryeat.GoogleMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ImageView
+                android:id="@+id/transparent_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00ffffff" />
+
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="음식점 이름 입력" />
+
+
+        <EditText
+            android:id="@+id/tel_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="전화번호 입력" />
 
         <fragment
-            android:id="@+id/map_fragment"
-            android:name="com.tryeat.tryeat.GoogleMapFragment"
+            android:id="@+id/image_fragment"
+            android:name="com.tryeat.tryeat.ImageAddFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"/>
 
-        <fragment
-            android:id="@+id/place_fragment"
-            android:name="com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment"
+        <Button
+            android:id="@+id/addButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="음식점 등록" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
-    <EditText
-        android:id="@+id/name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:hint="음식점 이름 입력" />
-
-
-    <EditText
-        android:id="@+id/tel_number"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:hint="전화번호 입력" />
-
-    <fragment
-        android:id="@+id/image_fragment"
-        android:name="com.tryeat.tryeat.ImageAddFragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.3" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:hint="영업 시간 입력" />
-
-    <Button
-        android:id="@+id/addButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="음식점 등록" />
-
-</LinearLayout>
+</ScrollView>

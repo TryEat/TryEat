@@ -93,6 +93,7 @@ public class ReviewAddFragment extends Fragment {
                         if (code == StatusCode.WRITE_REVIEW_SUCCESS) {
                         } else if (code == StatusCode.WRITE_REVIEW_FAIL) {
                         }
+
                     }
 
                     @Override
@@ -100,6 +101,7 @@ public class ReviewAddFragment extends Fragment {
                         Log.d("onFailure", t.toString());
                     }
                 });
+                getFragmentManager().popBackStackImmediate();
             }
         };
     }

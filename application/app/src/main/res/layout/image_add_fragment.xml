@@ -15,11 +15,12 @@
     <ImageView
         android:id="@+id/image_view"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
+        android:maxHeight="250dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="5dp"
-        android:contentDescription="TODO"
-        android:src="@drawable/view_border" />
+        android:scaleType="fitXY"
+        android:adjustViewBounds= "true"/>
 
 </LinearLayout>

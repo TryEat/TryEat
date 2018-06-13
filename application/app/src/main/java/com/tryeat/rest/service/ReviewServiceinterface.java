@@ -32,12 +32,12 @@ public interface ReviewServiceInterface {
     Call<ArrayList<Review>> getRestaurantUserReviews(@Path("user_id") int userId, @Path("restaurant_id") int restaurantId);
 
     @Multipart
-    @POST("reviews")
+    @POST("reviews/")
     Call<Status> writeReview(@Part MultipartBody.Part image, @PartMap HashMap<String, Object> body);
 
-    @PUT("reviews")
+    @PUT("reviews/")
     Call<Status> updateReview(@Body HashMap<String,Object> body);
 
-    @DELETE("reviews")
+    @DELETE("reviews/")
     Call<Status> deleteReview(@Body HashMap<String,Object> body);
 }
