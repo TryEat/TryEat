@@ -6,12 +6,14 @@ import android.support.v4.app.Fragment;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -41,6 +43,8 @@ public class RestaurantListFragment extends Fragment{
 
     ImageView header;
 
+    NestedScrollView nestedScrollView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if(view==null) {
@@ -49,6 +53,8 @@ public class RestaurantListFragment extends Fragment{
             view = inflater.inflate(R.layout.restaurant_list_fragment, container, false);
 
             header = view.findViewById(R.id.header);
+
+            nestedScrollView = view.findViewById(R.id.nested_view);
 
             Glide.with(view)
                     .load(R.drawable.list_header_image2)
@@ -67,10 +73,17 @@ public class RestaurantListFragment extends Fragment{
             });
 
             lv.setAdapter(rAdapter);
-            lv.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+
+
+            nestedScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
                 @Override
-                public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-                    if(!lv.canScrollVertically(1)) {
+                public void onScrollChanged() {
+                    View view = (View) nestedScrollView.getChildAt(nestedScrollView.getChildCount() - 1);
+
+                    int diff = (view.getBottom() - (nestedScrollView.getHeight() + nestedScrollView
+                            .getScrollY()));
+
+                    if (diff == 0) {
                         getRestaurantList();
                     }
                 }

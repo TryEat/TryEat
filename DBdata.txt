@@ -23,14 +23,15 @@ CREATE TABLE restaurant(
 	locate_longitude DOUBLE NOT NULL,
 	review_count INT(11) NOT NULL,
 	total_rate decimal(5,1) NOT NULL,
+	total_bookmark INT(11) NOT NULL,
 	PRIMARY KEY (restaurant_id)
 );
 
-CREATE TABLE follow(
-	follow_id INT(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE bookmark(
+	bookmark_id INT(11) NOT NULL AUTO_INCREMENT,
 	user_id INT(11) NOT NULL,
 	restaurant_id INT(11) NOT NULL,
-	PRIMARY KEY (follow_id),
+	PRIMARY KEY (bookmark_id),
 	KEY pkey (restaurant_id),
 	FOREIGN KEY (user_id) REFERENCES user (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (restaurant_id) REFERENCES restaurant (restaurant_id) ON DELETE CASCADE ON UPDATE CASCADE

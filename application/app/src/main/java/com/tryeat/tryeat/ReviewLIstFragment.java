@@ -4,12 +4,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -43,6 +45,8 @@ public class ReviewLIstFragment extends Fragment {
 
     int restaurantId;
 
+    NestedScrollView nestedScrollView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (view == null) {
@@ -50,7 +54,7 @@ public class ReviewLIstFragment extends Fragment {
 
             mListItem1 = new ArrayList<>();
 
-
+            nestedScrollView = view.findViewById(R.id.nested_view);
 
             header = view.findViewById(R.id.header);
 
@@ -73,6 +77,9 @@ public class ReviewLIstFragment extends Fragment {
                 }
             });
             lv.setAdapter(rAdapter);
+
+
+
         }
         return view;
     }
@@ -84,10 +91,15 @@ public class ReviewLIstFragment extends Fragment {
         if(getArguments().containsKey("user")){
             //getArguments().remove("restaurant");
             getReviewList();
-            lv.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            nestedScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
                 @Override
-                public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-                    if(!lv.canScrollVertically(1)) {
+                public void onScrollChanged() {
+                    View view = (View) nestedScrollView.getChildAt(nestedScrollView.getChildCount() - 1);
+
+                    int diff = (view.getBottom() - (nestedScrollView.getHeight() + nestedScrollView
+                            .getScrollY()));
+
+                    if (diff == 0) {
                         getReviewList();
                     }
                 }
@@ -98,10 +110,15 @@ public class ReviewLIstFragment extends Fragment {
             restaurantId = getArguments().getInt("restaurant");
             //getArguments().remove("user");
             getReviewList(restaurantId);
-            lv.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            nestedScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
                 @Override
-                public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-                    if(!lv.canScrollVertically(1)) {
+                public void onScrollChanged() {
+                    View view = (View) nestedScrollView.getChildAt(nestedScrollView.getChildCount() - 1);
+
+                    int diff = (view.getBottom() - (nestedScrollView.getHeight() + nestedScrollView
+                            .getScrollY()));
+
+                    if (diff == 0) {
                         getReviewList(restaurantId);
                     }
                 }

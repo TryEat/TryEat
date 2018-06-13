@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.tryeat.rest.model.Restaurant;
 import com.tryeat.rest.model.Review;
 import com.tryeat.rest.model.Status;
-import com.tryeat.rest.service.FollowService;
+import com.tryeat.rest.service.BookMarkService;
 import com.tryeat.rest.service.RestaurantService;
 import com.tryeat.rest.service.ReviewService;
 import com.tryeat.team.tryeat_service.R;
@@ -69,11 +69,11 @@ public class RestaurantDetailFragment extends Fragment {
             address = view.findViewById(R.id.address);
             date = view.findViewById(R.id.date);
 
-            followBnt = view.findViewById(R.id.followbnt);
+            followBnt = view.findViewById(R.id.addbookmark);
             followBnt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    FollowService.addFollower(LoginToken.getId(), restaurantId, new Callback<Status>() {
+                    BookMarkService.addBookMark(LoginToken.getId(), restaurantId, new Callback<Status>() {
                         @Override
                         public void onResponse(Call<Status> call, Response<Status> response) {
 
@@ -102,9 +102,7 @@ public class RestaurantDetailFragment extends Fragment {
             more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Bundle bundle = new Bundle(2);
-                    bundle.putSerializable("restaurant", restaurantId);
-                    FragmentLoader.startFragment(R.id.frament_place, ReviewLIstFragment.class, bundle, true);
+                    getReviewList(restaurantId,rAdapter.getItemCount());
                 }
             });
         }
@@ -144,7 +142,7 @@ public class RestaurantDetailFragment extends Fragment {
         rAdapter.setOnItemClickListener(new ReviewListAdapter.ClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-
+                itemClick(position);
             }
         });
         lv.setAdapter(rAdapter);
@@ -168,6 +166,12 @@ public class RestaurantDetailFragment extends Fragment {
 
             }
         });
+    }
+
+    public void itemClick(int position) {
+        Bundle bundle = new Bundle(2);
+        bundle.putSerializable("item", mListItem1.get(position));
+        FragmentLoader.startFragment(R.id.frament_place,ReviewDetailFragment.class,bundle,true);
     }
 
     public void getReviewList(int restaurantId, int position){

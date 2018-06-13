@@ -24,6 +24,16 @@ public class Restaurant implements Serializable {
     private int reviewCount;
     @SerializedName("total_rate")
     private float totalRate;
+    @SerializedName("total_bookmark")
+    private int totalBookMark;
+
+    public int getTotalBookMark() {
+        return totalBookMark;
+    }
+
+    public void setTotalBookMark(int totalBookMark) {
+        this.totalBookMark = totalBookMark;
+    }
 
     public int getId() {
         return id;

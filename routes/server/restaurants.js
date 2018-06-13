@@ -12,7 +12,7 @@ module.exports = function (_dbPool) {
     router.get('/:position', function (req, res) {
         var position = req.params.position;
 
-        var query = 'SELECT * FROM restaurant LIMIT ?,5';
+        var query = 'SELECT * FROM restaurant LIMIT ?,10';
         dbPool.query(query, [parseInt(position)], function (err, rows, fields) {
             if (err) throw err;
             res.status(200).json(rows);
@@ -133,8 +133,8 @@ module.exports = function (_dbPool) {
 
         if(img.length==0)img=null;
 
-        var query = 'INSERT INTO restaurant (img,restaurant_name,address,phone,locate_latitude,locate_longitude,review_count,total_rate) VALUES (?,?,?,?,?,?,?,?)';
-        dbPool.query(query, [img, restaurant_name, address, phone, locate_latitude, locate_longitude,0,0], function (err, rows, fields) {
+        var query = 'INSERT INTO restaurant (img,restaurant_name,address,phone,locate_latitude,locate_longitude,review_count,total_rate,total_bookmark) VALUES (?,?,?,?,?,?,?,?,?)';
+        dbPool.query(query, [img, restaurant_name, address, phone, locate_latitude, locate_longitude,0,0,0], function (err, rows, fields) {
             if (err) throw err;
             if (rows.affectedRows != 0) res.status(201).json({ message: "Add Restaurant Success", payLoadInt: rows.insertId , payLoadString: restaurant_name})
             else res.status(400).json({ message: "Add Restaurant Fail" })

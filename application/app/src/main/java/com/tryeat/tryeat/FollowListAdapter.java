@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.tryeat.rest.model.Follow;
+import com.tryeat.rest.model.BookMark;
 import com.tryeat.rest.model.Review;
 import com.tryeat.team.tryeat_service.R;
 
@@ -24,7 +24,7 @@ public class FollowListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static ClickListener clickListener;
 
     private Context mContext;
-    private ArrayList<Follow> mList;
+    private ArrayList<BookMark> mList;
 
     private static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView name;
@@ -47,7 +47,7 @@ public class FollowListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.clickListener = clickListener;
     }
 
-    public FollowListAdapter(Context context, ArrayList<Follow> item) {
+    public FollowListAdapter(Context context, ArrayList<BookMark> item) {
         this.mList = item;
         mContext = context;
     }
@@ -61,7 +61,7 @@ public class FollowListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ViewHolder viewHolder = (ViewHolder) holder;
-        Follow item = mList.get(position);
+        BookMark item = mList.get(position);
 
         viewHolder.name.setText(item.getRestaurantName());
 

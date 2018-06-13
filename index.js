@@ -34,10 +34,10 @@ app.get('/', function (req, res) {
 app.use(printMessage);
 app.use('/sign', require('./routes/server/sign')(pool, userTokens));
 app.use('/recommends', require('./routes/server/recommends')(pool, userTokens));
-app.use(verifyUser);
+//app.use(verifyUser);
 app.use('/users', require('./routes/server/users')(pool, userTokens));
 app.use('/restaurants', require('./routes/server/restaurants')(pool));
-app.use('/follows', require('./routes/server/follows')(pool));
+app.use('/bookmarks', require('./routes/server/bookmarks')(pool));
 app.use('/reviews', require('./routes/server/reviews')(pool));
 
 var server = app.listen(port, function () {

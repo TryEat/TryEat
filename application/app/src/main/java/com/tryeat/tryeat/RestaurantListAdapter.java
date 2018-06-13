@@ -1,20 +1,13 @@
 package com.tryeat.tryeat;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.tryeat.rest.model.Restaurant;
-import com.tryeat.rest.model.Review;
 import com.tryeat.team.tryeat_service.R;
 
 import java.util.ArrayList;
@@ -37,17 +30,19 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private ArrayList<Restaurant> mList;
 
     private static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView who;
-        public RatingBar rate;
+        public TextView address;
+        public TextView rate;
         public TextView count;
+        public TextView bookmark;
         public TextView name;
         public ImageView image;
 
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            who = itemView.findViewById(R.id.who);
+            address = itemView.findViewById(R.id.address);
             rate = itemView.findViewById(R.id.rate);
+            bookmark = itemView.findViewById(R.id.addbookmark);
             count = itemView.findViewById(R.id.count);
             image = itemView.findViewById(R.id.image);
             name = itemView.findViewById(R.id.name);
@@ -78,7 +73,10 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         ViewHolder viewHolder = (ViewHolder) holder;
         Restaurant item = mList.get(position);
 
-        viewHolder.rate.setRating(safeDivide(item.getTotalRate(), item.getReviewCount()));
+
+        Utils.safeSetObject(viewHolder.rate,safeDivide(item.getTotalRate(), item.getReviewCount()));
+        Utils.safeSetObject(viewHolder.address,item.getAddress());
+        Utils.safeSetObject(viewHolder.bookmark,item.getTotalBookMark());
         viewHolder.count.setText(item.getReviewCount() + "");
 
         if(item.getImage()!=null) {

@@ -2,9 +2,9 @@ package com.tryeat.rest.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Follow {
-    @SerializedName("follow_id")
-    private int followId;
+public class BookMark {
+    @SerializedName("bookmark_id")
+    private int bookmarkId;
     @SerializedName("user_id")
     private int userId;
     @SerializedName("restaurant_id")
@@ -12,12 +12,12 @@ public class Follow {
     @SerializedName("restaurant_name")
     private String restaurantName;
 
-    public int getFollowId() {
-        return followId;
+    public int getBookmarkId() {
+        return bookmarkId;
     }
 
-    public void setFollowId(int followId) {
-        this.followId = followId;
+    public void setBookmarkId(int bookmarkId) {
+        this.bookmarkId = bookmarkId;
     }
 
     public int getUserId() {

@@ -10,7 +10,7 @@ module.exports = function (_dbPool) {
         
         var query = 'SELECT review.*, restaurant_name, address, user_login_id FROM \
         review INNER JOIN restaurant ON review.restaurant_id = restaurant.restaurant_id \
-        INNER JOIN user ON review.user_id = user.user_id WHERE review.user_id = ? LIMIT ?,5';
+        INNER JOIN user ON review.user_id = user.user_id WHERE review.user_id = ? LIMIT ?,10';
         
         dbPool.query(query, [user_id,parseInt(position)], function (err, rows, fields) {
             if (err) throw err;
