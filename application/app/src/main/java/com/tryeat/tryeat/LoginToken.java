@@ -1,7 +1,7 @@
 package com.tryeat.tryeat;
 
 public class LoginToken {
-    private static String token = "SFDASDFASF";
+    private static String token = "None";
     private static int id = 1;
 
     public static Boolean hasLoginToken(){

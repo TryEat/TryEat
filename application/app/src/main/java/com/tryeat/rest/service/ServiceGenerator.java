@@ -12,7 +12,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
-    private static final String URL = "http://tryeats.homedns.tv:8080/";
+    private static final String URL = "http://tryeat.homedns.tv:8080/";
     //private static final String URL = "http://192.168.1.138:8080/";
 
     private static Interceptor mTokenInterceptor = new Interceptor() {

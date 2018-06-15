@@ -35,6 +35,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.tryeat.rest.model.Restaurant;
+import com.tryeat.rest.model.Review;
 import com.tryeat.rest.model.Status;
 import com.tryeat.rest.model.StatusCode;
 import com.tryeat.rest.service.RestaurantService;
@@ -59,6 +60,7 @@ public class ReviewAddFragment extends Fragment {
     EditText desc;
     RatingBar rate;
 
+    int reviewId;
     int restaurantId;
 
     ImageAddFragment imageAddFragment;
@@ -70,14 +72,28 @@ public class ReviewAddFragment extends Fragment {
             Button addButton = view.findViewById(R.id.addButton);
             addButton.setOnClickListener(addReview());
 
+            NavigationManager.setVisibility(View.GONE);
+
             name = view.findViewById(R.id.name);
             desc = view.findViewById(R.id.review);
             rate = view.findViewById(R.id.rate);
 
-            restaurantId = getArguments().getInt("id");
-            name.setText(getArguments().getString("name"));
-
             imageAddFragment = (ImageAddFragment) getChildFragmentManager().findFragmentById(R.id.image_fragment);
+
+            if(getArguments().containsKey("revise")){
+                Review review = (Review) getArguments().get("revise");
+                reviewId = review.getReviewId();
+                restaurantId = review.getRestaurantId();
+                name.setText(review.getRestaurantName());
+                rate.setRating(review.getRate());
+                desc.setText(review.getText());
+                imageAddFragment.setImage(review.getImage());
+            }else {
+                reviewId=-1;
+                restaurantId = getArguments().getInt("id");
+                name.setText(getArguments().getString("name"));
+            }
+
         }
         return view;
     }
@@ -86,21 +102,35 @@ public class ReviewAddFragment extends Fragment {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ReviewService.writeReview(LoginToken.getId(), restaurantId, desc.getText().toString(), imageAddFragment.getImageBitmap(), rate.getRating(), new Callback<Status>() {
-                    @Override
-                    public void onResponse(Call<Status> call, Response<Status> response) {
-                        int code = response.code();
-                        if (code == StatusCode.WRITE_REVIEW_SUCCESS) {
-                        } else if (code == StatusCode.WRITE_REVIEW_FAIL) {
+                if(reviewId==-1) {
+                    ReviewService.writeReview(LoginToken.getId(), restaurantId, desc.getText().toString(), imageAddFragment.getImageBitmap(), rate.getRating(), new Callback<Status>() {
+                        @Override
+                        public void onResponse(Call<Status> call, Response<Status> response) {
+                            int code = response.code();
+                            if (code == StatusCode.WRITE_REVIEW_SUCCESS) {
+                            } else if (code == StatusCode.WRITE_REVIEW_FAIL) {
+                            }
+
                         }
 
-                    }
+                        @Override
+                        public void onFailure(Call<Status> call, Throwable t) {
+                            Log.d("onFailure", t.toString());
+                        }
+                    });
+                }else{
+                    ReviewService.updateReview(reviewId, desc.getText().toString(), imageAddFragment.getImageBitmap(), rate.getRating(), new Callback<Status>() {
+                        @Override
+                        public void onResponse(Call<Status> call, Response<Status> response) {
 
-                    @Override
-                    public void onFailure(Call<Status> call, Throwable t) {
-                        Log.d("onFailure", t.toString());
-                    }
-                });
+                        }
+
+                        @Override
+                        public void onFailure(Call<Status> call, Throwable t) {
+
+                        }
+                    });
+                }
                 getFragmentManager().popBackStackImmediate();
             }
         };

@@ -2,11 +2,9 @@ package com.tryeat.tryeat;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
@@ -26,11 +24,8 @@ import android.widget.SimpleCursorAdapter;
 
 import com.bumptech.glide.Glide;
 
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
-import com.google.android.gms.location.places.GeoDataClient;
 import com.tryeat.rest.model.GoogleAutoComplete;
 import com.tryeat.rest.model.GoogleDetail;
 import com.tryeat.rest.model.Restaurant;
@@ -40,7 +35,6 @@ import com.tryeat.rest.service.RestaurantService;
 import com.tryeat.team.tryeat_service.R;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -125,14 +119,14 @@ public class AutoSearchFragment extends DialogFragment {
     }
 
     public void getItem(final CharSequence constraint) {
-        RestaurantService.getRestaurant(constraint.toString(), new Callback<ArrayList<Restaurant>>() {
+        RestaurantService.getRestaurantsOrderByDistance(constraint.toString(), new Callback<ArrayList<Restaurant>>() {
             @Override
             public void onResponse(Call<ArrayList<Restaurant>> call, Response<ArrayList<Restaurant>> response) {
                 if (response.body() != null) {
                     ArrayList<Restaurant> items = response.body();
                     for (int i = 0; i < items.size(); i++) {
                         Log.d("asdf", items.get(i).getName());
-                        matrixCursor.newRow().add(i).add(items.get(i).getId()).add(items.get(i).getName()).add("주소지");
+                        matrixCursor.newRow().add(i).add(items.get(i).getId()).add(items.get(i).getName()).add(items.get(i).getAddress());
                     }
                 }
                 getItem2(constraint);

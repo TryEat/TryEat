@@ -74,7 +74,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         BitmapLoader bitmapLoader = new BitmapLoader(viewHolder.image);
         bitmapLoader.execute(item.getImage());
 
-        viewHolder.name.setText(item.getRestaurantName());
+        viewHolder.name.setText(item.getWriter());
         viewHolder.rate.setRating(item.getRate());
         viewHolder.text.setText(item.getText());
     }

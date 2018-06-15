@@ -1,18 +1,13 @@
 package com.tryeat.rest.service;
 
 import android.graphics.Bitmap;
-import android.location.Address;
-import android.location.Geocoder;
 
 import com.tryeat.rest.model.Restaurant;
 import com.tryeat.rest.model.Status;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -26,7 +21,7 @@ public class RestaurantService {
         restaurantServiceInterface.getRestaurants(position).enqueue(callback);
     }
 
-    public static void getRestaurant(int restaurantId, Callback<Restaurant> callback) {
+    public static void getRestaurantsOrderByDistance(int restaurantId, Callback<Restaurant> callback) {
         restaurantServiceInterface.getRestaurant(restaurantId).enqueue(callback);
     }
 
@@ -34,15 +29,27 @@ public class RestaurantService {
         restaurantServiceInterface.getRestaurants(idList).enqueue(callback);
     }
 
-    public static void getRestaurant(String name, Callback<ArrayList<Restaurant>> callback) {
+    public static void getRestaurantsOrderByDistance(String name, Callback<ArrayList<Restaurant>> callback) {
         restaurantServiceInterface.getRestaurant(name).enqueue(callback);
     }
 
-    public static void getRestaurant(double lat, double ion, Callback<ArrayList<Restaurant>> callback) {
-        restaurantServiceInterface.getRestaurant(lat, ion).enqueue(callback);
+    public static void getRestaurantsOrderByRecommander(int userId, double lat, double ion, int position,int distance, Callback<ArrayList<Restaurant>> callback) {
+        restaurantServiceInterface.getRestaurantsOrderByRecommander(userId,lat,ion,position,distance).enqueue(callback);
     }
 
-    public static void getRestaurant(String name, double lat, double ion, Callback<ArrayList<Restaurant>> callback) {
+    public static void getRestaurantsOrderByRate(double lat, double ion, int position,int distance, Callback<ArrayList<Restaurant>> callback) {
+        restaurantServiceInterface.getRestaurantsOrderByRate(lat,ion,position,distance).enqueue(callback);
+    }
+
+    public static void getRestaurantsOrderByReview(double lat, double ion, int position,int distance, Callback<ArrayList<Restaurant>> callback) {
+        restaurantServiceInterface.getRestaurantsOrderByReview(lat,ion,position,distance).enqueue(callback);
+    }
+
+    public static void getRestaurantsOrderByDistance(double lat, double ion, int position, int distance, Callback<ArrayList<Restaurant>> callback) {
+        restaurantServiceInterface.getRestaurantsOrderByDistance(lat,ion,position,distance).enqueue(callback);
+    }
+
+    public static void getRestaurantsOrderByDistance(String name, double lat, double ion, Callback<ArrayList<Restaurant>> callback) {
         restaurantServiceInterface.getRestaurant(name, lat, ion).enqueue(callback);
     }
 
@@ -62,7 +69,7 @@ public class RestaurantService {
         byte[] byteArray = new byte[]{};
         if (file != null) {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            file.compress(Bitmap.CompressFormat.WEBP, 75, stream);
+            file.compress(Bitmap.CompressFormat.WEBP, 100, stream);
             byteArray = stream.toByteArray();
         }
         RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), byteArray);

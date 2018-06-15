@@ -72,6 +72,8 @@ public class RestaurantAddFragment extends Fragment {
             Button addButton = view.findViewById(R.id.addButton);
             addButton.setOnClickListener(addRestaurant());
 
+            NavigationManager.setVisibility(View.GONE);
+
             name = view.findViewById(R.id.name);
             tel = view.findViewById(R.id.tel_number);
 
@@ -123,7 +125,9 @@ public class RestaurantAddFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                RestaurantService.addRestaurant(name.getText().toString(), "", tel.getText().toString(), imageFragment.getImageBitmap(), location.getLatitude(), location.getLongitude(), new Callback<Status>() {
+                String adress = myList.get(0).getAddressLine(0).toString();
+
+                RestaurantService.addRestaurant(name.getText().toString(), adress, tel.getText().toString(), imageFragment.getImageBitmap(), location.getLatitude(), location.getLongitude(), new Callback<Status>() {
                     @Override
                     public void onResponse(Call<Status> call, Response<Status> response) {
                         if (response.code() == StatusCode.ADD_RESTAURANT_SUCCESS) {

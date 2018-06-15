@@ -16,8 +16,8 @@ public class BookMarkService {
         bookMarkServiceInterface.getBookMarks(userId,position).enqueue(callback);
     }
 
-    public static void isExistBookMarks(int userId,int rasturantId, Callback<Status> callback) {
-        bookMarkServiceInterface.isExistBookMarks(userId,rasturantId).enqueue(callback);
+    public static void isExistBookMarks(int userId,int restaurantId, Callback<Status> callback) {
+        bookMarkServiceInterface.isExistBookMarks(userId,restaurantId).enqueue(callback);
     }
 
     public static void addBookMark(int userId, int restaurantId, Callback<Status> callback) {

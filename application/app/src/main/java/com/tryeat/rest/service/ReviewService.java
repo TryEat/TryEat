@@ -32,7 +32,7 @@ public class ReviewService {
         userServiceInterface.getRestaurantReviews(restaurantId, position).enqueue(callback);
     }
 
-    public static void getRestaurantUserReviews(int userId, int restaurantId, Callback<ArrayList<Review>> callback) {
+    public static void getRestaurantUserReviews(int userId, int restaurantId, Callback<Review> callback) {
         userServiceInterface.getRestaurantUserReviews(userId, restaurantId).enqueue(callback);
     }
 
@@ -44,7 +44,7 @@ public class ReviewService {
         byte[] byteArray = new byte[]{};
         if (file != null) {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            file.compress(Bitmap.CompressFormat.WEBP, 75, stream);
+            file.compress(Bitmap.CompressFormat.WEBP, 100, stream);
             byteArray = stream.toByteArray();
         }
         RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), byteArray);
@@ -58,10 +58,21 @@ public class ReviewService {
         userServiceInterface.writeReview(imageBody, body).enqueue(callback);
     }
 
-    public static void updateReview(int userId, int restaurantId, Callback<Status> callback) {
-        HashMap<String, Object> body = new HashMap<>();
+    public static void updateReview(int reviewId, final String content, final Bitmap file, final float rate, Callback<Status> callback) {
+        byte[] byteArray = new byte[]{};
+        if (file != null) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            file.compress(Bitmap.CompressFormat.WEBP, 100, stream);
+            byteArray = stream.toByteArray();
+        }
+        RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), byteArray);
+        MultipartBody.Part imageBody = MultipartBody.Part.createFormData("upload", "image", reqFile);
 
-        userServiceInterface.updateReview(body).enqueue(callback);
+        HashMap<String, Object> body = new HashMap<>();
+        body.put("review_id", reviewId);
+        body.put("content", content);
+        body.put("rate", rate);
+        userServiceInterface.updateReview(imageBody,body).enqueue(callback);
     }
 
     public static void deleteReview(int reviewId, Callback<Status> callback) {

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:theme="@style/Theme.AppCompat.DayNight.Dialog">
+    android:layout_height="wrap_content"
+    android:theme="@style/Theme.AppCompat.DayNight.Dialog"
+    android:paddingBottom="60dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:background="#e1e4e9"
         android:padding="15dp">
 
         <TextView

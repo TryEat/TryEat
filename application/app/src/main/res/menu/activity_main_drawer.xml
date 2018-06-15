@@ -1,32 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_Add_Review"
-            android:icon="@drawable/nav_add"
-            android:title="@string/menu1" />
-        <item
-            android:id="@+id/nav_RestaurantList"
-            android:icon="@drawable/nav_list"
-            android:title="@string/menu2" />
-        <item
-            android:id="@+id/nav_Fllow"
-            android:icon="@drawable/nav_follower"
-            android:title="@string/menu3" />
-    </group>
-
-    <item android:title="@string/admin">
-        <menu>
-            <item
-                android:id="@+id/nav_sign"
-                android:title="로그아웃" />
-            <item
-                android:id="@+id/nav_send"
-                android:title="NULL" />
-        </menu>
-    </item>
+    <item
+        android:id="@+id/nav_recommand"
+        android:icon="@drawable/nav_add"
+        app:showAsAction="ifRoom"
+        android:enabled="true"
+        android:title="추천" />
+    <item
+        android:id="@+id/nav_add_review"
+        android:icon="@drawable/nav_list"
+        app:showAsAction="ifRoom"
+        android:enabled="true"
+        android:title="리뷰 추가" />
+    <item
+        android:id="@+id/nav_user"
+        android:icon="@drawable/nav_follower"
+        app:showAsAction="ifRoom"
+        android:enabled="true"
+        android:title="유저" />
 
 </menu>

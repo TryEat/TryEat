@@ -2,11 +2,13 @@ package com.tryeat.tryeat;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,18 +24,30 @@ import retrofit2.Response;
 
 public class SignInActivity extends AppCompatActivity {
 
-    EditText id;
-    EditText password;
+    private boolean saveLoginData;
+    private String id;
+    private String pwd;
+
+    EditText idText;
+    EditText passwordText;
     Button signButton;
     TextView signup_btn;
+    CheckBox checkBox;
+
+    private SharedPreferences appData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signin_layout);
 
-        id = findViewById(R.id.id);
-        password = findViewById(R.id.password);
+        appData = getSharedPreferences("appData", MODE_PRIVATE);
+        load();
+
+        idText = findViewById(R.id.id);
+        passwordText = findViewById(R.id.password);
+
+        checkBox = findViewById(R.id.checkbox);
 
         signButton = findViewById(R.id.signinbutton);
         signup_btn = findViewById(R.id.signup_btn);
@@ -51,13 +65,40 @@ public class SignInActivity extends AppCompatActivity {
         signButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(checkBox.isChecked()){
+                    save();
+                }
                 signIn();
             }
         });
+
+        if(saveLoginData){
+            idText.setText(id);
+            passwordText.setText(pwd);
+            checkBox.setChecked(saveLoginData);
+            signIn();
+        }
+    }
+
+    private void save() {
+        SharedPreferences.Editor editor = appData.edit();
+
+        editor.putBoolean("SAVE_LOGIN_DATA", checkBox.isChecked());
+        editor.putString("ID", idText.getText().toString().trim());
+        editor.putString("PWD", passwordText.getText().toString().trim());
+
+        editor.apply();
+    }
+
+    // 설정값을 불러오는 함수
+    private void load() {
+        saveLoginData = appData.getBoolean("SAVE_LOGIN_DATA", false);
+        id = appData.getString("ID", "");
+        pwd = appData.getString("PWD", "");
     }
 
     private void signIn() {
-        if (id.getText().length() == 0 || password.getText().length() == 0) {
+        if (idText.getText().length() == 0 || passwordText.getText().length() == 0) {
             Toast.makeText(getApplicationContext(), "빈칸이 존재합니다.", Toast.LENGTH_LONG).show();
             return;
         }
@@ -70,7 +111,7 @@ public class SignInActivity extends AppCompatActivity {
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-                        SignService.signIn(id.getText().toString(), password.getText().toString(), new Callback<Status>() {
+                        SignService.signIn(idText.getText().toString(), passwordText.getText().toString(), new Callback<Status>() {
                             @Override
                             public void onResponse(Call<Status> call, Response<Status> response) {
                                 if (response.code() == StatusCode.SIGNIN_SUCCESS) {

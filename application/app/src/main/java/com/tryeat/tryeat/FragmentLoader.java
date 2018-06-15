@@ -45,10 +45,6 @@ public class FragmentLoader {
         return null;
     }
 
-    public static void removeFragmentInstance(Class fragmentClass) {
-        fragmentMap.remove(fragmentClass);
-    }
-
     public static Fragment startFragment(int layout, Class fragmentClass, Boolean needBackStack) {
         Fragment fragment = getFragmentInstance(fragmentClass);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -68,5 +64,9 @@ public class FragmentLoader {
         if (needBackStack) fragmentTransaction.addToBackStack(null).commit();
         else fragmentTransaction.commit();
         return fragment;
+    }
+
+    public static void back() {
+        fragmentManager.popBackStack();
     }
 }

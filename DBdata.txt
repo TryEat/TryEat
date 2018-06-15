@@ -9,6 +9,8 @@ CREATE TABLE user(
 	user_login_id VARCHAR(30) NOT NULL,
 	user_pwd VARCHAR(50) NOT NULL,
 	profile VARCHAR(100),
+	review_count INT(11) DEFAULT 0,
+	bookmark_count INT(11) DEFAULT 0,
 	signdate TIMESTAMP NOT NULL DEFAULT now(),
 	PRIMARY KEY (user_id)
 );
@@ -31,6 +33,7 @@ CREATE TABLE bookmark(
 	bookmark_id INT(11) NOT NULL AUTO_INCREMENT,
 	user_id INT(11) NOT NULL,
 	restaurant_id INT(11) NOT NULL,
+	date TIMESTAMP NOT NULL DEFAULT now(),
 	PRIMARY KEY (bookmark_id),
 	KEY pkey (restaurant_id),
 	FOREIGN KEY (user_id) REFERENCES user (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -55,7 +58,8 @@ CREATE TABLE counting(
 	target INT(11),
 	user INT(11),
 	restaurant INT(11),
-	review INT(11)
+	review INT(11),
+	PRIMARY KEY (target)
 );
 
 USE tryeat;

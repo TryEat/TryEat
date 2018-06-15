@@ -3,6 +3,7 @@ package com.tryeat.rest.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 public class Restaurant implements Serializable {
 
@@ -26,6 +27,26 @@ public class Restaurant implements Serializable {
     private float totalRate;
     @SerializedName("total_bookmark")
     private int totalBookMark;
+    @SerializedName("date")
+    private Timestamp date;
+    @SerializedName("distance")
+    private double distance;
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
+
+    public Timestamp getDate() {
+        return date;
+    }
+
+    public void setDate(Timestamp date) {
+        this.date = date;
+    }
 
     public int getTotalBookMark() {
         return totalBookMark;

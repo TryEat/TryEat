@@ -18,12 +18,12 @@ module.exports = function (_dbPool) {
         var query = 'SELECT * FROM user WHERE user_id=? LIMIT 1';
         dbPool.query(query, [user_id], function (err, rows, fields) {
             if (err) throw err;
-            res.status(200).json(rows);
+            res.status(200).json(rows[0]);
         });
     });
 
     router.put('/profile', function (req, res) {
-        var user_id = req.body.user_id;
+        var user_id = req.body.user_id.replace(/"/gi,'');;
         var profile = req.body.profile;
 
         var query = 'UPDATE user SET profile=? WHERE user_id=?';
@@ -35,13 +35,14 @@ module.exports = function (_dbPool) {
     });
 
     router.delete('/', function (req, res) {
-        var user_id = req.body.user_id;
-        var user_pwd = req.body.user_pwd;
+        var user_id = req.body.user_id.replace(/"/gi,'');;
+        var user_pwd = req.body.user_pwd.replace(/"/gi,'');;
 
-        var query = 'DELETE FROM user WHERE user_id=? AND user_pwd=?';
+        var query = 'DELETE FROM user WHERE user_id=? AND user_pwd=?;';
+        query += 'update tryeat.counting SET user=user-1 where target=0;'
         dbPool.query(query, [user_id, user_pwd], function (err, rows, fields) {
             if (err) throw err;
-            if (rows.affectedRows != 0) res.status(201).json({ message: "delete user success" })
+            if (rows[0].affectedRows != 0) res.status(201).json({ message: "delete user success" })
             else res.status(400).json({ message: "delete user fail" })
         });
     });

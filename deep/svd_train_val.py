@@ -56,6 +56,7 @@ for i in range(1000):
 
 f = open(r'''F:\project\TryEat\deep\u.dat''','w')
 val = sess.run(U)
+f.write("%d\n"%user_len)
 for i in range(user_len):
     for j in range(feature_len):
         f.write("%f\n" %val[i][j])
@@ -63,8 +64,9 @@ f.close()
 
 f = open(r'''F:\project\TryEat\deep\p.dat''','w')
 val = sess.run(P)
+f.write("%d\n"%item_len)
 for i in range(feature_len):
-    for j in range(user_len):
+    for j in range(item_len):
         f.write("%f\n" %val[i][j])
 f.close()
 

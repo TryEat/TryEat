@@ -11,6 +11,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -29,15 +30,16 @@ public interface ReviewServiceInterface {
     Call<Review> getRestaurantReviewsImage(@Path("review_id") int reviewId);
 
     @GET("reviews/{user_id}/{restaurant_id}")
-    Call<ArrayList<Review>> getRestaurantUserReviews(@Path("user_id") int userId, @Path("restaurant_id") int restaurantId);
+    Call<Review> getRestaurantUserReviews(@Path("user_id") int userId, @Path("restaurant_id") int restaurantId);
 
     @Multipart
     @POST("reviews/")
     Call<Status> writeReview(@Part MultipartBody.Part image, @PartMap HashMap<String, Object> body);
 
+    @Multipart
     @PUT("reviews/")
-    Call<Status> updateReview(@Body HashMap<String,Object> body);
+    Call<Status> updateReview(@Part MultipartBody.Part image,@PartMap HashMap<String,Object> body);
 
-    @DELETE("reviews/")
+    @HTTP(path = "reviews/", method = "DELETE", hasBody = true)
     Call<Status> deleteReview(@Body HashMap<String,Object> body);
 }

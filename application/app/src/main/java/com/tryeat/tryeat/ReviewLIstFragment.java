@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -37,50 +38,27 @@ public class ReviewLIstFragment extends Fragment {
     RecyclerView lv;
     RecyclerView.LayoutManager mLayoutManager;
     ReviewListAdapter rAdapter;
+    ReviewListAdapter2 rAdapter2;
     LinearLayout button;
 
     ArrayList<Review> mListItem1;
 
-    ImageView header;
-
-    int restaurantId;
+    int restaurantId = -1;
 
     NestedScrollView nestedScrollView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (view == null) {
-            view = inflater.inflate(R.layout.review_list_fragment, container, false);
+        view = inflater.inflate(R.layout.review_list_fragment, container, false);
 
-            mListItem1 = new ArrayList<>();
+        mListItem1 = new ArrayList<>();
 
-            nestedScrollView = view.findViewById(R.id.nested_view);
+        nestedScrollView = view.findViewById(R.id.nested_view);
 
-            header = view.findViewById(R.id.header);
-
-            button = view.findViewById(R.id.review_add_btn);
-            button.setOnClickListener(showAddReviewFragment());
-
-            Glide.with(view)
-                    .load(R.drawable.list_header_image1)
-                    .into(header);
-
-            lv = view.findViewById(R.id.listView);
-            lv.setHasFixedSize(true);
-            mLayoutManager = new LinearLayoutManager(getContext());
-            lv.setLayoutManager(mLayoutManager);
-            rAdapter = new ReviewListAdapter(mListItem1);
-            rAdapter.setOnItemClickListener(new ReviewListAdapter.ClickListener() {
-                @Override
-                public void onItemClick(int position, View v) {
-                    itemClick(position);
-                }
-            });
-            lv.setAdapter(rAdapter);
-
-
-
-        }
+        lv = view.findViewById(R.id.listView);
+        lv.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        lv.setLayoutManager(mLayoutManager);
         return view;
     }
 
@@ -88,8 +66,17 @@ public class ReviewLIstFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if(getArguments().containsKey("user")){
+        if (getArguments().containsKey("user")) {
             //getArguments().remove("restaurant");
+            rAdapter2 = new ReviewListAdapter2(mListItem1);
+            rAdapter2.setOnItemClickListener(new ReviewListAdapter2.ClickListener() {
+                @Override
+                public void onItemClick(int position, View v) {
+                    itemClick(position);
+                }
+            });
+            lv.setAdapter(rAdapter2);
+
             getReviewList();
             nestedScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
                 @Override
@@ -109,6 +96,15 @@ public class ReviewLIstFragment extends Fragment {
         if (getArguments().containsKey("restaurant")) {
             restaurantId = getArguments().getInt("restaurant");
             //getArguments().remove("user");
+            rAdapter = new ReviewListAdapter(mListItem1);
+            rAdapter.setOnItemClickListener(new ReviewListAdapter.ClickListener() {
+                @Override
+                public void onItemClick(int position, View v) {
+                    itemClick(position);
+                }
+            });
+            lv.setAdapter(rAdapter);
+
             getReviewList(restaurantId);
             nestedScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
                 @Override
@@ -129,27 +125,15 @@ public class ReviewLIstFragment extends Fragment {
     }
 
 
-
-    public View.OnClickListener showAddReviewFragment() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                AutoSearchFragment dialogFragment = new AutoSearchFragment();
-                dialogFragment.show(fm, "frament_place");
-            }
-        };
-    }
-
     public void itemClick(int position) {
         Bundle bundle = new Bundle(2);
-        bundle.putSerializable("item", mListItem1.get(position));
-        FragmentLoader.startFragment(R.id.frament_place,ReviewDetailFragment.class,bundle,true);
+        bundle.putSerializable("reviewItem", mListItem1.get(position));
+        FragmentLoader.startFragment(R.id.frament_place, ReviewDetailFragment.class, bundle, true);
     }
 
     public void getReviewList() {
         Log.d("aa", "getReviewList");
-        ReviewService.getUserReviews(LoginToken.getId(), rAdapter.getItemCount(), new Callback<ArrayList<Review>>() {
+        ReviewService.getUserReviews(LoginToken.getId(), rAdapter2.getItemCount(), new Callback<ArrayList<Review>>() {
             @Override
             public void onResponse(Call<ArrayList<Review>> call, Response<ArrayList<Review>> response) {
                 if (response.isSuccessful()) {
@@ -159,7 +143,7 @@ public class ReviewLIstFragment extends Fragment {
                         Review item = reviews.get(i);
                         mListItem1.add(item);
                     }
-                    rAdapter.notifyDataSetChanged();
+                    rAdapter2.notifyDataSetChanged();
                 }
             }
 
@@ -190,6 +174,13 @@ public class ReviewLIstFragment extends Fragment {
                 Log.d("debug", "getRestaurantReviews onFailure" + t);
             }
         });
+    }
+
+    public Boolean refresh() {
+        mListItem1.clear();
+        if (restaurantId != -1) getReviewList(restaurantId);
+        else getReviewList();
+        return true;
     }
 }
 

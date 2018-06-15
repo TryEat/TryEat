@@ -48,7 +48,7 @@ public class GoogleDetail {
 
     public String getPhotoUrl() {
         if (result.photos==null) return null;
-        String url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + result.photos.get(0).photo_reference + "&key=AIzaSyAfDHQhe4fmz5FAitOnTjrOFPesb88GXFE";
+        String url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=1920&photoreference=" + result.photos.get(0).photo_reference + "&key=AIzaSyAfDHQhe4fmz5FAitOnTjrOFPesb88GXFE";
         return url;
     }
 

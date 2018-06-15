@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.tryeat.rest.model.Image;
 import com.tryeat.team.tryeat_service.R;
 
 import java.io.File;
@@ -92,6 +93,10 @@ public class ImageAddFragment extends Fragment implements View.OnClickListener{
         return  image_bitmap;
     }
 
+    public void setImage(Image image){
+        BitmapLoader bm = new BitmapLoader(mImageView);
+        bm.execute(image);
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {

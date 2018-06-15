@@ -31,8 +31,17 @@ public interface RestaurantServiceInterface {
     @GET("restaurants/list/{id_list}/byid")
     Call<ArrayList<Restaurant>> getRestaurants(@Path("id_list") String name);
 
-    @GET("restaurants/{lat}/{ion}/bylocation")
-    Call<ArrayList<Restaurant>> getRestaurant(@Path("lat") double lat, @Path("ion") double ion);
+    @GET("restaurants/byrecommander/{user_id}/{lat}/{ion}/{position}/{distance}")
+    Call<ArrayList<Restaurant>> getRestaurantsOrderByRecommander(@Path("user_id") int userId, @Path("lat") double lat, @Path("ion") double ion,@Path("position") int position,@Path("distance") int distance);
+
+    @GET("restaurants/byrate/{lat}/{ion}/{position}/{distance}")
+    Call<ArrayList<Restaurant>> getRestaurantsOrderByRate(@Path("lat") double lat, @Path("ion") double ion,@Path("position") int position,@Path("distance") int distance);
+
+    @GET("restaurants/byreview/{lat}/{ion}/{position}/{distance}")
+    Call<ArrayList<Restaurant>> getRestaurantsOrderByReview(@Path("lat") double lat, @Path("ion") double ion,@Path("position") int position,@Path("distance") int distance);
+
+    @GET("restaurants/bydistance/{lat}/{ion}/{position}/{distance}")
+    Call<ArrayList<Restaurant>> getRestaurantsOrderByDistance(@Path("lat") double lat, @Path("ion") double ion, @Path("position") int position, @Path("distance") int distance);
 
     @GET("restaurants/{name}/{lat}/{ion}")
     Call<ArrayList<Restaurant>> getRestaurant(@Path("name") String name,@Path("lat") double lat, @Path("ion") double ion);
