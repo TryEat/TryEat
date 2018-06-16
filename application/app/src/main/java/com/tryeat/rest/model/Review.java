@@ -1,11 +1,14 @@
 package com.tryeat.rest.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class Review implements Serializable {
+public class Review implements Serializable, Parcelable {
     @SerializedName("review_id")
     private int reviewId;
     @SerializedName("restaurant_id")
@@ -27,12 +30,16 @@ public class Review implements Serializable {
     @SerializedName("rate")
     private float rate;
 
-    public String getRestaurantName() {
-        return restaurantName;
-    }
-
-    public void setRestaurantName(String restaurantName) {
-        this.restaurantName = restaurantName;
+    protected Review(Parcel in) {
+        reviewId = in.readInt();
+        restaurantId = in.readInt();
+        writer = in.readString();
+        restaurantName = in.readString();
+        address = in.readString();
+        userId = in.readInt();
+        image = in.readParcelable(Image.class.getClassLoader());
+        text = in.readString();
+        rate = in.readFloat();
     }
 
     public int getReviewId() {
@@ -49,6 +56,30 @@ public class Review implements Serializable {
 
     public void setRestaurantId(int restaurantId) {
         this.restaurantId = restaurantId;
+    }
+
+    public String getWriter() {
+        return writer;
+    }
+
+    public void setWriter(String writer) {
+        this.writer = writer;
+    }
+
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
+    public void setRestaurantName(String restaurantName) {
+        this.restaurantName = restaurantName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public int getUserId() {
@@ -87,28 +118,38 @@ public class Review implements Serializable {
         return rate;
     }
 
-    public void setRate(int rate) {
-        this.rate = rate;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public void setRate(float rate) {
         this.rate = rate;
     }
 
-    public String getWriter() {
-        return writer;
+    public static final Creator<Review> CREATOR = new Creator<Review>() {
+        @Override
+        public Review createFromParcel(Parcel in) {
+            return new Review(in);
+        }
+
+        @Override
+        public Review[] newArray(int size) {
+            return new Review[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setWriter(String writer) {
-        this.writer = writer;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(reviewId);
+        dest.writeInt(restaurantId);
+        dest.writeString(writer);
+        dest.writeString(restaurantName);
+        dest.writeString(address);
+        dest.writeInt(userId);
+        dest.writeParcelable(image,flags);
+        dest.writeString(text);
+        dest.writeSerializable(date);
+        dest.writeFloat(rate);
     }
-
 }

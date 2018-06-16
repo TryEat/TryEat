@@ -84,7 +84,7 @@ class ReviewListAdapter2 extends SimpleAdapter<Review>{
             public void onClick(View view) {
                 Bundle bundle = new Bundle(2);
                 bundle.putInt("id", reviewItem.getRestaurantId());
-                FragmentLoader.startFragment(R.id.frament_place, RestaurantDetailFragment.class, bundle, false);
+                FragmentLoader.startFragment(R.id.frament_place, RestaurantDetailFragment.class, bundle, true);
             }
         });
 

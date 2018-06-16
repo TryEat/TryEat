@@ -170,9 +170,10 @@ public class RestaurantDetailFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mListItem1 = new ArrayList<>();
+
         if (getArguments().containsKey("id")) {
             restaurantId = getArguments().getInt("id");
-            //getArguments().remove("id");
         }
 
         if (getArguments().containsKey("reviewItem")) {
@@ -192,8 +193,6 @@ public class RestaurantDetailFragment extends Fragment {
             restaurantId = restaurant.getId();
             init = true;
         }
-
-        mListItem1 = new ArrayList<>();
 
         lv = view.findViewById(R.id.review_list_in_detail);
         lv.setHasFixedSize(true);
@@ -226,7 +225,7 @@ public class RestaurantDetailFragment extends Fragment {
             @Override
             public void toDo(Response<Review> response) {
                 Review review = response.body();
-                if(review!=null)
+                if (review != null)
                     setMyReview(review);
             }
 
@@ -323,12 +322,15 @@ public class RestaurantDetailFragment extends Fragment {
         Utils.safeSetObject(address, restaurant.getAddress());
         Utils.safeSetObject(tel, restaurant.getPhone());
         Utils.safeSetObject(reviewNum, restaurant.getReviewCount());
+
+        if (mListItem1.size() >= restaurant.getReviewCount())
+            more.setVisibility(View.GONE);
     }
 
     private void addListItems(List<Review> items) {
         mListItem1.addAll(items);
         rAdapter.notifyDataSetChanged();
-        if (mListItem1.size() >= restaurant.getReviewCount())
+        if (restaurant != null && mListItem1.size() >= restaurant.getReviewCount())
             more.setVisibility(View.GONE);
     }
 

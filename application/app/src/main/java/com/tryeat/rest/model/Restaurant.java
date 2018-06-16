@@ -165,7 +165,6 @@ public class Restaurant implements Serializable ,Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
         dest.writeInt(id);
         dest.writeParcelable(image,flags);
         dest.writeString(name);

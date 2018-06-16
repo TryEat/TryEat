@@ -22,8 +22,9 @@ class MyLocation {
         LocationManager manager = (LocationManager) mActivity.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         GPSListener gpsListener = new GPSListener();
 
-        if (ActivityCompat.checkSelfPermission(mActivity.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-            ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
 
         manager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, gpsListener, null);
     }
