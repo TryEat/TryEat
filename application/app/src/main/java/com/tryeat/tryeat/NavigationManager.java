@@ -6,7 +6,7 @@ import android.view.MenuItem;
 
 import com.tryeat.team.tryeat_service.R;
 
-public class NavigationManager implements BottomNavigationView.OnNavigationItemSelectedListener {
+class NavigationManager implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private static BottomNavigationView mBottomNavigationView;
 
@@ -24,7 +24,7 @@ public class NavigationManager implements BottomNavigationView.OnNavigationItemS
         switch (item.getItemId()) {
             case R.id.nav_recommand:
                 bundle = new Bundle(2);
-                bundle.putSerializable("user",LoginToken.getId());
+                bundle.putInt("user",LoginToken.getId());
                 FragmentLoader.startFragment(R.id.frament_place,RestaurantListFragment.class,bundle,false);
                 return true;
             case R.id.nav_add_review:
@@ -32,7 +32,7 @@ public class NavigationManager implements BottomNavigationView.OnNavigationItemS
                 return true;
             case R.id.nav_user:
                 bundle = new Bundle(2);
-                bundle.putSerializable("id",LoginToken.getId());
+                bundle.putInt("id",LoginToken.getId());
                 FragmentLoader.startFragment(R.id.frament_place,UserFragment.class,bundle,false);
                 return true;
         }

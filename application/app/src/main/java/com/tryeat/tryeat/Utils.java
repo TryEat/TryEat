@@ -1,19 +1,11 @@
 package com.tryeat.tryeat;
 
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-public class Utils {
+class Utils {
     public static float safeDivide(float a, float b) {
         if (a != 0 && b != 0) return a / b;
         return 0;
@@ -24,7 +16,7 @@ public class Utils {
             float rate = 0;
             if (object == null) {
             } else if (object instanceof Float) {
-                rate = ((Float) object).floatValue();
+                rate = (Float) object;
             }
             ((RatingBar) view).setRating(rate);
         } else if (view instanceof TextView) {

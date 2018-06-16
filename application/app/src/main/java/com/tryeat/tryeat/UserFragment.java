@@ -1,15 +1,12 @@
 package com.tryeat.tryeat;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,38 +19,36 @@ import android.widget.TextView;
 
 import com.tryeat.rest.model.Status;
 import com.tryeat.rest.model.User;
-import com.tryeat.rest.service.ReviewService;
 import com.tryeat.rest.service.SignService;
 import com.tryeat.rest.service.UserService;
 import com.tryeat.team.tryeat_service.R;
 
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class UserFragment extends Fragment {
 
-    View view;
+    private View view;
 
-    TextView name;
+    private TextView name;
 
-    TextView bookMarkNum;
-    TextView reviewNum;
+    private TextView bookMarkNum;
+    private TextView reviewNum;
 
-    LinearLayout bookmark;
-    LinearLayout review;
+    private LinearLayout bookmark;
+    private LinearLayout review;
 
-    FrameLayout fragmentView;
+    private FrameLayout fragmentView;
 
-    NestedScrollView nsView;
+    private NestedScrollView nsView;
 
-    SwipeRefreshLayout refreshLayout;
+    private SwipeRefreshLayout refreshLayout;
 
-    Fragment fragment;
+    private Fragment fragment;
 
-    PopupMenu popupMenu;
+    private PopupMenu popupMenu;
 
-    int userId;
+    private int userId;
+
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.user_fragment, container, false);
@@ -75,21 +70,7 @@ public class UserFragment extends Fragment {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.m1:
-                                SignService.signOut(new Callback<Status>() {
-                                    @Override
-                                    public void onResponse(Call<Status> call, Response<Status> response) {
-                                        Intent intent = new Intent(getActivity(), SignInActivity.class);
-                                        intent.putExtra("logout",true);
-                                        startActivity(intent);
-                                        getActivity().finish();
-                                        getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<Status> call, Throwable t) {
-
-                                    }
-                                });
+                                signOut();
                                 break;
                             case R.id.m2:
                                 popupMenu.dismiss();
@@ -108,8 +89,10 @@ public class UserFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(fragment instanceof FollowListFragment)((FollowListFragment) fragment).refresh();
-                else if(fragment instanceof ReviewLIstFragment)((ReviewLIstFragment) fragment).refresh();
+                if (fragment instanceof FollowListFragment)
+                    ((FollowListFragment) fragment).refresh();
+                else if (fragment instanceof ReviewLIstFragment)
+                    ((ReviewLIstFragment) fragment).refresh();
                 refreshLayout.setRefreshing(false);
             }
         });
@@ -126,8 +109,8 @@ public class UserFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle(2);
-                bundle.putSerializable("user",userId);
-                fragment  =  FragmentLoader.startFragment(R.id.fragment_view, ReviewLIstFragment.class,bundle,false);
+                bundle.putInt("user", userId);
+                fragment = FragmentLoader.startFragment(R.id.fragment_view, ReviewLIstFragment.class, bundle, false);
             }
         });
 
@@ -136,8 +119,8 @@ public class UserFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle(2);
-                bundle.putSerializable("user",userId);
-                fragment=  FragmentLoader.startFragment(R.id.fragment_view, FollowListFragment.class,bundle,false);
+                bundle.putInt("user", userId);
+                fragment = FragmentLoader.startFragment(R.id.fragment_view, FollowListFragment.class, bundle, false);
             }
         });
 
@@ -149,22 +132,47 @@ public class UserFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Bundle bundle = new Bundle(2);
-        bundle.putSerializable("user",userId);
-        fragment  =  FragmentLoader.startFragment(R.id.fragment_view, ReviewLIstFragment.class,bundle,false);
+        bundle.putSerializable("user", userId);
+        fragment = FragmentLoader.startFragment(R.id.fragment_view, ReviewLIstFragment.class, bundle, false);
 
-        UserService.getUser(userId, new Callback<User>() {
+        UserService.getUser(userId, new SimpleCallBack<>(UserService.class.getSimpleName(), new SimpleCallBack.Success<User>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void toDo(Response<User> response) {
                 User user = response.body();
-                name.setText(user.getUser_login_id());
-                Utils.safeSetObject(reviewNum,user.getReview_count());
-                Utils.safeSetObject(bookMarkNum,user.getBookmark_count());
+                Utils.safeSetObject(name,user.getUser_login_id());
+                Utils.safeSetObject(reviewNum, user.getReview_count());
+                Utils.safeSetObject(bookMarkNum, user.getBookmark_count());
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Log.d("sdf",t.toString());
+            public void exception() {
+
             }
-        });
+        }));
+    }
+
+    public void signOut() {
+        SignService.signOut(new SimpleCallBack<>(SignService.class.getSimpleName(),
+                new SimpleCallBack.Success<Status>() {
+                    @Override
+                    public void toDo(Response<Status> response) {
+                        LoginToken.removeToken();
+                        startSignInActivity();
+                    }
+
+                    @Override
+                    public void exception() {
+
+                    }
+                }
+        ));
+    }
+
+    public void startSignInActivity(){
+        Intent intent = new Intent(getActivity(), SignInActivity.class);
+        intent.putExtra("logout", true);
+        startActivity(intent);
+        getActivity().finish();
+        getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
     }
 }

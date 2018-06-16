@@ -7,7 +7,7 @@ import android.content.Context;
  */
 
 public class FollowButton extends android.support.v7.widget.AppCompatButton{
-    int mTargetId;
+    private int mTargetId;
     public FollowButton(Context context) {
         super(context);
     }

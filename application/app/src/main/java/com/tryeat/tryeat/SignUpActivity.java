@@ -23,11 +23,11 @@ import retrofit2.Response;
 public class SignUpActivity extends AppCompatActivity {
 
     LinearLayout checkPasswordLayout;
-    EditText id;
-    EditText password;
-    EditText checkPassword;
-    TextView signinButton;
-    Button signupButton;
+    private EditText id;
+    private EditText password;
+    private EditText checkPassword;
+    private TextView signinButton;
+    private Button signupButton;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,20 +80,24 @@ public class SignUpActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(Call<Status> call, Response<Status> response) {
                                 int statusCode = response.code();
-                                if (statusCode == StatusCode.SIGNUP_ID_DUPLICATION) {
-                                    progressDialog.dismiss();
-                                    Toast.makeText(getApplicationContext(), "Id 가 중복됩니다...", Toast.LENGTH_LONG).show();
-                                } else if (statusCode == StatusCode.SIGNUP_SUCCESS) {
-                                    progressDialog.dismiss();
-                                    Toast.makeText(getApplicationContext(), "가입에 성공했습니다...", Toast.LENGTH_LONG).show();
-                                    Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                                switch (statusCode) {
+                                    case StatusCode.SIGNUP_ID_DUPLICATION:
+                                        progressDialog.dismiss();
+                                        Toast.makeText(getApplicationContext(), "Id 가 중복됩니다...", Toast.LENGTH_LONG).show();
+                                        break;
+                                    case StatusCode.SIGNUP_SUCCESS:
+                                        progressDialog.dismiss();
+                                        Toast.makeText(getApplicationContext(), "가입에 성공했습니다...", Toast.LENGTH_LONG).show();
+                                        Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                        overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 
-                                } else if (statusCode == StatusCode.SIGNIN_FAIL) {
-                                    progressDialog.dismiss();
-                                    Toast.makeText(getApplicationContext(), "가입에 실패했습니다...", Toast.LENGTH_LONG).show();
+                                        break;
+                                    case StatusCode.SIGNIN_FAIL:
+                                        progressDialog.dismiss();
+                                        Toast.makeText(getApplicationContext(), "가입에 실패했습니다...", Toast.LENGTH_LONG).show();
+                                        break;
                                 }
 
                             }

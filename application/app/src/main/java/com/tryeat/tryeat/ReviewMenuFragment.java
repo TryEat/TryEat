@@ -16,10 +16,10 @@ import com.tryeat.team.tryeat_service.R;
 
 public class ReviewMenuFragment extends Fragment {
 
-    View view;
+    private View view;
 
-    LinearLayout addReview;
-    ImageView image;
+    private LinearLayout addReview;
+    private ImageView image;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

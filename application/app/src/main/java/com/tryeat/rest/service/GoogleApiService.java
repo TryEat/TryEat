@@ -13,12 +13,12 @@ import retrofit2.http.Query;
 public class GoogleApiService {
     private static final String GOOGLE_API_KEY = "AIzaSyClqhsf_HgFPeNBwmOM0GkHJLjBFl-lwTo";
 
-    public static final Retrofit retrofit = new Retrofit.Builder()
+    private static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://maps.googleapis.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
-    private static GooApiServiewInterface googleApiService = retrofit.create(GooApiServiewInterface.class);;
+    private static GooApiServiceInterface googleApiService = retrofit.create(GooApiServiceInterface.class);
 
     public static void getRestaurant(String name, double lat, double lon, int radius, Callback<GoogleAutoComplete> callback) {
         String location = Double.toString(lat)+','+Double.toString(lon);
@@ -29,7 +29,7 @@ public class GoogleApiService {
         googleApiService.getDetail(placeId,"ko",GOOGLE_API_KEY).enqueue(callback);
     }
 
-    public interface GooApiServiewInterface{
+    interface GooApiServiceInterface {
         @GET("maps/api/place/autocomplete/json")
         Call<GoogleAutoComplete> getRestaurant(@Query("input") String name,@Query("language") String language,@Query("location") String location, @Query("radius") int radius, @Query("key") String key);
 

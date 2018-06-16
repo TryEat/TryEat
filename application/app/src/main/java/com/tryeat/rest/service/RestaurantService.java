@@ -21,7 +21,7 @@ public class RestaurantService {
         restaurantServiceInterface.getRestaurants(position).enqueue(callback);
     }
 
-    public static void getRestaurantsOrderByDistance(int restaurantId, Callback<Restaurant> callback) {
+    public static void getRestaurant(int restaurantId, Callback<Restaurant> callback) {
         restaurantServiceInterface.getRestaurant(restaurantId).enqueue(callback);
     }
 
@@ -29,7 +29,7 @@ public class RestaurantService {
         restaurantServiceInterface.getRestaurants(idList).enqueue(callback);
     }
 
-    public static void getRestaurantsOrderByDistance(String name, Callback<ArrayList<Restaurant>> callback) {
+    public static void getRestaurant(String name, Callback<ArrayList<Restaurant>> callback) {
         restaurantServiceInterface.getRestaurant(name).enqueue(callback);
     }
 
@@ -49,7 +49,7 @@ public class RestaurantService {
         restaurantServiceInterface.getRestaurantsOrderByDistance(lat,ion,position,distance).enqueue(callback);
     }
 
-    public static void getRestaurantsOrderByDistance(String name, double lat, double ion, Callback<ArrayList<Restaurant>> callback) {
+    public static void getRestaurant(String name, double lat, double ion, Callback<ArrayList<Restaurant>> callback) {
         restaurantServiceInterface.getRestaurant(name, lat, ion).enqueue(callback);
     }
 

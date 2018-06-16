@@ -7,7 +7,7 @@ import android.widget.ImageView;
 
 import com.tryeat.rest.model.Image;
 
-public class BitmapLoader extends AsyncTask<Image,Void,Bitmap> {
+class BitmapLoader extends AsyncTask<Image,Void,Bitmap> {
     private ImageView mImageView;
 
     public BitmapLoader(ImageView imageView) {

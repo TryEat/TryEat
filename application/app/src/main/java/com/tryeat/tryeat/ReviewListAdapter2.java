@@ -33,26 +33,19 @@ import retrofit2.Response;
  */
 
 
-public class ReviewListAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    public interface ClickListener{
-        void onItemClick(int position, View v);
-    }
-
-    private  static ClickListener clickListener;
-
-    private ArrayList<Review> mListItem1;
+class ReviewListAdapter2 extends SimpleAdapter<Review>{
 
     private static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        public ImageView image;
-        public TextView restaurantName;
-        public RatingBar rate;
-        public TextView text;
-        public TextView address;
-        public TextView date;
-        public ImageView menu;
-        public LinearLayout open;
+        ImageView image;
+        TextView restaurantName;
+        RatingBar rate;
+        TextView text;
+        TextView address;
+        TextView date;
+        ImageView menu;
+        LinearLayout open;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             image = itemView.findViewById(R.id.image);
@@ -71,12 +64,8 @@ public class ReviewListAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    public void setOnItemClickListener(ClickListener clickListener) {
-        this.clickListener = clickListener;
-    }
-
     public ReviewListAdapter2(ArrayList<Review> item){
-        this.mListItem1 = item;
+        this.mItemList = item;
     }
 
     @Override
@@ -88,7 +77,7 @@ public class ReviewListAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final ViewHolder viewHolder = (ViewHolder) holder;
-        final Review reviewItem = mListItem1.get(position);
+        final Review reviewItem = mItemList.get(position);
 
         viewHolder.open.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,8 +110,8 @@ public class ReviewListAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHo
                                             @Override
                                             public void onResponse(Call<Status> call, Response<Status> response) {
                                                 if(response.isSuccessful()){
-                                                    int position = mListItem1.indexOf(reviewItem);
-                                                    mListItem1.remove(position);
+                                                    int position = mItemList.indexOf(reviewItem);
+                                                    mItemList.remove(position);
                                                     notifyItemRemoved(position);
                                                 }
                                             }
@@ -164,7 +153,7 @@ public class ReviewListAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        return mListItem1.size();
+        return mItemList.size();
     }
 
 }

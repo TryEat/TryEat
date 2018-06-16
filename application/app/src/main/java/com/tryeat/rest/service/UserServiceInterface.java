@@ -13,7 +13,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
-public interface UserServiceInterface {
+interface UserServiceInterface {
     @GET("users/")
     Call<ArrayList<User>> getUsers();
 

@@ -10,7 +10,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
-public class MyLocation {
+class MyLocation {
     private static Activity mActivity;
     private static Location mLocation;
 

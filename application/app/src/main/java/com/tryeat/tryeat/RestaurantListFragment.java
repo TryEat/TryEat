@@ -9,13 +9,11 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -36,31 +34,49 @@ import retrofit2.Response;
  */
 
 
-public class RestaurantListFragment extends Fragment {
-    View view;
-    RecyclerView lv;
-    RecyclerView.LayoutManager mLayoutManager;
-    RestaurantListAdapter rAdapter;
+public class RestaurantListFragment extends Fragment{
+    private View view;
+    private RecyclerView lv;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private RestaurantListAdapter rAdapter;
 
-    ArrayList<Restaurant> mListItem1;
+    private ArrayList<Restaurant> mListItem1;
 
-    ImageView header;
+    private ImageView header;
 
-    NestedScrollView nestedScrollView;
+    private NestedScrollView nestedScrollView;
 
-    SwipeRefreshLayout refreshLayout;
+    private SwipeRefreshLayout refreshLayout;
 
-    LinearLayout filter;
+    private LinearLayout filter;
 
-    boolean getFlag = false;
+    private boolean getFlag = false;
 
-    int mDistance=0, mType=0;
+    private int mDistance=0;
+    private int mType=0;
+    private int[] mDistanceValue = {100,500,1000,3000,5000,0};
+
+    SimpleCallBack<ArrayList<Restaurant>> callBack;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mListItem1 = new ArrayList<>();
 
         NavigationManager.setVisibility(View.VISIBLE);
+
+        callBack = new SimpleCallBack<>(Restaurant.class.getSimpleName(), new SimpleCallBack.Success<ArrayList<Restaurant>>() {
+            @Override
+            public void toDo(Response<ArrayList<Restaurant>> response) {
+                List<Restaurant> restaurants = response.body();
+                addItems(restaurants);
+                getFlag = false;
+            }
+
+            @Override
+            public void exception() {
+                getFlag = false;
+            }
+        });
 
         view = inflater.inflate(R.layout.restaurant_list_fragment, container, false);
 
@@ -71,9 +87,8 @@ public class RestaurantListFragment extends Fragment {
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 FilterDialogFragment dialogFragment = new FilterDialogFragment();
                 Bundle bundle = new Bundle(2);
-                bundle.putInt("type",mType);
-                bundle.putInt("distance",mDistance);
-
+                bundle.putSerializable("type",mType);
+                bundle.putSerializable("distance",mDistance);
                 dialogFragment.setArguments(bundle);
                 dialogFragment.setInterface(new FilterDialogFragment.FilterInterface() {
                     @Override
@@ -120,7 +135,7 @@ public class RestaurantListFragment extends Fragment {
         nestedScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             @Override
             public void onScrollChanged() {
-                View view = (View) nestedScrollView.getChildAt(nestedScrollView.getChildCount() - 1);
+                View view = nestedScrollView.getChildAt(nestedScrollView.getChildCount() - 1);
 
                 int diff = (view.getBottom() - (nestedScrollView.getHeight() + nestedScrollView
                         .getScrollY()));
@@ -142,131 +157,55 @@ public class RestaurantListFragment extends Fragment {
 
     }
 
-    public void getRestaurantListOrderByDistacne() {
-        if (getFlag == true) return;
-        getFlag = true;
-        RestaurantService.getRestaurantsOrderByDistance(MyLocation.getLocation().getLatitude(),MyLocation.getLocation().getLongitude(),rAdapter.getItemCount(),mDistance, new Callback<ArrayList<Restaurant>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Restaurant>> call, Response<ArrayList<Restaurant>> response) {
-                if (response.isSuccessful()) {
-                    List<Restaurant> restaurants = response.body();
-                    int size = restaurants.size();
-                    for (int i = 0; i < size; i++) {
-                        Restaurant item = restaurants.get(i);
-                        mListItem1.add(item);
-                    }
-                    rAdapter.notifyDataSetChanged();
-                    getFlag = false;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<Restaurant>> call, Throwable t) {
-                Log.d("debug", "getRestaurantList onFailure" + t);
-                getFlag = false;
-            }
-        });
+    private void addItems(List<Restaurant> items){
+        mListItem1.addAll(items);
+        rAdapter.notifyDataSetChanged();
     }
 
-    public void getRestaurantListOrderByRate() {
-        if (getFlag == true) return;
+    private void getRestaurantListOrderByDistance() {
+        if (getFlag) return;
         getFlag = true;
-        RestaurantService.getRestaurantsOrderByRate(MyLocation.getLocation().getLatitude(),MyLocation.getLocation().getLongitude(),rAdapter.getItemCount(),mDistance, new Callback<ArrayList<Restaurant>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Restaurant>> call, Response<ArrayList<Restaurant>> response) {
-                if (response.isSuccessful()) {
-                    List<Restaurant> restaurants = response.body();
-                    int size = restaurants.size();
-                    for (int i = 0; i < size; i++) {
-                        Restaurant item = restaurants.get(i);
-                        mListItem1.add(item);
-                    }
-                    rAdapter.notifyDataSetChanged();
-                    getFlag = false;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<Restaurant>> call, Throwable t) {
-                Log.d("debug", "getRestaurantList onFailure" + t);
-                getFlag = false;
-            }
-        });
+        RestaurantService.getRestaurantsOrderByDistance(MyLocation.getLocation().getLatitude(),MyLocation.getLocation().getLongitude(),rAdapter.getItemCount(),mDistanceValue[mDistance], callBack);
     }
 
-    public void getRestaurantListOrderByReview() {
-        if (getFlag == true) return;
+    private void getRestaurantListOrderByRate() {
+        if (getFlag) return;
         getFlag = true;
-        RestaurantService.getRestaurantsOrderByReview(MyLocation.getLocation().getLatitude(),MyLocation.getLocation().getLongitude(),rAdapter.getItemCount(),mDistance, new Callback<ArrayList<Restaurant>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Restaurant>> call, Response<ArrayList<Restaurant>> response) {
-                if (response.isSuccessful()) {
-                    List<Restaurant> restaurants = response.body();
-                    int size = restaurants.size();
-                    for (int i = 0; i < size; i++) {
-                        Restaurant item = restaurants.get(i);
-                        mListItem1.add(item);
-                    }
-                    rAdapter.notifyDataSetChanged();
-                    getFlag = false;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<Restaurant>> call, Throwable t) {
-                Log.d("debug", "getRestaurantList onFailure" + t);
-                getFlag = false;
-            }
-        });
+        RestaurantService.getRestaurantsOrderByRate(MyLocation.getLocation().getLatitude(),MyLocation.getLocation().getLongitude(),rAdapter.getItemCount(),mDistanceValue[mDistance], callBack);
     }
 
-    public void getRestaurantsOrderByRecommander() {
-        if (getFlag == true) return;
+    private void getRestaurantListOrderByReview() {
+        if (getFlag) return;
         getFlag = true;
-        RestaurantService.getRestaurantsOrderByRecommander(LoginToken.getId(),MyLocation.getLocation().getLatitude(),MyLocation.getLocation().getLongitude(),rAdapter.getItemCount(),mDistance, new Callback<ArrayList<Restaurant>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Restaurant>> call, Response<ArrayList<Restaurant>> response) {
-                if (response.isSuccessful()) {
-                    List<Restaurant> restaurants = response.body();
-                    int size = restaurants.size();
-                    for (int i = 0; i < size; i++) {
-                        Restaurant item = restaurants.get(i);
-                        mListItem1.add(item);
-                    }
-                    rAdapter.notifyDataSetChanged();
-                    getFlag = false;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<Restaurant>> call, Throwable t) {
-                Log.d("debug", "getRestaurantList onFailure" + t);
-                getFlag = false;
-            }
-        });
+        RestaurantService.getRestaurantsOrderByReview(MyLocation.getLocation().getLatitude(),MyLocation.getLocation().getLongitude(),rAdapter.getItemCount(),mDistanceValue[mDistance], callBack);
     }
 
-    public void itemClick(int position) {
+    private void getRestaurantsOrderByRecommend() {
+        if (getFlag) return;
+        getFlag = true;
+        RestaurantService.getRestaurantsOrderByRecommander(LoginToken.getId(),MyLocation.getLocation().getLatitude(),MyLocation.getLocation().getLongitude(),rAdapter.getItemCount(),mDistanceValue[mDistance], callBack);
+    }
+
+    private void itemClick(int position) {
         if(mListItem1.size()>position) {
             Bundle bundle = new Bundle(2);
             Restaurant item = mListItem1.get(position);
-            bundle.putSerializable("reviewItem", item);
+            bundle.putParcelable("reviewItem", item);
             FragmentLoader.startFragment(R.id.frament_place, RestaurantDetailFragment.class, bundle, true);
         }
     }
 
-    public void setSearchTypeSetting(int type, int distance) {
+    private void setSearchTypeSetting(int type, int distance) {
         mDistance = distance;
         mType = type;
         mListItem1.clear();
         getData();
     }
 
-    public void getData(){
-        // 리뷰, 거리, 평점
+    private void getData(){
         switch (mType){
             case 0:
-                getRestaurantsOrderByRecommander();
+                getRestaurantsOrderByRecommend();
                 break;
             case 1:
                 getRestaurantListOrderByReview();
@@ -275,9 +214,11 @@ public class RestaurantListFragment extends Fragment {
                 getRestaurantListOrderByRate();
                 break;
             case 3:
-                getRestaurantListOrderByDistacne();
+                getRestaurantListOrderByDistance();
                 break;
         }
     }
+
+
 }
 

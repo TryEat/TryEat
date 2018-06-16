@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -18,8 +17,6 @@ import com.tryeat.rest.model.StatusCode;
 import com.tryeat.rest.service.SignService;
 import com.tryeat.team.tryeat_service.R;
 
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SignInActivity extends AppCompatActivity {
@@ -28,11 +25,11 @@ public class SignInActivity extends AppCompatActivity {
     private String id;
     private String pwd;
 
-    EditText idText;
-    EditText passwordText;
-    Button signButton;
-    TextView signup_btn;
-    CheckBox checkBox;
+    private EditText idText;
+    private EditText passwordText;
+    private Button signButton;
+    private TextView signup_btn;
+    private CheckBox checkBox;
 
     private SharedPreferences appData;
 
@@ -77,7 +74,7 @@ public class SignInActivity extends AppCompatActivity {
             idText.setText(id);
             passwordText.setText(pwd);
             checkBox.setChecked(saveLoginData);
-            if (getIntent().getExtras()==null) {
+            if (getIntent().getExtras() == null) {
                 signIn();
             }
         }
@@ -114,30 +111,22 @@ public class SignInActivity extends AppCompatActivity {
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-                        SignService.signIn(idText.getText().toString(), passwordText.getText().toString(), new Callback<Status>() {
+                        SimpleCallBack<Status> simpleCallBack = new SimpleCallBack<>(SignService.class.getSimpleName(), new SimpleCallBack.Success<Status>() {
                             @Override
-                            public void onResponse(Call<Status> call, Response<Status> response) {
-                                if (response.code() == StatusCode.SIGNIN_SUCCESS) {
-                                    int id = response.body().payLoadInt;
-                                    String token = response.body().payLoadString;
-                                    LoginToken.setToken(id, token);
-
-                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                    progressDialog.dismiss();
-                                } else if (response.code() == StatusCode.SIGNIN_FAIL) {
-                                    progressDialog.dismiss();
-                                    Toast.makeText(getApplicationContext(), "아이디 또는 비밀번호가 틀립니다.", Toast.LENGTH_LONG).show();
-                                    return;
-                                }
+                            public void toDo(Response<Status> response) {
+                                LoginToken.setToken(response.body().payLoadInt, response.body().payLoadString);
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                                progressDialog.dismiss();
                             }
-
                             @Override
-                            public void onFailure(Call<Status> call, Throwable t) {
-                                Log.d("debug", t.toString());
+                            public void exception() {
+                                progressDialog.dismiss();
+                                Toast.makeText(getApplicationContext(), "아이디 또는 비밀번호가 틀립니다.", Toast.LENGTH_LONG).show();
                             }
                         });
+                        SignService.signIn(idText.getText().toString(), passwordText.getText().toString(), simpleCallBack);
                     }
                 }, 500
         );

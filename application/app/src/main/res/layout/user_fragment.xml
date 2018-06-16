@@ -54,7 +54,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingBottom="5dp"
-                    android:weightSum="1">
+                    android:weightSum="1"
+                    android:baselineAligned="false">
 
                     <LinearLayout
                         android:id="@+id/review"

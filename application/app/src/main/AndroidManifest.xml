@@ -10,7 +10,8 @@
         android:largeHeap="true"
         android:roundIcon="@drawable/logo_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar">
+        android:theme="@style/AppTheme.NoActionBar"
+        android:fullBackupContent="@xml/backup_descriptor">
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

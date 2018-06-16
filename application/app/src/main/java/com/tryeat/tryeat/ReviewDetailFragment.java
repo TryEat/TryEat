@@ -1,11 +1,9 @@
 package com.tryeat.tryeat;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,23 +31,23 @@ import retrofit2.Response;
 
 
 public class ReviewDetailFragment extends Fragment {
-    View view;
+    private View view;
 
     int reviewId;
-    Review reviewItem;
+    private Review reviewItem;
     Button delete, modify;
 
 
-    TextView writer;
-    TextView date;
-    RatingBar rate;
-    ImageView image;
-    TextView review;
-    TextView name;
-    TextView address;
-    ImageView userIcon;
+    private TextView writer;
+    private TextView date;
+    private RatingBar rate;
+    private ImageView image;
+    private TextView review;
+    private TextView name;
+    private TextView address;
+    private ImageView userIcon;
 
-    PopupMenu popupMenu;
+    private PopupMenu popupMenu;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -63,8 +61,8 @@ public class ReviewDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle(2);
-                bundle.putSerializable("id", reviewItem.getUserId());
-                bundle.putSerializable("name", reviewItem.getWriter());
+                bundle.putInt("id", reviewItem.getUserId());
+                bundle.putString("name", reviewItem.getWriter());
                 FragmentLoader.startFragment(R.id.frament_place, UserFragment.class, bundle, false);
             }
         });

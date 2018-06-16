@@ -3,6 +3,7 @@ package com.tryeat.tryeat;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -37,40 +38,42 @@ import retrofit2.Response;
 
 
 public class RestaurantDetailFragment extends Fragment {
-    View view;
-    RecyclerView lv;
-    LinearLayoutManager mLayoutManager;
-    Restaurant restaurant;
-    ReviewListAdapter rAdapter;
-    TextView name;
-    TextView rate;
-    TextView count;
-    TextView address;
-    TextView tel;
-    TextView bookmark;
+    private View view;
+    private RecyclerView lv;
+    private LinearLayoutManager mLayoutManager;
+    private Restaurant restaurant;
+    private ReviewListAdapter rAdapter;
+    private TextView name;
+    private TextView rate;
+    private TextView count;
+    private TextView address;
+    private TextView tel;
+    private TextView bookmark;
 
-    ImageView bookmarkimg;
+    private ImageView bookmarkimg;
 
-    int restaurantId;
+    private int restaurantId;
 
-    Review myReviewItem;
-    ArrayList<Review> mListItem1;
+    private Review myReviewItem;
+    private ArrayList<Review> mListItem1;
 
-    Boolean init = false;
+    private Boolean init = false;
 
-    TextView more;
+    private TextView more;
 
-    ImageView image;
+    private ImageView image;
 
-    LinearLayout followBnt;
-    LinearLayout addReviewBnt;
+    private LinearLayout followBnt;
+    private LinearLayout addReviewBnt;
 
-    TextView reviewNum;
+    private TextView reviewNum;
 
-    TextView reviewText;
-    int bookmarkFlag = -1;
+    private TextView reviewText;
+    private int bookmarkFlag = -1;
 
-    LinearLayout myReviewPlace;
+    private LinearLayout myReviewPlace;
+
+    private SwipeRefreshLayout refreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -95,41 +98,45 @@ public class RestaurantDetailFragment extends Fragment {
 
         followBnt = view.findViewById(R.id.addbookmark);
 
+        refreshLayout = view.findViewById(R.id.refreshlayout);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+                refreshLayout.setRefreshing(false);
+            }
+        });
+
         followBnt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (bookmarkFlag == -1) return;
                 if (bookmarkFlag == 1) {
-                    BookMarkService.removeBookMark(LoginToken.getId(), restaurantId, new Callback<Status>() {
+                    BookMarkService.removeBookMark(LoginToken.getId(), restaurantId, new SimpleCallBack<Status>(BookMarkService.class.getSimpleName(), new SimpleCallBack.Success<Status>() {
                         @Override
-                        public void onResponse(Call<Status> call, Response<Status> response) {
-                            if (response.code() == 201) {
-                                bookmarkFlag = 0;
-                                setBookmarkImg(bookmarkFlag);
-                            }
-
+                        public void toDo(Response<Status> response) {
+                            bookmarkFlag = 0;
+                            setBookmarkImg(bookmarkFlag);
                         }
 
                         @Override
-                        public void onFailure(Call<Status> call, Throwable t) {
+                        public void exception() {
 
                         }
-                    });
+                    }));
                 } else {
-                    BookMarkService.addBookMark(LoginToken.getId(), restaurantId, new Callback<Status>() {
+                    BookMarkService.addBookMark(LoginToken.getId(), restaurantId, new SimpleCallBack<Status>(BookMarkService.class.getSimpleName(), new SimpleCallBack.Success<Status>() {
                         @Override
-                        public void onResponse(Call<Status> call, Response<Status> response) {
-                            if (response.code() == 201) {
-                                bookmarkFlag = 1;
-                                setBookmarkImg(bookmarkFlag);
-                            }
+                        public void toDo(Response<Status> response) {
+                            bookmarkFlag = 1;
+                            setBookmarkImg(bookmarkFlag);
                         }
 
                         @Override
-                        public void onFailure(Call<Status> call, Throwable t) {
+                        public void exception() {
 
                         }
-                    });
+                    }));
                 }
             }
         });
@@ -169,15 +176,9 @@ public class RestaurantDetailFragment extends Fragment {
         }
 
         if (getArguments().containsKey("reviewItem")) {
-            restaurant = (Restaurant) getArguments().getSerializable("reviewItem");
+            restaurant = (Restaurant) getArguments().getParcelable("reviewItem");
             //getArguments().remove("reviewItem");
-            name.setText(restaurant.getName());
-            rate.setText(String.valueOf(Utils.safeDivide(restaurant.getTotalRate(), restaurant.getReviewCount())));
-            count.setText(restaurant.getReviewCount() + "");
-            Utils.safeSetObject(bookmark, restaurant.getTotalBookMark());
-            Utils.safeSetObject(address, restaurant.getAddress());
-            Utils.safeSetObject(tel, restaurant.getPhone());
-            Utils.safeSetObject(reviewNum, restaurant.getReviewCount());
+            setData(restaurant);
 
             if (restaurant.getImage() != null) {
                 BitmapLoader bitmapLoader = new BitmapLoader(image);
@@ -214,129 +215,128 @@ public class RestaurantDetailFragment extends Fragment {
         getBookMarkState(restaurantId);
     }
 
-    public void setBookmarkImg(int bookmarkFlag) {
-        if (bookmarkFlag == 0) {
-            Glide.with(getActivity())
-                    .load(R.drawable.bookmark_on)
-                    .into(bookmarkimg);
-        } else if (bookmarkFlag == 1) {
-            Glide.with(getActivity())
-                    .load(R.drawable.bookmark_off)
-                    .into(bookmarkimg);
-        }
-
+    private void setBookmarkImg(int bookmarkFlag) {
+        Glide.with(getActivity())
+                .load((bookmarkFlag == 0) ? R.drawable.bookmark_on : R.drawable.bookmark_off)
+                .into(bookmarkimg);
     }
 
-    public void getMyReview(int restaurantId) {
-        ReviewService.getRestaurantUserReviews(LoginToken.getId(), restaurantId, new Callback<Review>() {
+    private void getMyReview(int restaurantId) {
+        ReviewService.getRestaurantUserReviews(LoginToken.getId(), restaurantId, new SimpleCallBack<Review>(ReviewService.class.getSimpleName(), new SimpleCallBack.Success<Review>() {
             @Override
-            public void onResponse(Call<Review> call, Response<Review> response) {
-                if (response.isSuccessful()) {
-                    if(response.code()==209){
-                        myReviewPlace.setVisibility(View.GONE);
-                        return;
-                    }
-                    myReviewItem = response.body();
-                    reviewText.setText("리뷰 수정");
-
-                    View myReview = view.findViewById(R.id.my_review);
-                    ImageView image = myReview.findViewById(R.id.image);
-                    TextView name = myReview.findViewById(R.id.name);
-                    RatingBar rate = myReview.findViewById(R.id.rate);
-                    TextView text = myReview.findViewById(R.id.text);
-
-                    BitmapLoader bitmapLoader = new BitmapLoader(image);
-                    bitmapLoader.execute(myReviewItem.getImage());
-
-                    name.setText(myReviewItem.getWriter());
-                    rate.setRating(myReviewItem.getRate());
-                    text.setText(myReviewItem.getText());
-
-                    myReview.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Bundle bundle = new Bundle(2);
-                            bundle.putSerializable("reviewItem", myReviewItem);
-                            FragmentLoader.startFragment(R.id.frament_place, ReviewDetailFragment.class, bundle, true);
-                        }
-                    });
-                }
+            public void toDo(Response<Review> response) {
+                Review review = response.body();
+                if(review!=null)
+                    setMyReview(review);
             }
 
             @Override
-            public void onFailure(Call<Review> call, Throwable t) {
-                Log.d("sdaf",t.toString());
+            public void exception() {
+                myReviewPlace.setVisibility(View.GONE);
             }
-        });
+        }));
     }
 
-    public void getBookMarkState(int restaurantId) {
-        BookMarkService.isExistBookMarks(LoginToken.getId(), restaurantId, new Callback<Status>() {
+    private void getBookMarkState(int restaurantId) {
+        BookMarkService.isExistBookMarks(LoginToken.getId(), restaurantId, new SimpleCallBack<>(BookMarkService.class.getSimpleName(), new SimpleCallBack.Success<Status>() {
             @Override
-            public void onResponse(Call<Status> call, Response<Status> response) {
-                if (response.isSuccessful()) {
-                    bookmarkFlag = 1;
-                } else {
-                    bookmarkFlag = 0;
-                }
+            public void toDo(Response<Status> response) {
+                bookmarkFlag = 1;
                 setBookmarkImg(bookmarkFlag);
             }
 
             @Override
-            public void onFailure(Call<Status> call, Throwable t) {
-
+            public void exception() {
+                bookmarkFlag = 0;
+                setBookmarkImg(bookmarkFlag);
             }
-        });
+        }));
     }
 
-    public void getData(int restaurantId) {
-        RestaurantService.getRestaurantsOrderByDistance(restaurantId, new Callback<Restaurant>() {
+    private void getData(int restaurantId) {
+        RestaurantService.getRestaurant(restaurantId, new SimpleCallBack<>(ReviewService.class.getSimpleName(), new SimpleCallBack.Success<Restaurant>() {
             @Override
-            public void onResponse(Call<Restaurant> call, Response<Restaurant> response) {
+            public void toDo(Response<Restaurant> response) {
                 restaurant = response.body();
-                name.setText(restaurant.getName());
-                rate.setText(String.valueOf(Utils.safeDivide(restaurant.getTotalRate(), restaurant.getReviewCount())));
-                count.setText(restaurant.getReviewCount() + "");
-                Utils.safeSetObject(bookmark, restaurant.getTotalBookMark());
-                Utils.safeSetObject(address, restaurant.getAddress());
-                Utils.safeSetObject(tel, restaurant.getPhone());
-                Utils.safeSetObject(reviewNum, restaurant.getReviewCount());
+                setData(restaurant);
             }
 
             @Override
-            public void onFailure(Call<Restaurant> call, Throwable t) {
+            public void exception() {
 
             }
-        });
+        }));
     }
 
-    public void itemClick(int position) {
+    private void itemClick(int position) {
         Bundle bundle = new Bundle(2);
         bundle.putSerializable("reviewItem", mListItem1.get(position));
         FragmentLoader.startFragment(R.id.frament_place, ReviewDetailFragment.class, bundle, true);
     }
 
-    public void getReviewList(int restaurantId, int position) {
-        ReviewService.getRestaurantReviews(restaurantId, position, new Callback<ArrayList<Review>>() {
+    private void getReviewList(int restaurantId, int position) {
+        ReviewService.getRestaurantReviews(restaurantId, position, new SimpleCallBack<ArrayList<Review>>(ReviewService.class.getSimpleName(), new SimpleCallBack.Success<ArrayList<Review>>() {
             @Override
-            public void onResponse(Call<ArrayList<Review>> call, Response<ArrayList<Review>> response) {
-                if (response.isSuccessful()) {
-                    List<Review> reviews = response.body();
-                    int size = reviews.size();
-                    if (size == 0 || size + mListItem1.size() >= restaurant.getReviewCount())
-                        more.setVisibility(View.GONE);
-                    for (int i = 0; i < size; i++) {
-                        Review item = reviews.get(i);
-                        mListItem1.add(item);
-                    }
-                    rAdapter.notifyDataSetChanged();
-                }
+            public void toDo(Response<ArrayList<Review>> response) {
+                addListItems(response.body());
             }
 
             @Override
-            public void onFailure(Call<ArrayList<Review>> call, Throwable t) {
-                Log.d("debug", "getRestaurantReviews onFailure" + t);
+            public void exception() {
+
+            }
+        }));
+    }
+
+    private void setMyReview(Review review) {
+        myReviewItem = review;
+
+        reviewText.setText("리뷰 수정");
+        View myReview = view.findViewById(R.id.my_review);
+        ImageView image = myReview.findViewById(R.id.image);
+        TextView name = myReview.findViewById(R.id.name);
+        RatingBar rate = myReview.findViewById(R.id.rate);
+        TextView text = myReview.findViewById(R.id.text);
+
+        BitmapLoader bitmapLoader = new BitmapLoader(image);
+        bitmapLoader.execute(myReviewItem.getImage());
+
+        name.setText(myReviewItem.getWriter());
+        rate.setRating(myReviewItem.getRate());
+        text.setText(myReviewItem.getText());
+
+        myReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle(2);
+                bundle.putSerializable("reviewItem", myReviewItem);
+                FragmentLoader.startFragment(R.id.frament_place, ReviewDetailFragment.class, bundle, true);
             }
         });
+    }
+
+    private void setData(Restaurant restaurant) {
+        name.setText(restaurant.getName());
+        rate.setText(String.valueOf(Utils.safeDivide(restaurant.getTotalRate(), restaurant.getReviewCount())));
+        count.setText(restaurant.getReviewCount() + "");
+        Utils.safeSetObject(bookmark, restaurant.getTotalBookMark());
+        Utils.safeSetObject(address, restaurant.getAddress());
+        Utils.safeSetObject(tel, restaurant.getPhone());
+        Utils.safeSetObject(reviewNum, restaurant.getReviewCount());
+    }
+
+    private void addListItems(List<Review> items) {
+        mListItem1.addAll(items);
+        rAdapter.notifyDataSetChanged();
+        if (mListItem1.size() >= restaurant.getReviewCount())
+            more.setVisibility(View.GONE);
+    }
+
+    private void refresh() {
+        mListItem1.clear();
+        getData(restaurantId);
+        getReviewList(restaurantId, 0);
+        getMyReview(restaurantId);
+        getBookMarkState(restaurantId);
     }
 }

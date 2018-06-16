@@ -19,7 +19,7 @@ import static com.tryeat.tryeat.Utils.safeDivide;
  * Created by socce on 2018-05-08.
  */
 
-public class RestaurantListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+class RestaurantListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface ClickListener {
         void onItemClick(int position, View v);
@@ -30,14 +30,14 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private ArrayList<Restaurant> mList;
 
     private static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView address;
-        public TextView rate;
-        public TextView count;
-        public TextView bookmark;
-        public TextView name;
-        public ImageView image;
+        TextView address;
+        TextView rate;
+        TextView count;
+        TextView bookmark;
+        TextView name;
+        ImageView image;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             address = itemView.findViewById(R.id.address);
@@ -55,7 +55,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     public void setOnItemClickListener(ClickListener clickListener) {
-        this.clickListener = clickListener;
+        RestaurantListAdapter.clickListener = clickListener;
     }
 
     public RestaurantListAdapter(ArrayList<Restaurant> item) {

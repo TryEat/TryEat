@@ -25,7 +25,7 @@ import retrofit2.Response;
 import static com.tryeat.tryeat.Utils.safeDivide;
 
 
-public class FollowListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+class FollowListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface ClickListener {
         void onItemClick(int position, View v);
@@ -36,17 +36,17 @@ public class FollowListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ArrayList<Restaurant> mList;
 
     private static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView address;
-        public TextView rate;
-        public TextView count;
-        public TextView bookmark;
-        public TextView name;
-        public TextView date;
-        public ImageView image;
+        TextView address;
+        TextView rate;
+        TextView count;
+        TextView bookmark;
+        TextView name;
+        TextView date;
+        ImageView image;
 
-        public ImageView bookMarkOff;
+        ImageView bookMarkOff;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             address = itemView.findViewById(R.id.address);
@@ -66,7 +66,7 @@ public class FollowListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void setOnItemClickListener(ClickListener clickListener) {
-        this.clickListener = clickListener;
+        FollowListAdapter.clickListener = clickListener;
     }
 
     public FollowListAdapter(ArrayList<Restaurant> item) {

@@ -1,7 +1,5 @@
 package com.tryeat.rest.model;
 
-import android.graphics.Bitmap;
-
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;

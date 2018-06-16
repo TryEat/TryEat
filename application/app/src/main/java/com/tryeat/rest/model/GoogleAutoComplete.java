@@ -6,6 +6,7 @@ import java.util.List;
 
 public class GoogleAutoComplete{
     @SerializedName("predictions")
+    private
     List<Prediction> predictions;
 
     public class Prediction{

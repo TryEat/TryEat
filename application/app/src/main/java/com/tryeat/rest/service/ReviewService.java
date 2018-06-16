@@ -1,25 +1,18 @@
 package com.tryeat.rest.service;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 import com.tryeat.rest.model.Review;
 import com.tryeat.rest.model.Status;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 import retrofit2.Callback;
-import retrofit2.http.Multipart;
 
 public class ReviewService {
     private static ReviewServiceInterface userServiceInterface = ServiceGenerator.createService(ReviewServiceInterface.class);

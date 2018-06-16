@@ -40,7 +40,7 @@ module.exports = function (_dbPool) {
         INNER JOIN user ON review.user_id = user.user_id WHERE review.user_id = ? AND review.restaurant_id = ? LIMIT 1';
         dbPool.query(query, [user_id, restaurant_id], function (err, rows, fields) {
             if (err) throw err;
-            if(rows.length==0)res.status(209).json({id:-1});
+            if(rows.length==0)res.status(401).json({id:-1});
             else res.status(200).json(rows[0]);
         });
     });

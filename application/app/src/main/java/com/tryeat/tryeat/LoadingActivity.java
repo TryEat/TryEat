@@ -3,13 +3,11 @@ package com.tryeat.tryeat;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.tryeat.team.tryeat_service.R;
 
 public class LoadingActivity extends AppCompatActivity {
-    Thread welcome;
+    private Thread welcome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

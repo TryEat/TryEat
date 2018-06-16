@@ -42,18 +42,18 @@ import retrofit2.Response;
 
 public class AutoSearchFragment extends DialogFragment {
 
-    View view;
-    AutoCompleteTextView autoCompleteTextView;
-    SimpleCursorAdapter simpleCursorAdapter;
-    MatrixCursor matrixCursor;
+    private View view;
+    private AutoCompleteTextView autoCompleteTextView;
+    private SimpleCursorAdapter simpleCursorAdapter;
+    private MatrixCursor matrixCursor;
 
-    String[] from = {"name", "address"};
-    int[] to = {android.R.id.text1, android.R.id.text2};
-    String[] columnNames = {BaseColumns._ID, "id", "name", "address"};
+    private String[] from = {"name", "address"};
+    private int[] to = {android.R.id.text1, android.R.id.text2};
+    private String[] columnNames = {BaseColumns._ID, "id", "name", "address"};
 
-    boolean prgresing = false;
+    private boolean prgresing = false;
 
-    ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -96,7 +96,7 @@ public class AutoSearchFragment extends DialogFragment {
             @Override
             public Cursor runQuery(CharSequence constraint) {
                 if (constraint == null) return null;
-                if (prgresing == false) {
+                if (!prgresing) {
                     prgresing = true;
                     if (matrixCursor != null) matrixCursor.close();
                     matrixCursor = new MatrixCursor(columnNames);
@@ -118,8 +118,8 @@ public class AutoSearchFragment extends DialogFragment {
         return dialog;
     }
 
-    public void getItem(final CharSequence constraint) {
-        RestaurantService.getRestaurantsOrderByDistance(constraint.toString(), new Callback<ArrayList<Restaurant>>() {
+    private void getItem(final CharSequence constraint) {
+        RestaurantService.getRestaurant(constraint.toString(), new Callback<ArrayList<Restaurant>>() {
             @Override
             public void onResponse(Call<ArrayList<Restaurant>> call, Response<ArrayList<Restaurant>> response) {
                 if (response.body() != null) {
@@ -140,7 +140,7 @@ public class AutoSearchFragment extends DialogFragment {
 
     }
 
-    public void getItem2(CharSequence constraint) {
+    private void getItem2(CharSequence constraint) {
         GoogleApiService.getRestaurant(constraint.toString(), MyLocation.getLocation().getLatitude(), MyLocation.getLocation().getLongitude(), 2000, new Callback<GoogleAutoComplete>() {
             @Override
             public void onResponse(Call<GoogleAutoComplete> call, Response<GoogleAutoComplete> response) {
@@ -177,15 +177,15 @@ public class AutoSearchFragment extends DialogFragment {
         }
     }
 
-    public void selfDismiss() {
+    private void selfDismiss() {
         this.dismiss();
     }
 
 
-    public class MyTarget extends SimpleTarget<Bitmap> {
+    class MyTarget extends SimpleTarget<Bitmap> {
         GoogleDetail mGoogleDetail;
 
-        public MyTarget(GoogleDetail googleDetail) {
+        MyTarget(GoogleDetail googleDetail) {
             super();
             mGoogleDetail = googleDetail;
         }
@@ -210,7 +210,7 @@ public class AutoSearchFragment extends DialogFragment {
         }
     }
 
-    public void addNewRestaurant(String placeId) {
+    private void addNewRestaurant(String placeId) {
         GoogleApiService.getDetail(placeId, new Callback<GoogleDetail>() {
             @Override
             public void onResponse(Call<GoogleDetail> call, Response<GoogleDetail> response) {

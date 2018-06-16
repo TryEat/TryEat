@@ -1,6 +1,5 @@
 package com.tryeat.rest.service;
 
-import com.tryeat.rest.model.BookMark;
 import com.tryeat.rest.model.Restaurant;
 import com.tryeat.rest.model.Status;
 

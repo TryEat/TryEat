@@ -50,7 +50,7 @@ function myFunc() {
     console.log((new Date()).toLocaleString() + " SVD 추천 정보 갱신 끝")
     setTimeout(() => {
       myFunc();
-    }, 10000); //10초
+    }, 30000); //10초
   });
 }
 

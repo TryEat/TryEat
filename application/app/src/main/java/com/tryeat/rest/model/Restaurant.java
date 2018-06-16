@@ -1,11 +1,14 @@
 package com.tryeat.rest.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class Restaurant implements Serializable {
+public class Restaurant implements Serializable ,Parcelable {
 
     @SerializedName("restaurant_id")
     private int id;
@@ -32,30 +35,6 @@ public class Restaurant implements Serializable {
     @SerializedName("distance")
     private double distance;
 
-    public double getDistance() {
-        return distance;
-    }
-
-    public void setDistance(double distance) {
-        this.distance = distance;
-    }
-
-    public Timestamp getDate() {
-        return date;
-    }
-
-    public void setDate(Timestamp date) {
-        this.date = date;
-    }
-
-    public int getTotalBookMark() {
-        return totalBookMark;
-    }
-
-    public void setTotalBookMark(int totalBookMark) {
-        this.totalBookMark = totalBookMark;
-    }
-
     public int getId() {
         return id;
     }
@@ -80,22 +59,6 @@ public class Restaurant implements Serializable {
         this.name = name;
     }
 
-    public double getLat() {
-        return lat;
-    }
-
-    public void setLat(double lat) {
-        this.lat = lat;
-    }
-
-    public double getLon() {
-        return lon;
-    }
-
-    public void setLon(double lon) {
-        this.lon = lon;
-    }
-
     public String getAddress() {
         return address;
     }
@@ -112,8 +75,20 @@ public class Restaurant implements Serializable {
         this.phone = phone;
     }
 
-    public void setTotalRate(float totalRate) {
-        this.totalRate = totalRate;
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLon() {
+        return lon;
+    }
+
+    public void setLon(double lon) {
+        this.lon = lon;
     }
 
     public int getReviewCount() {
@@ -128,8 +103,80 @@ public class Restaurant implements Serializable {
         return totalRate;
     }
 
-    public void setTotalRate(int totalRate) {
+    public void setTotalRate(float totalRate) {
         this.totalRate = totalRate;
     }
 
+    public int getTotalBookMark() {
+        return totalBookMark;
+    }
+
+    public void setTotalBookMark(int totalBookMark) {
+        this.totalBookMark = totalBookMark;
+    }
+
+    public Timestamp getDate() {
+        return date;
+    }
+
+    public void setDate(Timestamp date) {
+        this.date = date;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
+
+    protected Restaurant(Parcel in) {
+        id = in.readInt();
+        image = in.readParcelable(Image.class.getClassLoader());
+        name = in.readString();
+        address = in.readString();
+        phone = in.readString();
+        lat = in.readDouble();
+        lon = in.readDouble();
+        reviewCount = in.readInt();
+        totalRate = in.readFloat();
+        totalBookMark = in.readInt();
+        date = (Timestamp) in.readSerializable();
+        distance = in.readDouble();
+    }
+
+    public static final Creator<Restaurant> CREATOR = new Creator<Restaurant>() {
+        @Override
+        public Restaurant createFromParcel(Parcel in) {
+            return new Restaurant(in);
+        }
+
+        @Override
+        public Restaurant[] newArray(int size) {
+            return new Restaurant[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeInt(id);
+        dest.writeParcelable(image,flags);
+        dest.writeString(name);
+        dest.writeString(address);
+        dest.writeString(phone);
+        dest.writeDouble(lat);
+        dest.writeDouble(lon);
+        dest.writeInt(reviewCount);
+        dest.writeFloat(totalRate);
+        dest.writeInt(totalBookMark);
+        dest.writeSerializable(date);
+        dest.writeDouble(distance);
+    }
 }

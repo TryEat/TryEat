@@ -37,7 +37,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:hint="음식점 이름 입력" />
+            android:hint="음식점 이름 입력"
+            android:inputType="text"/>
 
 
         <EditText
@@ -46,7 +47,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:hint="전화번호 입력" />
+            android:hint="전화번호 입력"
+            android:inputType="phone"/>
 
         <fragment
             android:id="@+id/image_fragment"

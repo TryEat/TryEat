@@ -3,9 +3,6 @@ package com.tryeat.tryeat;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.HorizontalScrollView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -16,9 +13,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class GoogleMapFragment extends SupportMapFragment implements OnMapReadyCallback {
-    GoogleMap gMap;
-    Marker marker;
-    Location _location;
+    private GoogleMap gMap;
+    private Marker marker;
+    private Location _location;
 
     @Override
     public void onActivityCreated(Bundle bundle) {
@@ -47,7 +44,7 @@ public class GoogleMapFragment extends SupportMapFragment implements OnMapReadyC
         setLocation(MyLocation.getLocation());
     }
 
-    public void update(){
+    private void update(){
         if(_location==null)return;
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(_location.getLatitude(), _location.getLongitude()),gMap.getCameraPosition().zoom));
     }
@@ -56,12 +53,12 @@ public class GoogleMapFragment extends SupportMapFragment implements OnMapReadyC
         return _location;
     }
 
-    public void setLocation(Location location) {
+    private void setLocation(Location location) {
         _location=location;
         update();
     }
 
-    public void setLocation(double latitude, double longitude) {
+    private void setLocation(double latitude, double longitude) {
         if(_location==null)_location=new Location(LocationManager.NETWORK_PROVIDER);
         this._location.setLatitude(latitude);
         this._location.setLongitude(longitude);

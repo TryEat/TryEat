@@ -2,9 +2,7 @@ package com.tryeat.rest.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.sql.Timestamp;
-
-public class BookMark {
+class BookMark {
     @SerializedName("bookmark_id")
     private int bookmarkId;
     @SerializedName("user_id")

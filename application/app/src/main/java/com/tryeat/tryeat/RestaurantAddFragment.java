@@ -1,13 +1,10 @@
 package com.tryeat.tryeat;
 
 
-import android.app.ProgressDialog;
-import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -20,19 +17,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlacePhotoMetadata;
-import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
-import com.google.android.gms.location.places.PlacePhotoMetadataResponse;
-import com.google.android.gms.location.places.PlacePhotoResponse;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.tryeat.rest.model.Status;
 import com.tryeat.rest.model.StatusCode;
 import com.tryeat.rest.service.RestaurantService;
@@ -55,15 +39,15 @@ import retrofit2.Response;
  */
 
 public class RestaurantAddFragment extends Fragment {
-    View view;
-    EditText name;
-    EditText tel;
+    private View view;
+    private EditText name;
+    private EditText tel;
 
-    GoogleMapFragment fragment;
-    ImageAddFragment imageFragment;
+    private GoogleMapFragment fragment;
+    private ImageAddFragment imageFragment;
 
-    ScrollView mainScrollView;
-    ImageView transparentImageView;
+    private ScrollView mainScrollView;
+    private ImageView transparentImageView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -77,8 +61,8 @@ public class RestaurantAddFragment extends Fragment {
             name = view.findViewById(R.id.name);
             tel = view.findViewById(R.id.tel_number);
 
-            mainScrollView = (ScrollView) view.findViewById(R.id.scrollView);
-            transparentImageView = (ImageView) view.findViewById(R.id.transparent_image);
+            mainScrollView = view.findViewById(R.id.scrollView);
+            transparentImageView = view.findViewById(R.id.transparent_image);
 
             transparentImageView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -106,7 +90,7 @@ public class RestaurantAddFragment extends Fragment {
         return view;
     }
 
-    public View.OnClickListener addRestaurant() {
+    private View.OnClickListener addRestaurant() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,24 +109,21 @@ public class RestaurantAddFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                String adress = myList.get(0).getAddressLine(0).toString();
+                String adress = myList.get(0).getAddressLine(0);
 
-                RestaurantService.addRestaurant(name.getText().toString(), adress, tel.getText().toString(), imageFragment.getImageBitmap(), location.getLatitude(), location.getLongitude(), new Callback<Status>() {
-                    @Override
-                    public void onResponse(Call<Status> call, Response<Status> response) {
-                        if (response.code() == StatusCode.ADD_RESTAURANT_SUCCESS) {
-                            Log.d("debug", response.toString());
-                        } else if (response.code() == StatusCode.ADD_RESTAURANT_FAIL) {
-                            Log.d("debug", response.toString());
-                        }
-                        getFragmentManager().popBackStackImmediate();
-                    }
+                RestaurantService.addRestaurant(name.getText().toString(), adress, tel.getText().toString(), imageFragment.getImageBitmap(), location.getLatitude(), location.getLongitude(),
+                        new SimpleCallBack<>(RestaurantService.class.getSimpleName(), new SimpleCallBack.Success<Status>() {
+                            @Override
+                            public void toDo(Response<Status> response) {
+                                getFragmentManager().popBackStackImmediate();
+                            }
 
-                    @Override
-                    public void onFailure(Call<Status> call, Throwable t) {
-                        Log.d("debug", t.toString());
-                    }
-                });
+                            @Override
+                            public void exception() {
+
+                            }
+                        })
+                );
             }
         };
     }

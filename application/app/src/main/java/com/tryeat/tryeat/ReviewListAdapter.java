@@ -1,8 +1,5 @@
 package com.tryeat.tryeat;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,22 +19,14 @@ import java.util.ArrayList;
  */
 
 
-public class ReviewListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    public interface ClickListener{
-        void onItemClick(int position, View v);
-    }
-
-    private  static ClickListener clickListener;
-
-    private ArrayList<Review> mListItem1;
-
+class ReviewListAdapter extends SimpleAdapter<Review>{
     private static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        public ImageView image;
-        public TextView name;
-        public RatingBar rate;
-        public TextView text;
+        ImageView image;
+        TextView name;
+        RatingBar rate;
+        TextView text;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             image = itemView.findViewById(R.id.image);
@@ -52,12 +41,8 @@ public class ReviewListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    public void setOnItemClickListener(ClickListener clickListener) {
-        this.clickListener = clickListener;
-    }
-
     public ReviewListAdapter(ArrayList<Review> item){
-        this.mListItem1 = item;
+        this.mItemList = item;
     }
 
     @Override
@@ -69,7 +54,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ViewHolder viewHolder = (ViewHolder) holder;
-        Review item = mListItem1.get(position);
+        Review item = mItemList.get(position);
 
         BitmapLoader bitmapLoader = new BitmapLoader(viewHolder.image);
         bitmapLoader.execute(item.getImage());
@@ -81,7 +66,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        return mListItem1.size();
+        return mItemList.size();
     }
 
 }

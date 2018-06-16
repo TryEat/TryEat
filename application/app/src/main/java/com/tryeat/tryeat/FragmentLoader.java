@@ -5,12 +5,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Layout;
-import android.util.Log;
 
 import java.util.HashMap;
 
-public class FragmentLoader {
+class FragmentLoader {
     private static HashMap<String, Fragment> fragmentMap = new HashMap<>();
     private static FragmentManager fragmentManager;
 
@@ -33,13 +31,10 @@ public class FragmentLoader {
         return fragmentMap.get(fragmentClass.getName());
     }*/
 
-    public static Fragment getFragmentInstance(Class fragmentClass) {
+    private static Fragment getFragmentInstance(Class fragmentClass) {
         try {
-            Fragment fragment = (Fragment) fragmentClass.newInstance();
-            return fragment;
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+            return (Fragment) fragmentClass.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
         return null;

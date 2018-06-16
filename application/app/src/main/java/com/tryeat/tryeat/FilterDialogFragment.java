@@ -8,8 +8,6 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.tryeat.team.tryeat_service.R;
@@ -18,14 +16,14 @@ public class FilterDialogFragment extends DialogFragment{
 
     private FilterInterface mFilterInterface;
 
-    TabLayout distanceTab;
-    TabLayout typeTab;
+    private TabLayout distanceTab;
+    private TabLayout typeTab;
 
-    int[] array = {100,500,1000,3000,5000,0};
-    View view;
 
-    int distance;
-    int type;
+    private View view;
+
+    private int distance;
+    private int type;
 
 
     public interface FilterInterface{
@@ -45,7 +43,7 @@ public class FilterDialogFragment extends DialogFragment{
         distanceTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                distance = array[tab.getPosition()];
+                distance = tab.getPosition();
             }
 
             @Override
@@ -86,10 +84,12 @@ public class FilterDialogFragment extends DialogFragment{
             }
         });
 
-        /*
+
         type = getArguments().getInt("type");
         distance = getArguments().getInt("distance");
-        */
+
+        typeTab.getTabAt(type).select();
+        distanceTab.getTabAt(distance).select();
 
         TextView cancel = view.findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +102,7 @@ public class FilterDialogFragment extends DialogFragment{
         return view;
     }
 
-    public void selfDismiss(){
+    private void selfDismiss(){
         this.dismiss();
     }
 
