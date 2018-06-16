@@ -25,15 +25,7 @@ import retrofit2.Response;
 import static com.tryeat.tryeat.Utils.safeDivide;
 
 
-class FollowListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-    public interface ClickListener {
-        void onItemClick(int position, View v);
-    }
-
-    private static ClickListener clickListener;
-
-    private ArrayList<Restaurant> mList;
+class FollowListAdapter extends SimpleAdapter<Restaurant> {
 
     private static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView address;
@@ -65,12 +57,8 @@ class FollowListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    public void setOnItemClickListener(ClickListener clickListener) {
-        FollowListAdapter.clickListener = clickListener;
-    }
-
     public FollowListAdapter(ArrayList<Restaurant> item) {
-        this.mList = item;
+        this.mItemList = item;
     }
 
     @Override
@@ -82,7 +70,7 @@ class FollowListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         final ViewHolder viewHolder = (ViewHolder) holder;
-        final Restaurant item = mList.get(position);
+        final Restaurant item = mItemList.get(position);
 
         viewHolder.bookMarkOff.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,8 +82,8 @@ class FollowListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             @Override
                             public void onResponse(Call<Status> call, Response<Status> response) {
                                 if (response.code() == 201) {
-                                    int position = mList.indexOf(item);
-                                    mList.remove(position);
+                                    int position = mItemList.indexOf(item);
+                                    mItemList.remove(position);
                                     notifyItemRemoved(position);
                                 }
                             }
@@ -121,18 +109,14 @@ class FollowListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         Utils.safeSetObject(viewHolder.date, sdf.format(currenTimeZone));
         viewHolder.count.setText(item.getReviewCount() + "");
 
-        if (item.getImage() != null)
-
-        {
-            BitmapLoader bitmapLoader = new BitmapLoader(viewHolder.image);
-            bitmapLoader.execute(item.getImage());
-        }
+        BitmapLoader bitmapLoader = new BitmapLoader(mActivitiy,viewHolder.image);
+        bitmapLoader.Load(item.getImgUri());
 
         viewHolder.name.setText(item.getName());
     }
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        return mItemList.size();
     }
 }

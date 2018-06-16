@@ -51,6 +51,7 @@ public class FollowListFragment extends Fragment{
             mLayoutManager = new LinearLayoutManager(getContext());
             lv.setLayoutManager(mLayoutManager);
             rAdapter = new FollowListAdapter(mListItem1);
+            rAdapter.setActivity(getActivity());
             rAdapter.setOnItemClickListener(new FollowListAdapter.ClickListener() {
                 @Override
                 public void onItemClick(int position, View v) {

@@ -56,7 +56,7 @@ public class ReviewAddFragment extends Fragment {
                 name.setText(review.getRestaurantName());
                 rate.setRating(review.getRate());
                 desc.setText(review.getText());
-                imageAddFragment.setImage(review.getImage());
+                imageAddFragment.setImage(review.getImgUri());
             } else {
                 reviewId = -1;
                 restaurantId = getArguments().getInt("id");

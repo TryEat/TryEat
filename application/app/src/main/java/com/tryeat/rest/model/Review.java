@@ -21,8 +21,8 @@ public class Review implements Serializable, Parcelable {
     private String address;
     @SerializedName("user_id")
     private int userId;
-    @SerializedName("img")
-    private Image image;
+    @SerializedName("img_uri")
+    private String imgUri;
     @SerializedName("content")
     private String text;
     @SerializedName("date")
@@ -37,7 +37,7 @@ public class Review implements Serializable, Parcelable {
         restaurantName = in.readString();
         address = in.readString();
         userId = in.readInt();
-        image = in.readParcelable(Image.class.getClassLoader());
+        imgUri = in.readString();
         text = in.readString();
         rate = in.readFloat();
     }
@@ -70,6 +70,15 @@ public class Review implements Serializable, Parcelable {
         return restaurantName;
     }
 
+    public String getImgUri() {
+        if(imgUri==null)return null;
+        return "http://tryeat.homedns.tv:8080/reviews/image/uri/"+imgUri;
+    }
+
+    public void setImgUri(String imgUri) {
+        this.imgUri = imgUri;
+    }
+
     public void setRestaurantName(String restaurantName) {
         this.restaurantName = restaurantName;
     }
@@ -88,14 +97,6 @@ public class Review implements Serializable, Parcelable {
 
     public void setUserId(int userId) {
         this.userId = userId;
-    }
-
-    public Image getImage() {
-        return image;
-    }
-
-    public void setImage(Image image) {
-        this.image = image;
     }
 
     public String getText() {
@@ -147,7 +148,7 @@ public class Review implements Serializable, Parcelable {
         dest.writeString(restaurantName);
         dest.writeString(address);
         dest.writeInt(userId);
-        dest.writeParcelable(image,flags);
+        dest.writeString(imgUri);
         dest.writeString(text);
         dest.writeSerializable(date);
         dest.writeFloat(rate);

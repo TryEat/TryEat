@@ -163,6 +163,15 @@ public class RestaurantDetailFragment extends Fragment {
                 getReviewList(restaurantId, rAdapter.getItemCount());
             }
         });
+
+        ImageView back = view.findViewById(R.id.back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentLoader.back();
+            }
+        });
+
         return view;
     }
 
@@ -181,9 +190,9 @@ public class RestaurantDetailFragment extends Fragment {
             //getArguments().remove("reviewItem");
             setData(restaurant);
 
-            if (restaurant.getImage() != null) {
-                BitmapLoader bitmapLoader = new BitmapLoader(image);
-                bitmapLoader.execute(restaurant.getImage());
+            if (restaurant.getImgUri() != null) {
+                BitmapLoader bitmapLoader = new BitmapLoader(getActivity(),image);
+                bitmapLoader.Load(restaurant.getImgUri());
             } else {
                 Glide.with(getActivity())
                         .load(R.drawable.list_header_image3)
@@ -215,6 +224,7 @@ public class RestaurantDetailFragment extends Fragment {
     }
 
     private void setBookmarkImg(int bookmarkFlag) {
+        if(getActivity()==null)return;
         Glide.with(getActivity())
                 .load((bookmarkFlag == 0) ? R.drawable.bookmark_on : R.drawable.bookmark_off)
                 .into(bookmarkimg);
@@ -297,8 +307,8 @@ public class RestaurantDetailFragment extends Fragment {
         RatingBar rate = myReview.findViewById(R.id.rate);
         TextView text = myReview.findViewById(R.id.text);
 
-        BitmapLoader bitmapLoader = new BitmapLoader(image);
-        bitmapLoader.execute(myReviewItem.getImage());
+        BitmapLoader bitmapLoader = new BitmapLoader(getActivity(),image);
+        bitmapLoader.Load(myReviewItem.getImgUri());
 
         name.setText(myReviewItem.getWriter());
         rate.setRating(myReviewItem.getRate());

@@ -56,8 +56,8 @@ class ReviewListAdapter extends SimpleAdapter<Review>{
         ViewHolder viewHolder = (ViewHolder) holder;
         Review item = mItemList.get(position);
 
-        BitmapLoader bitmapLoader = new BitmapLoader(viewHolder.image);
-        bitmapLoader.execute(item.getImage());
+        BitmapLoader bitmapLoader = new BitmapLoader(mActivitiy,viewHolder.image);
+        bitmapLoader.Load(item.getImgUri());
 
         viewHolder.name.setText(item.getWriter());
         viewHolder.rate.setRating(item.getRate());

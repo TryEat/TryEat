@@ -142,8 +142,8 @@ class ReviewListAdapter2 extends SimpleAdapter<Review>{
 
         Utils.safeSetObject(viewHolder.date, sdf.format(currenTimeZone));
 
-        BitmapLoader bitmapLoader = new BitmapLoader(viewHolder.image);
-        bitmapLoader.execute(reviewItem.getImage());
+        BitmapLoader bitmapLoader = new BitmapLoader(mActivitiy,viewHolder.image);
+        bitmapLoader.Load(reviewItem.getImgUri());
 
         viewHolder.restaurantName.setText(reviewItem.getRestaurantName());
         viewHolder.rate.setRating(reviewItem.getRate());

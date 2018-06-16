@@ -12,8 +12,8 @@ public class Restaurant implements Serializable ,Parcelable {
 
     @SerializedName("restaurant_id")
     private int id;
-    @SerializedName("img")
-    private Image image;
+    @SerializedName("img_uri")
+    private String imgUri;
     @SerializedName("restaurant_name")
     private String name;
     @SerializedName("address")
@@ -43,12 +43,13 @@ public class Restaurant implements Serializable ,Parcelable {
         this.id = id;
     }
 
-    public Image getImage() {
-        return image;
+    public String getImgUri() {
+        if(imgUri==null)return null;
+        return "http://tryeat.homedns.tv:8080/restaurants/image/uri/"+imgUri;
     }
 
-    public void setImage(Image image) {
-        this.image = image;
+    public void setImgUri(String imgUri) {
+        this.imgUri = imgUri;
     }
 
     public String getName() {
@@ -133,7 +134,7 @@ public class Restaurant implements Serializable ,Parcelable {
 
     protected Restaurant(Parcel in) {
         id = in.readInt();
-        image = in.readParcelable(Image.class.getClassLoader());
+        imgUri = in.readString();
         name = in.readString();
         address = in.readString();
         phone = in.readString();
@@ -166,7 +167,7 @@ public class Restaurant implements Serializable ,Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
-        dest.writeParcelable(image,flags);
+        dest.writeString(imgUri);
         dest.writeString(name);
         dest.writeString(address);
         dest.writeString(phone);

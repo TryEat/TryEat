@@ -17,7 +17,7 @@ CREATE TABLE user(
 
 CREATE TABLE restaurant(
 	restaurant_id INT(11) NOT NULL AUTO_INCREMENT,
-	img MEDIUMBLOB,
+	img_uri VARCHAR(50),
 	restaurant_name VARCHAR(30) NOT NULL,
 	address VARCHAR(100),
 	phone VARCHAR(20),
@@ -44,7 +44,7 @@ CREATE TABLE review(
 	review_id INT(11) NOT NULL AUTO_INCREMENT,
 	restaurant_id INT(11) NOT NULL,
 	user_id INT(11) NOT NULL,
-	img MEDIUMBLOB,
+	img_uri VARCHAR(50),
 	content TEXT,
 	date TIMESTAMP NOT NULL DEFAULT now(),
 	rate DECIMAL(2,1) NOT NULL,

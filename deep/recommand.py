@@ -30,6 +30,6 @@ data.close()
 
 all = np.matmul(u,p)[user-1]
 index = sorted((e,i+1) for i,e in enumerate(all))[::-1]
-print(','.join(str(i) for e,i in index[start:end]))
+print(','.join(str(i) for e,i in index[start:start+end]))
 
  

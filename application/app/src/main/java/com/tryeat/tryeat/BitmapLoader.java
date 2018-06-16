@@ -1,35 +1,36 @@
 package com.tryeat.tryeat;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaderFactory;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.tryeat.rest.model.Image;
 
-class BitmapLoader extends AsyncTask<Image,Void,Bitmap> {
+class BitmapLoader {
+    private Activity mActivity;
     private ImageView mImageView;
 
-    public BitmapLoader(ImageView imageView) {
+    public BitmapLoader(Activity activity, ImageView imageView) {
+        mActivity = activity;
         mImageView = imageView;
     }
 
-    @Override
-    protected Bitmap doInBackground(Image... images) {
-        if(images[0]==null)return null;
-        if(images[0].bitmap==null) {
-            if(images[0].data==null)return null;
-            byte[] v = images[0].data;
-            images[0].data = null;
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 4;
-            images[0].bitmap = BitmapFactory.decodeByteArray(v, 0, v.length, options);
-        }
-        return images[0].bitmap;
-    }
+    public void Load(String uri) {
+        if (uri == null||uri=="") return;
+        if (mActivity == null) return;
+        GlideUrl glideUrl = new GlideUrl(uri, new LazyHeaders.Builder()
+                .addHeader("id", String.valueOf(LoginToken.getId()))
+                .addHeader("Authorization", LoginToken.getToken())
+                .build());
+        Glide.with(mActivity)
+                .load(glideUrl)
+                .into(mImageView);
 
-    @Override
-    protected void onPostExecute(Bitmap bitmap) {
-        if(bitmap!=null)mImageView.setImageBitmap(bitmap);
     }
 }

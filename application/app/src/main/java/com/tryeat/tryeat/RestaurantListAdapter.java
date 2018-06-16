@@ -1,5 +1,6 @@
 package com.tryeat.tryeat;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,8 @@ class RestaurantListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private ArrayList<Restaurant> mList;
 
+    private Activity mActivity;
+
     private static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView address;
         TextView rate;
@@ -36,6 +39,7 @@ class RestaurantListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         TextView bookmark;
         TextView name;
         ImageView image;
+        TextView distance;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -46,6 +50,7 @@ class RestaurantListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             count = itemView.findViewById(R.id.count);
             image = itemView.findViewById(R.id.image);
             name = itemView.findViewById(R.id.name);
+            distance = itemView.findViewById(R.id.distance);
         }
 
         @Override
@@ -56,6 +61,10 @@ class RestaurantListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public void setOnItemClickListener(ClickListener clickListener) {
         RestaurantListAdapter.clickListener = clickListener;
+    }
+
+    public void setActivity(Activity activity){
+        mActivity = activity;
     }
 
     public RestaurantListAdapter(ArrayList<Restaurant> item) {
@@ -77,11 +86,20 @@ class RestaurantListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         Utils.safeSetObject(viewHolder.rate,safeDivide(item.getTotalRate(), item.getReviewCount()));
         Utils.safeSetObject(viewHolder.address,item.getAddress());
         Utils.safeSetObject(viewHolder.bookmark,item.getTotalBookMark());
-        viewHolder.count.setText(item.getReviewCount() + "");
+        Utils.safeSetObject(viewHolder.count,item.getReviewCount());
 
-        if(item.getImage()!=null) {
-            BitmapLoader bitmapLoader = new BitmapLoader(viewHolder.image);
-            bitmapLoader.execute(item.getImage());
+        if(item.getDistance()!=0){
+            viewHolder.distance.setVisibility(View.VISIBLE);
+            double distance = item.getDistance();
+            if(distance<1) Utils.safeSetObject(viewHolder.distance,String.format("%.0fm" , distance*1000));
+            else Utils.safeSetObject(viewHolder.distance,String.format("%.1fkm" , distance));
+        }else{
+            viewHolder.distance.setVisibility(View.GONE);
+        }
+
+        if(item.getImgUri()!=null) {
+            BitmapLoader bitmapLoader = new BitmapLoader(mActivity,viewHolder.image);
+            bitmapLoader.Load(item.getImgUri());
         }
 
         viewHolder.name.setText(item.getName());

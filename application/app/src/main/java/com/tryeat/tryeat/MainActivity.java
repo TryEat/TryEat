@@ -1,5 +1,6 @@
 package com.tryeat.tryeat;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
@@ -32,4 +33,7 @@ public class MainActivity extends AppCompatActivity{
         FragmentLoader.startFragment(R.id.frament_place,RestaurantListFragment.class,true);
     }
 
+    public static class ImageSaver{
+        public static Bitmap bitmap;
+    }
 }

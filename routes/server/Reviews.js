@@ -1,8 +1,20 @@
 module.exports = function (_dbPool) {
+    var fs = require('fs');
+    var path = require('path');
     var express = require('express');
     var router = express.Router();
-    var multer = require('multer')();
     var dbPool = _dbPool;
+    var multer = require('multer');
+    var upload = multer({
+        storage:multer.diskStorage({
+            destination: function (req, file, cb) {
+                cb(null, 'Image/review');
+            },
+            filename: function (req, file, cb) {
+                cb(null, new Date().valueOf() + '.webp');
+            }
+        }),
+    });
 
     router.get('/:user_id/:position/user', function (req, res) {
         var user_id = req.params.user_id;
@@ -40,53 +52,48 @@ module.exports = function (_dbPool) {
         INNER JOIN user ON review.user_id = user.user_id WHERE review.user_id = ? AND review.restaurant_id = ? LIMIT 1';
         dbPool.query(query, [user_id, restaurant_id], function (err, rows, fields) {
             if (err) throw err;
-            if(rows.length==0)res.status(401).json({id:-1});
+            if (rows.length == 0) res.status(401).json({ id: -1 });
             else res.status(200).json(rows[0]);
         });
     });
 
-    router.get('/:review_id', function (req, res) {
-        var review_id = req.params.review_id;
-
-        var query = 'SELECT review_id,img FROM review WHERE review_id=?';
-        dbPool.query(query, [review_id], function (err, rows, fields) {
-            if (err) throw err;
-            res.status(200).json(rows[0]);
+    router.get('/image/uri/:uri', function (req, res) {
+        var uri = req.params.uri;
+        fs.readFile('Image/review/'+uri,function(err,data){
+            res.end(data);
         });
     });
 
-    router.post('/', multer.single('upload'), function (req, res) {
+    router.post('/', upload.single('upload'), function (req, res) {
         var restaurant_id = req.body.restaurant_id;
         var user_id = req.body.user_id;
-        var img = req.file.buffer;
-        var content = req.body.content.replace(/"/gi, '');;
+        var content = req.body.content.replace(/"/gi, '');
         var rate = req.body.rate;
 
-        if (img.length == 0) img = null;
+        var img_uri = (req.file.size==0)?null:req.file.filename;
 
-        var query = 'INSERT INTO review (restaurant_id,user_id,img,content,rate) VALUES (?,?,?,?,?);';
+        var query = 'INSERT INTO review (restaurant_id,user_id,img_uri,content,rate) VALUES (?,?,?,?,?);';
         query += 'UPDATE restaurant SET review_count=review_count+1, total_rate=total_rate+? WHERE restaurant_id=?;'
         query += 'UPDATE user SET review_count=review_count+1 WHERE user_id=?;'
         query += 'update counting SET review=review+1 where target=0;'
-        dbPool.query(query, [restaurant_id, user_id, img, content, rate, rate, restaurant_id,user_id], function (err, rows, fields) {
+        dbPool.query(query, [restaurant_id, user_id, img_uri, content, rate, rate, restaurant_id, user_id], function (err, rows, fields) {
             if (err) throw err;
             if (rows[0].changedRows != 0) res.status(201).json({ message: "write review, count++ success" })
             else res.status(400).json({ message: "write review success, count++ fail" })
         });
     });
 
-    router.put('/', multer.single('upload'),function (req, res) {
+    router.put('/', upload.single('upload'), function (req, res) {
         var review_id = req.body.review_id;
-        var img = req.file.buffer;
         var content = req.body.content.replace(/"/gi, '');;
         var rate = req.body.rate;
 
-        if(img.length==0)img=null;
+        var img_uri = (req.file.size!=0)?null:req.file.filename;
 
         var query = 'Update tryeat.restaurant,(Select rate,restaurant_id from tryeat.review Where review_id=?)target \
         Set total_rate=total_rate-target.rate+? Where tryeat.restaurant.restaurant_id=target.restaurant_id;'
-        query += 'UPDATE review SET img=?, content=?, rate=? WHERE review_id=?;';
-        dbPool.query(query, [review_id,rate,img, content, rate, review_id], function (err, rows, fields) {
+        query += 'UPDATE review SET img_uri=?, content=?, rate=? WHERE review_id=?;';
+        dbPool.query(query, [review_id, rate, img_uri, content, rate, review_id], function (err, rows, fields) {
             if (err) throw err;
             if (rows[0].changedRows != 0) res.status(201).json({ message: "update review success" })
             else res.status(400).json({ message: "update review fail" })
@@ -101,7 +108,7 @@ module.exports = function (_dbPool) {
         Where a.restaurant_id=target.restaurant_id AND b.user_id=target.user_id;'
         query += 'DELETE FROM review WHERE review_id=?;'
         query += 'update tryeat.counting SET review=review-1 where target=0;'
-        dbPool.query(query, [review_id,review_id], function (err, rows, fields) {
+        dbPool.query(query, [review_id, review_id], function (err, rows, fields) {
             if (err) throw err;
             if (rows[0].affectedRows != 0) res.status(201).json({ message: "delete review success" })
             else res.status(400).json({ message: "delete review fail" })

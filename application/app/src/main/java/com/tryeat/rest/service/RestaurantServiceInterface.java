@@ -32,16 +32,16 @@ interface RestaurantServiceInterface {
     Call<ArrayList<Restaurant>> getRestaurants(@Path("id_list") String name);
 
     @GET("restaurants/byrecommander/{user_id}/{lat}/{ion}/{position}/{distance}")
-    Call<ArrayList<Restaurant>> getRestaurantsOrderByRecommander(@Path("user_id") int userId, @Path("lat") double lat, @Path("ion") double ion,@Path("position") int position,@Path("distance") int distance);
+    Call<ArrayList<Restaurant>> getRestaurantsOrderByRecommander(@Path("user_id") int userId, @Path("lat") double lat, @Path("ion") double ion,@Path("position") int position,@Path("distance") double distance);
 
     @GET("restaurants/byrate/{lat}/{ion}/{position}/{distance}")
-    Call<ArrayList<Restaurant>> getRestaurantsOrderByRate(@Path("lat") double lat, @Path("ion") double ion,@Path("position") int position,@Path("distance") int distance);
+    Call<ArrayList<Restaurant>> getRestaurantsOrderByRate(@Path("lat") double lat, @Path("ion") double ion,@Path("position") int position,@Path("distance") double distance);
 
     @GET("restaurants/byreview/{lat}/{ion}/{position}/{distance}")
-    Call<ArrayList<Restaurant>> getRestaurantsOrderByReview(@Path("lat") double lat, @Path("ion") double ion,@Path("position") int position,@Path("distance") int distance);
+    Call<ArrayList<Restaurant>> getRestaurantsOrderByReview(@Path("lat") double lat, @Path("ion") double ion,@Path("position") int position,@Path("distance") double distance);
 
     @GET("restaurants/bydistance/{lat}/{ion}/{position}/{distance}")
-    Call<ArrayList<Restaurant>> getRestaurantsOrderByDistance(@Path("lat") double lat, @Path("ion") double ion, @Path("position") int position, @Path("distance") int distance);
+    Call<ArrayList<Restaurant>> getRestaurantsOrderByDistance(@Path("lat") double lat, @Path("ion") double ion, @Path("position") int position, @Path("distance") double distance);
 
     @GET("restaurants/{name}/{lat}/{ion}")
     Call<ArrayList<Restaurant>> getRestaurant(@Path("name") String name,@Path("lat") double lat, @Path("ion") double ion);
@@ -58,9 +58,6 @@ interface RestaurantServiceInterface {
     @Multipart
     @POST("restaurants/")
     Call<Status> addRestaurant(@Part MultipartBody.Part image, @PartMap HashMap<String, Object> body);
-
-    @PUT("restaurants/")
-    Call<Status> updateRestaurant(@Body HashMap<String, Object> body);
 
     @DELETE("restaurants/")
     Call<Status> deleteRestaurant(@Body HashMap<String, Object> body);

@@ -82,6 +82,7 @@ public class ReviewLIstFragment extends Fragment {
             getReviewList(restaurantId);
         }
 
+        rAdapter.setActivity(getActivity());
         rAdapter.setOnItemClickListener(new ReviewListAdapter.ClickListener() {
             @Override
             public void onItemClick(int position, View v) {

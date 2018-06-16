@@ -1,8 +1,20 @@
 module.exports = function (_dbPool) {
+    var fs = require('fs');
+    var path = require('path');
     var express = require('express');
     var router = express.Router();
-    var multer = require('multer')();
     var dbPool = _dbPool;
+    var multer = require('multer');
+    var upload = multer({
+        storage:multer.diskStorage({
+            destination: function (req, file, cb) {
+                cb(null, 'Image/restaurant');
+            },
+            filename: function (req, file, cb) {
+                cb(null, new Date().valueOf() + '.webp');
+            }
+        }),
+    });
 
     function generateID() {
         var _id;
@@ -61,6 +73,13 @@ module.exports = function (_dbPool) {
         });
     })
 
+    router.get('/image/uri/:uri', function (req, res) {
+        var uri = req.params.uri;
+        fs.readFile('Image/restaurant/'+uri,function(err,data){
+            res.end(data);
+        });
+    });
+
     router.get('/byrecommander/:user_id/:lat/:ion/:position/:distance', function (req, res) {
         var user_id = req.params.user_id;
         var locate_latitude = req.params.lat;
@@ -70,7 +89,7 @@ module.exports = function (_dbPool) {
 
         var spawn = require("child_process").spawn;
 
-        var process = spawn('python', ["./deep/recommand.py", user_id, position, 5]);
+        var process = spawn('python', ["./deep/recommand.py", user_id, position, 10]);
 
         process.stdout.on('data', function (data) {
             var idlist = data.toString().split(',').map(function (item) {
@@ -85,14 +104,17 @@ module.exports = function (_dbPool) {
                         res.status(200).json(rows);
                     });
                 } else {
-                    var query = 'SELECT *,(6371 * ACOS(COS(RADIANS(?)) * COS(RADIANS(locate_latitude)) * COS(RADIANS(locate_longitude) \
+                    distance=5000;
+                    var query = 'SELECT restaurant_name,(6371 * ACOS(COS(RADIANS(?)) * COS(RADIANS(locate_latitude)) * COS(RADIANS(locate_longitude) \
                 - RADIANS(?)) + SIN(RADIANS(?)) * SIN(RADIANS(locate_latitude)))) AS distance \
-                 From tryeat.restaurant WHERE restaurant_id IN (?) HAVING distance < ? LIMIT ?,5;'
+                 From tryeat.restaurant WHERE restaurant_id IN (?) HAVING distance < ? LIMIT ?,10;'
                     dbPool.query(query, [locate_latitude, locate_longitude, locate_latitude, idlist, parseInt(distance), parseInt(position)], function (err, rows, fields) {
                         if (err) throw err;
                         res.status(200).json(rows);
                     });
                 }
+            }else{
+                res.status(400);
             }
         })
     });
@@ -211,41 +233,21 @@ module.exports = function (_dbPool) {
         });
     });
 
-    router.post('/', multer.single('upload'), function (req, res) {
-        var img = req.file.buffer;
+    router.post('/', upload.single('upload'), function (req, res) {
         var restaurant_name = req.body.restaurant_name.replace(/"/gi, '');
         var address = req.body.address.replace(/"/gi, '');
         var phone = req.body.phone.replace(/"/gi, '');
         var locate_latitude = req.body.locate_latitude;
         var locate_longitude = req.body.locate_longitude;
 
-        if (img.length == 0) img = null;
+        var img_uri = (req.file.size==0)?null:req.file.filename;
 
-        var query = 'INSERT INTO restaurant (img,restaurant_name,address,phone,locate_latitude,locate_longitude,review_count,total_rate,total_bookmark) VALUES (?,?,?,?,?,?,?,?,?);';
+        var query = 'INSERT INTO restaurant (img_uri,restaurant_name,address,phone,locate_latitude,locate_longitude,review_count,total_rate,total_bookmark) VALUES (?,?,?,?,?,?,?,?,?);';
         query += 'update tryeat.counting SET restaurant=restaurant+1 where target=0;'
-        dbPool.query(query, [img, restaurant_name, address, phone, locate_latitude, locate_longitude, 0, 0, 0], function (err, rows, fields) {
+        dbPool.query(query, [img_uri, restaurant_name, address, phone, locate_latitude, locate_longitude, 0, 0, 0], function (err, rows, fields) {
             if (err) throw err;
             if (rows[0].affectedRows != 0) res.status(201).json({ message: "Add Restaurant Success", payLoadInt: rows[0].insertId, payLoadString: restaurant_name })
             else res.status(400).json({ message: "Add Restaurant Fail" })
-        });
-    });
-
-    router.put('/', function (req, res) {
-        var restaurant_id = req.body.restaurant_id;
-        var img = req.body.img;
-        var restaurant_name = req.body.restaurant_name.replace(/"/gi, '');;
-        var address = req.body.address.replace(/"/gi, '');;
-        var phone = req.body.phone.replace(/"/gi, '');;
-        var locate_latitude = req.body.locate_latitude;
-        var locate_longitude = req.body.locate_longitude;
-
-        if (img.length == 0) img = null;
-
-        var query = 'UPDATE restaurant SET img=?,restaurant_name=?,address=?,phone=?,locate_latitude=?,locate_longitude=?, WHERE restaurant_id=?';
-        dbPool.query(query, [img, restaurant_name, address, phone, locate_latitude, locate_longitude, restaurant_id], function (err, rows, fields) {
-            if (err) throw err;
-            if (rows.changedRows != 0) res.status(201).json({ message: "Restaurant Revise Success" })
-            else res.status(400).json({ message: "Restaurant Revise Fail" })
         });
     });
 

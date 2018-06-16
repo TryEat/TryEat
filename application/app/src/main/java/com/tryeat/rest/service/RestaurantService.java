@@ -33,19 +33,19 @@ public class RestaurantService {
         restaurantServiceInterface.getRestaurant(name).enqueue(callback);
     }
 
-    public static void getRestaurantsOrderByRecommander(int userId, double lat, double ion, int position,int distance, Callback<ArrayList<Restaurant>> callback) {
+    public static void getRestaurantsOrderByRecommander(int userId, double lat, double ion, int position,double distance, Callback<ArrayList<Restaurant>> callback) {
         restaurantServiceInterface.getRestaurantsOrderByRecommander(userId,lat,ion,position,distance).enqueue(callback);
     }
 
-    public static void getRestaurantsOrderByRate(double lat, double ion, int position,int distance, Callback<ArrayList<Restaurant>> callback) {
+    public static void getRestaurantsOrderByRate(double lat, double ion, int position,double distance, Callback<ArrayList<Restaurant>> callback) {
         restaurantServiceInterface.getRestaurantsOrderByRate(lat,ion,position,distance).enqueue(callback);
     }
 
-    public static void getRestaurantsOrderByReview(double lat, double ion, int position,int distance, Callback<ArrayList<Restaurant>> callback) {
+    public static void getRestaurantsOrderByReview(double lat, double ion, int position,double distance, Callback<ArrayList<Restaurant>> callback) {
         restaurantServiceInterface.getRestaurantsOrderByReview(lat,ion,position,distance).enqueue(callback);
     }
 
-    public static void getRestaurantsOrderByDistance(double lat, double ion, int position, int distance, Callback<ArrayList<Restaurant>> callback) {
+    public static void getRestaurantsOrderByDistance(double lat, double ion, int position, double distance, Callback<ArrayList<Restaurant>> callback) {
         restaurantServiceInterface.getRestaurantsOrderByDistance(lat,ion,position,distance).enqueue(callback);
     }
 
@@ -82,11 +82,6 @@ public class RestaurantService {
         body.put("locate_latitude", latitude);
         body.put("locate_longitude", longitude);
         restaurantServiceInterface.addRestaurant(imageBody, body).enqueue(callback);
-    }
-
-    public static void updateRestaurant(Callback<Status> callback) {
-        HashMap<String, Object> body = new HashMap<>();
-        restaurantServiceInterface.updateRestaurant(body).enqueue(callback);
     }
 
     public static void deleteRestaurant(int restaurantId, Callback<Status> callback) {

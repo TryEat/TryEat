@@ -48,13 +48,13 @@ public class RestaurantListFragment extends Fragment{
 
     private SwipeRefreshLayout refreshLayout;
 
-    private LinearLayout filter;
+    private ImageView filter;
 
     private boolean getFlag = false;
 
-    private int mDistance=0;
+    private int mDistance=5;
     private int mType=0;
-    private int[] mDistanceValue = {100,500,1000,3000,5000,0};
+    private double[] mDistanceValue = {0.1,0.5,1,3,5,0};
 
     SimpleCallBack<ArrayList<Restaurant>> callBack;
 
@@ -69,7 +69,6 @@ public class RestaurantListFragment extends Fragment{
             public void toDo(Response<ArrayList<Restaurant>> response) {
                 List<Restaurant> restaurants = response.body();
                 addItems(restaurants);
-                getFlag = false;
             }
 
             @Override
@@ -115,7 +114,7 @@ public class RestaurantListFragment extends Fragment{
         nestedScrollView = view.findViewById(R.id.nested_view);
 
         Glide.with(view)
-                .load(R.drawable.list_header_image2)
+                .load(R.drawable.list_header_image1)
                 .into(header);
 
         lv = view.findViewById(R.id.listView);
@@ -123,6 +122,7 @@ public class RestaurantListFragment extends Fragment{
         mLayoutManager = new LinearLayoutManager(getContext());
         lv.setLayoutManager(mLayoutManager);
         rAdapter = new RestaurantListAdapter(mListItem1);
+        rAdapter.setActivity(getActivity());
         rAdapter.setOnItemClickListener(new RestaurantListAdapter.ClickListener() {
             @Override
             public void onItemClick(int position, View v) {
@@ -160,6 +160,7 @@ public class RestaurantListFragment extends Fragment{
     private void addItems(List<Restaurant> items){
         mListItem1.addAll(items);
         rAdapter.notifyDataSetChanged();
+        getFlag = false;
     }
 
     private void getRestaurantListOrderByDistance() {
@@ -199,6 +200,7 @@ public class RestaurantListFragment extends Fragment{
         mDistance = distance;
         mType = type;
         mListItem1.clear();
+        rAdapter.notifyDataSetChanged();
         getData();
     }
 
@@ -211,10 +213,10 @@ public class RestaurantListFragment extends Fragment{
                 getRestaurantListOrderByReview();
                 break;
             case 2:
-                getRestaurantListOrderByRate();
+                getRestaurantListOrderByDistance();
                 break;
             case 3:
-                getRestaurantListOrderByDistance();
+                getRestaurantListOrderByRate();
                 break;
         }
     }

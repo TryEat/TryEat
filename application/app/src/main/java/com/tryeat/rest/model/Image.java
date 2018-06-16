@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+import com.tryeat.tryeat.MainActivity;
 
 import java.io.Serializable;
 
@@ -19,7 +20,7 @@ public class Image implements Serializable,Parcelable{
     protected Image(Parcel in) {
         type = in.readString();
         data = in.createByteArray();
-        bitmap = in.readParcelable(Bitmap.class.getClassLoader());
+        bitmap = MainActivity.ImageSaver.bitmap;
     }
 
     public static final Creator<Image> CREATOR = new Creator<Image>() {
@@ -43,6 +44,6 @@ public class Image implements Serializable,Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(type);
         dest.writeByteArray(data);
-        dest.writeValue(bitmap);
+        MainActivity.ImageSaver.bitmap = bitmap;
     }
 }

@@ -86,8 +86,8 @@ public class ReviewDetailFragment extends Fragment {
         Utils.safeSetObject(address, reviewItem.getAddress());
 
         image = view.findViewById(R.id.image);
-        BitmapLoader bitmapLoader = new BitmapLoader(image);
-        bitmapLoader.execute(reviewItem.getImage());
+        BitmapLoader bitmapLoader = new BitmapLoader(getActivity(),image);
+        bitmapLoader.Load(reviewItem.getImgUri());
 
         ImageView back = view.findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {

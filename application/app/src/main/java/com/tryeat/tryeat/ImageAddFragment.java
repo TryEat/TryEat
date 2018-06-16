@@ -71,6 +71,7 @@ public class ImageAddFragment extends Fragment implements View.OnClickListener {
                         }
 
                         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
                         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
                             File photoFile = null;
                             try {
@@ -92,7 +93,7 @@ public class ImageAddFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Intent intent = new Intent(Intent.ACTION_PICK);
-                        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+                        intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
                         startActivityForResult(intent, PICK_FROM_ALBUM);
                     }
                 };
@@ -144,9 +145,9 @@ public class ImageAddFragment extends Fragment implements View.OnClickListener {
         return image_bitmap;
     }
 
-    public void setImage(Image image) {
-        BitmapLoader bm = new BitmapLoader(mImageView);
-        bm.execute(image);
+    public void setImage(String uri) {
+        BitmapLoader bitmapLoader = new BitmapLoader(getActivity(),mImageView);
+        bitmapLoader.Load(uri);
     }
 
     @Override
@@ -159,11 +160,13 @@ public class ImageAddFragment extends Fragment implements View.OnClickListener {
 
                 try {
                     image_bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
+                    image_bitmap = Bitmap.createScaledBitmap(image_bitmap, 960, image_bitmap.getHeight()/(image_bitmap.getWidth()/960), true);
                     mImageView.setImageBitmap(image_bitmap);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 break;
+
             case PICK_FROM_CAMERA:
                 Bitmap bitmap = BitmapFactory.decodeFile(imageFilePath);
                 ExifInterface exif = null;
