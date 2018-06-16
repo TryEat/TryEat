@@ -70,7 +70,11 @@ public class RestaurantListFragment extends Fragment {
             public void onClick(View v) {
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 FilterDialogFragment dialogFragment = new FilterDialogFragment();
+                Bundle bundle = new Bundle(2);
+                bundle.putInt("type",mType);
+                bundle.putInt("distance",mDistance);
 
+                dialogFragment.setArguments(bundle);
                 dialogFragment.setInterface(new FilterDialogFragment.FilterInterface() {
                     @Override
                     public void setSetting(int type, int distance) {

@@ -5,6 +5,7 @@
     android:background="#e1e4e9">
 
     <ImageView
+        android:id="@+id/image"
         android:layout_width="300dp"
         android:layout_height="200dp"
         android:src="@drawable/list_header_image2"

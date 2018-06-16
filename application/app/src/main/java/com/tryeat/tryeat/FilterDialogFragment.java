@@ -86,6 +86,11 @@ public class FilterDialogFragment extends DialogFragment{
             }
         });
 
+        /*
+        type = getArguments().getInt("type");
+        distance = getArguments().getInt("distance");
+        */
+
         TextView cancel = view.findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
