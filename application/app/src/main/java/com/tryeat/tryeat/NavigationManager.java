@@ -25,15 +25,15 @@ public class NavigationManager implements BottomNavigationView.OnNavigationItemS
             case R.id.nav_recommand:
                 bundle = new Bundle(2);
                 bundle.putSerializable("user",LoginToken.getId());
-                FragmentLoader.startFragment(R.id.frament_place,RestaurantListFragment.class,bundle,true);
+                FragmentLoader.startFragment(R.id.frament_place,RestaurantListFragment.class,bundle,false);
                 return true;
             case R.id.nav_add_review:
-                FragmentLoader.startFragment(R.id.frament_place,ReviewMenuFragment.class,true);
+                FragmentLoader.startFragment(R.id.frament_place,ReviewMenuFragment.class,false);
                 return true;
             case R.id.nav_user:
                 bundle = new Bundle(2);
                 bundle.putSerializable("id",LoginToken.getId());
-                FragmentLoader.startFragment(R.id.frament_place,UserFragment.class,bundle,true);
+                FragmentLoader.startFragment(R.id.frament_place,UserFragment.class,bundle,false);
                 return true;
         }
         return false;

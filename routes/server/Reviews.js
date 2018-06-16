@@ -40,7 +40,8 @@ module.exports = function (_dbPool) {
         INNER JOIN user ON review.user_id = user.user_id WHERE review.user_id = ? AND review.restaurant_id = ? LIMIT 1';
         dbPool.query(query, [user_id, restaurant_id], function (err, rows, fields) {
             if (err) throw err;
-            res.status(200).json(rows[0]);
+            if(rows.length==0)res.status(209).json({id:-1});
+            else res.status(200).json(rows[0]);
         });
     });
 
@@ -50,7 +51,6 @@ module.exports = function (_dbPool) {
         var query = 'SELECT review_id,img FROM review WHERE review_id=?';
         dbPool.query(query, [review_id], function (err, rows, fields) {
             if (err) throw err;
-            JSON.stringify(rows[0]);
             res.status(200).json(rows[0]);
         });
     });
@@ -84,9 +84,9 @@ module.exports = function (_dbPool) {
         if(img.length==0)img=null;
 
         var query = 'Update tryeat.restaurant,(Select rate,restaurant_id from tryeat.review Where review_id=?)target \
-        Set total_rate=total_rate-target.rate Where tryeat.restaurant.restaurant_id=target.restaurant_id;'
+        Set total_rate=total_rate-target.rate+? Where tryeat.restaurant.restaurant_id=target.restaurant_id;'
         query += 'UPDATE review SET img=?, content=?, rate=? WHERE review_id=?;';
-        dbPool.query(query, [review_id,img, content, rate, review_id], function (err, rows, fields) {
+        dbPool.query(query, [review_id,rate,img, content, rate, review_id], function (err, rows, fields) {
             if (err) throw err;
             if (rows[0].changedRows != 0) res.status(201).json({ message: "update review success" })
             else res.status(400).json({ message: "update review fail" })

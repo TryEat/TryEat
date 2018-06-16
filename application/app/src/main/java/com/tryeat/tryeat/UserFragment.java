@@ -1,5 +1,7 @@
 package com.tryeat.tryeat;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,13 +11,19 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.tryeat.rest.model.Status;
 import com.tryeat.rest.model.User;
+import com.tryeat.rest.service.ReviewService;
+import com.tryeat.rest.service.SignService;
 import com.tryeat.rest.service.UserService;
 import com.tryeat.team.tryeat_service.R;
 
@@ -43,9 +51,11 @@ public class UserFragment extends Fragment {
 
     Fragment fragment;
 
+    PopupMenu popupMenu;
+
     int userId;
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.user_fragment, container, false);
 
         userId = getArguments().getInt("id");
@@ -53,6 +63,46 @@ public class UserFragment extends Fragment {
         NavigationManager.setVisibility(View.VISIBLE);
 
         name = view.findViewById(R.id.name);
+
+        ImageView option = view.findViewById(R.id.option);
+        option.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupMenu = new PopupMenu(getContext(), v);
+                popupMenu.inflate(R.menu.user_menu);
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.m1:
+                                SignService.signOut(new Callback<Status>() {
+                                    @Override
+                                    public void onResponse(Call<Status> call, Response<Status> response) {
+                                        Intent intent = new Intent(getActivity(), SignInActivity.class);
+                                        intent.putExtra("logout",true);
+                                        startActivity(intent);
+                                        getActivity().finish();
+                                        getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Status> call, Throwable t) {
+
+                                    }
+                                });
+                                break;
+                            case R.id.m2:
+                                popupMenu.dismiss();
+                                break;
+                            default:
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                popupMenu.show();
+            }
+        });
 
         refreshLayout = view.findViewById(R.id.refreshlayout);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

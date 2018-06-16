@@ -33,7 +33,7 @@ app.get('/', function (req, res) {
 
 app.use(printMessage);
 app.use('/sign', require('./routes/server/sign')(pool, userTokens));
-//app.use(verifyUser);
+app.use(verifyUser);
 app.use('/users', require('./routes/server/users')(pool));
 app.use('/restaurants', require('./routes/server/restaurants')(pool));
 app.use('/bookmarks', require('./routes/server/bookmarks')(pool));
@@ -50,7 +50,7 @@ function myFunc() {
     console.log((new Date()).toLocaleString() + " SVD 추천 정보 갱신 끝")
     setTimeout(() => {
       myFunc();
-    }, 3000); //5초
+    }, 10000); //10초
   });
 }
 

@@ -1,6 +1,7 @@
 package com.tryeat.tryeat;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -99,52 +100,56 @@ public class ReviewDetailFragment extends Fragment {
         });
 
         ImageView menu = view.findViewById(R.id.menu);
-        menu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupMenu = new PopupMenu(getContext(), v);
-                popupMenu.inflate(R.menu.review_menu);
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.m1:
-                                Bundle bundle = new Bundle(2);
-                                bundle.putSerializable("revise", reviewItem);
-                                FragmentLoader.startFragment(R.id.frament_place, ReviewAddFragment.class, bundle, true);
-                                break;
-                            case R.id.m2:
-                                AlertDialogBuilder.createChoiceAlert(getActivity(), "리뷰를 지우시겠습니까?", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        ReviewService.deleteReview(reviewItem.getReviewId(), new Callback<Status>() {
-                                            @Override
-                                            public void onResponse(Call<Status> call, Response<Status> response) {
-                                                if (response.isSuccessful()) {
-                                                    FragmentLoader.back();
+        if(LoginToken.getId()!=reviewItem.getUserId())menu.setVisibility(View.GONE);
+        else {
+            menu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    popupMenu = new PopupMenu(getContext(), v);
+                    popupMenu.inflate(R.menu.review_menu);
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.m1:
+                                    Bundle bundle = new Bundle(2);
+                                    bundle.putSerializable("revise", reviewItem);
+                                    FragmentLoader.startFragment(R.id.frament_place, ReviewAddFragment.class, bundle, true);
+                                    break;
+                                case R.id.m2:
+                                    AlertDialogBuilder.createChoiceAlert(getActivity(), "리뷰를 지우시겠습니까?", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ReviewService.deleteReview(reviewItem.getReviewId(), new Callback<Status>() {
+                                                @Override
+                                                public void onResponse(Call<Status> call, Response<Status> response) {
+                                                    if (response.isSuccessful()) {
+                                                        FragmentLoader.back();
+                                                    }
                                                 }
-                                            }
 
-                                            @Override
-                                            public void onFailure(Call<Status> call, Throwable t) {
+                                                @Override
+                                                public void onFailure(Call<Status> call, Throwable t) {
 
-                                            }
-                                        });
-                                    }
-                                });
-                                break;
-                            case R.id.m3:
-                                popupMenu.dismiss();
-                                break;
-                            default:
-                                break;
+                                                }
+                                            });
+                                        }
+                                    });
+                                    break;
+                                case R.id.m3:
+                                    popupMenu.dismiss();
+                                    break;
+                                default:
+                                    break;
+                            }
+                            return false;
                         }
-                        return false;
-                    }
-                });
-                popupMenu.show();
-            }
-        });
+                    });
+                    popupMenu.show();
+                }
+            });
+        }
+
 
         LinearLayout open = view.findViewById(R.id.view_restaurant_button);
         open.setOnClickListener(new View.OnClickListener() {

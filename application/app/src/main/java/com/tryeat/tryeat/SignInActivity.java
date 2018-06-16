@@ -65,18 +65,21 @@ public class SignInActivity extends AppCompatActivity {
         signButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(checkBox.isChecked()){
+                if (checkBox.isChecked()) {
                     save();
                 }
                 signIn();
             }
         });
 
-        if(saveLoginData){
+
+        if (saveLoginData) {
             idText.setText(id);
             passwordText.setText(pwd);
             checkBox.setChecked(saveLoginData);
-            signIn();
+            if (getIntent().getExtras()==null) {
+                signIn();
+            }
         }
     }
 

@@ -28,7 +28,6 @@ public class Review implements Serializable {
     private Timestamp date;
     @SerializedName("rate")
     private float rate;
-    private Bitmap bitmap;
 
     public String getRestaurantName() {
         return restaurantName;

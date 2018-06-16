@@ -232,11 +232,11 @@ public class RestaurantDetailFragment extends Fragment {
             @Override
             public void onResponse(Call<Review> call, Response<Review> response) {
                 if (response.isSuccessful()) {
-                    myReviewItem = response.body();
-                    if (myReviewItem == null) {
+                    if(response.code()==209){
                         myReviewPlace.setVisibility(View.GONE);
                         return;
                     }
+                    myReviewItem = response.body();
                     reviewText.setText("리뷰 수정");
 
                     View myReview = view.findViewById(R.id.my_review);
@@ -265,7 +265,7 @@ public class RestaurantDetailFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Review> call, Throwable t) {
-
+                Log.d("sdaf",t.toString());
             }
         });
     }
