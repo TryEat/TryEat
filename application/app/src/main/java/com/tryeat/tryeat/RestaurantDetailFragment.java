@@ -31,11 +31,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.tryeat.tryeat.Utils.safeDivide;
 
 /**
  * Created by socce on 2018-05-08.
  */
-
 
 public class RestaurantDetailFragment extends Fragment {
     private View view;
@@ -326,7 +326,7 @@ public class RestaurantDetailFragment extends Fragment {
 
     private void setData(Restaurant restaurant) {
         name.setText(restaurant.getName());
-        rate.setText(String.valueOf(Utils.safeDivide(restaurant.getTotalRate(), restaurant.getReviewCount())));
+        rate.setText(String.format("%.1fm" , safeDivide(restaurant.getTotalRate(), restaurant.getReviewCount())));
         count.setText(restaurant.getReviewCount() + "");
         Utils.safeSetObject(bookmark, restaurant.getTotalBookMark());
         Utils.safeSetObject(address, restaurant.getAddress());

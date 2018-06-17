@@ -9,7 +9,7 @@ var port = process.env.PORT || 8080;
 
 var userTokens = [];
 
-var printMessage = function(req,res,next){
+var printMessage = function (req, res, next) {
   console.log();
   console.log(req);
   console.log(req.body);
@@ -44,13 +44,21 @@ var server = app.listen(port, function () {
 });
 
 function myFunc() {
-  console.log((new Date()).toLocaleString() + " SVD 추천 정보 갱신 시작")
-  var process = require("child_process").spawn('python',["./deep/svd_train_val.py"]);
-  process.on("exit",function (code) {
-    console.log((new Date()).toLocaleString() + " SVD 추천 정보 갱신 끝")
-    setTimeout(() => {
-      myFunc();
-    }, 30000); //10초
+  console.log((new Date()).toLocaleString() + " 리뷰 데이터 추출 시작")
+  var makeData = require("child_process").spawn('python', ["./deep/makeData.py"]);
+  makeData.on("exit", function (code) {
+    console.log((new Date()).toLocaleString() + " 리뷰 데이터 추출 끝")
+    console.log((new Date()).toLocaleString() + " SVD 추천 정보 갱신 시작")
+    var train = require("child_process").spawn('python', ["./deep/svd_train_val.py"]);
+    train.stdout.on("data",function(data){
+      console.log("오차 " + data + "%")
+    });
+    train.on("exit", function (code) {
+      console.log((new Date()).toLocaleString() + " SVD 추천 정보 갱신 끝")
+      setTimeout(() => {
+        myFunc();
+      }, 10000); //10초
+    });
   });
 }
 

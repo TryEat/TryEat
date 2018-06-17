@@ -9,7 +9,7 @@ module.exports = function (_dbPool) {
 
         var query = 'SELECT *,date FROM tryeat.restaurant \
          INNER JOIN tryeat.bookmark ON tryeat.bookmark.restaurant_id = tryeat.restaurant.restaurant_id \
-         WHERE tryeat.bookmark.user_id = ? LIMIT ?,10';
+         WHERE tryeat.bookmark.user_id = ? ORDER BY date DESC LIMIT ?,10';
         dbPool.query(query, [user_id, parseInt(position)], function (err, rows, fields) {
             if (err) throw err;
             res.status(200).json(rows);

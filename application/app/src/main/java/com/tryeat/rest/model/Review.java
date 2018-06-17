@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+import com.tryeat.rest.service.ServiceGenerator;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -72,7 +73,7 @@ public class Review implements Serializable, Parcelable {
 
     public String getImgUri() {
         if(imgUri==null)return null;
-        return "http://tryeat.homedns.tv:8080/reviews/image/uri/"+imgUri;
+        return ServiceGenerator.getServerUri()+"reviews/image/uri/"+imgUri;
     }
 
     public void setImgUri(String imgUri) {
@@ -121,6 +122,14 @@ public class Review implements Serializable, Parcelable {
 
     public void setRate(float rate) {
         this.rate = rate;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj!=null && obj instanceof Review){
+            return this.getReviewId() == ((Review) obj).getReviewId();
+        }
+        return false;
     }
 
     public static final Creator<Review> CREATOR = new Creator<Review>() {

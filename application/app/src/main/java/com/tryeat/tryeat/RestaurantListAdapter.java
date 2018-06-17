@@ -83,7 +83,7 @@ class RestaurantListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         Restaurant item = mList.get(position);
 
 
-        Utils.safeSetObject(viewHolder.rate,safeDivide(item.getTotalRate(), item.getReviewCount()));
+        Utils.safeSetObject(viewHolder.rate,String.format("%.1f" , safeDivide(item.getTotalRate(), item.getReviewCount())));
         Utils.safeSetObject(viewHolder.address,item.getAddress());
         Utils.safeSetObject(viewHolder.bookmark,item.getTotalBookMark());
         Utils.safeSetObject(viewHolder.count,item.getReviewCount());

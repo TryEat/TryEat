@@ -8,7 +8,6 @@ CREATE TABLE user(
 	user_id INT(11) NOT NULL AUTO_INCREMENT,
 	user_login_id VARCHAR(30) NOT NULL,
 	user_pwd VARCHAR(50) NOT NULL,
-	profile VARCHAR(100),
 	review_count INT(11) DEFAULT 0,
 	bookmark_count INT(11) DEFAULT 0,
 	signdate TIMESTAMP NOT NULL DEFAULT now(),
@@ -63,8 +62,6 @@ CREATE TABLE counting(
 );
 
 USE tryeat;
-
-INSERT INTO tryeat.counting (target,user,restaurant,review) VALUES (0,0,0,0);
 
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '1234';
 flush privileges;

@@ -121,7 +121,11 @@ public class ReviewLIstFragment extends Fragment {
     }
 
     private void addItems(List<Review> items) {
-        mListItem1.addAll(items);
+        for(Review item : items){
+            if(!mListItem1.contains(item)) {
+                mListItem1.add(item);
+            }
+        }
         rAdapter.notifyDataSetChanged();
     }
 

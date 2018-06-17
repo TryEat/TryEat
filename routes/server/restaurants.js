@@ -89,7 +89,7 @@ module.exports = function (_dbPool) {
 
         var spawn = require("child_process").spawn;
 
-        var process = spawn('python', ["./deep/recommand.py", user_id, position, 10]);
+        var process = spawn('python', ["./deep/recommand.py", user_id, position, 40]);
 
         process.stdout.on('data', function (data) {
             var idlist = data.toString().split(',').map(function (item) {
@@ -98,17 +98,18 @@ module.exports = function (_dbPool) {
 
             if (!isNaN(idlist[0])){
                 if (distance == 0) {
-                    var query = 'SELECT * FROM restaurant WHERE restaurant_id IN (?)';
-                    dbPool.query(query, [idlist], function (err, rows, fields) {
+                    var query = 'SELECT * FROM restaurant WHERE restaurant_id IN (?) ORDER BY FIND_IN_SET(restaurant_id,"?") LIMIT ?,10';
+                    dbPool.query(query, [idlist,idlist,parseInt(position%40)], function (err, rows, fields) {
                         if (err) throw err;
                         res.status(200).json(rows);
+
                     });
                 } else {
                     distance=5000;
                     var query = 'SELECT restaurant_name,(6371 * ACOS(COS(RADIANS(?)) * COS(RADIANS(locate_latitude)) * COS(RADIANS(locate_longitude) \
                 - RADIANS(?)) + SIN(RADIANS(?)) * SIN(RADIANS(locate_latitude)))) AS distance \
-                 From tryeat.restaurant WHERE restaurant_id IN (?) HAVING distance < ? LIMIT ?,10;'
-                    dbPool.query(query, [locate_latitude, locate_longitude, locate_latitude, idlist, parseInt(distance), parseInt(position)], function (err, rows, fields) {
+                 From tryeat.restaurant WHERE restaurant_id IN (?)  HAVING distance < ? LIMIT ?,10;'
+                    dbPool.query(query, [locate_latitude, locate_longitude, locate_latitude, idlist, parseInt(distance), parseInt(position%40)], function (err, rows, fields) {
                         if (err) throw err;
                         res.status(200).json(rows);
                     });

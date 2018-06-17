@@ -18,7 +18,7 @@ item_indecies = [x-1 for x in df_train.item.values[1:]]
 rates = df_train.rate.values[1:]
 
 # variables
-feature_len = 10
+feature_len = 30
 U = tf.Variable(initial_value=tf.truncated_normal([user_len,feature_len]), name='users')
 P = tf.Variable(initial_value=tf.truncated_normal([feature_len,item_len]), name='items')
 result = tf.matmul(U, P)
@@ -41,7 +41,7 @@ regularizer = tf.multiply(norm_sums, lda, 'regularizer')
 # cost function
 lr = tf.constant(.001, name='learning_rate')
 global_step = tf.Variable(0, trainable=False)
-learning_rate = tf.train.exponential_decay(lr, global_step, 10000, 0.96, staircase=True)
+learning_rate = tf.train.exponential_decay(lr, global_step, 1000, 0.96, staircase=True)
 optimizer = tf.train.GradientDescentOptimizer(learning_rate)
 training_step = optimizer.minimize(base_cost, global_step=global_step)
 
@@ -51,7 +51,6 @@ init = tf.initialize_all_variables()
 sess.run(init)
 
 for i in range(1000):
-    print(i)
     sess.run(training_step)
 
 f = open(r'''F:\project\TryEat\deep\u.dat''','w')

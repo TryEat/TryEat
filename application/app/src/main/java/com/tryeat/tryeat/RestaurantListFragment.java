@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.tryeat.rest.model.Restaurant;
+import com.tryeat.rest.model.Review;
 import com.tryeat.rest.service.RestaurantService;
 import com.tryeat.team.tryeat_service.R;
 
@@ -158,7 +159,11 @@ public class RestaurantListFragment extends Fragment{
     }
 
     private void addItems(List<Restaurant> items){
-        mListItem1.addAll(items);
+        for(Restaurant item : items){
+            if(!mListItem1.contains(item)) {
+                mListItem1.add(item);
+            }
+        }
         rAdapter.notifyDataSetChanged();
         getFlag = false;
     }

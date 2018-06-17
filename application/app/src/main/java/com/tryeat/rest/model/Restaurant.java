@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+import com.tryeat.rest.service.ServiceGenerator;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -45,7 +46,7 @@ public class Restaurant implements Serializable ,Parcelable {
 
     public String getImgUri() {
         if(imgUri==null)return null;
-        return "http://tryeat.homedns.tv:8080/restaurants/image/uri/"+imgUri;
+        return ServiceGenerator.getServerUri()+"restaurants/image/uri/"+imgUri;
     }
 
     public void setImgUri(String imgUri) {
@@ -145,6 +146,14 @@ public class Restaurant implements Serializable ,Parcelable {
         totalBookMark = in.readInt();
         date = (Timestamp) in.readSerializable();
         distance = in.readDouble();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj!=null && obj instanceof Review){
+            return this.getId() == ((Restaurant) obj).getId();
+        }
+        return false;
     }
 
     public static final Creator<Restaurant> CREATOR = new Creator<Restaurant>() {

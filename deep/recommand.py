@@ -1,30 +1,41 @@
 import numpy as np
 import sys
+import pymysql
 
 user = int(sys.argv[1])
-start = int(sys.argv[2])
+start =int(sys.argv[2])
 end = int(sys.argv[3])
+
+conn = pymysql.connect(host='localhost', user='root', password='1234',
+                       db='tryeat', charset='utf8')
+curs = conn.cursor()
+
+sql = "SELECT user, restaurant FROM counting WHERE target=0"
+curs.execute(sql)
+counts = curs.fetchall()
+
+conn.close()
 
 data = open(r'''F:\project\TryEat\deep\u.dat''')
 user_data = data.read().split()
-user_len = (int)(user_data[0])
-u = np.zeros(shape=[user_len*10])
+user_len = (int)(counts[0][0])
+u = np.random.rand(user_len*30)
 index = 0
 for i in user_data[1:]:
     u[index] = i
     index+=1
-u = u.reshape((user_len,10))
+u = u.reshape((user_len,30))
 data.close()
 
 data = open(r'''F:\project\TryEat\deep\p.dat''')
 restaurant_data = data.read().split()
-restaurant_len = (int)(restaurant_data[0])
-p = np.zeros(shape=[restaurant_len*10])
+restaurant_len = (int)(counts[0][1])
+p = np.random.rand(restaurant_len*30)
 index = 0
 for i in restaurant_data[1:]:
     p[index] = i
     index+=1
-p = p.reshape((10,restaurant_len))
+p = p.reshape((30,restaurant_len))
 data.close()
 data.close()
 
