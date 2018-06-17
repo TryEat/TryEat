@@ -33,11 +33,11 @@ public class ReviewLIstFragment extends Fragment {
 
     private ArrayList<Review> mListItem1;
 
-    private int restaurantId = -1;
-
     private NestedScrollView nestedScrollView;
 
     SimpleCallBack<ArrayList<Review>> callBack;
+
+    int userId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -73,13 +73,8 @@ public class ReviewLIstFragment extends Fragment {
 
         if (getArguments().containsKey("user")) {
             rAdapter = new ReviewListAdapter2(mListItem1);
+            userId = getArguments().getInt("user");
             getReviewList();
-        }
-
-        if (getArguments().containsKey("restaurant")) {
-            restaurantId = getArguments().getInt("restaurant");
-            rAdapter = new ReviewListAdapter(mListItem1);
-            getReviewList(restaurantId);
         }
 
         rAdapter.setActivity(getActivity());
@@ -98,9 +93,8 @@ public class ReviewLIstFragment extends Fragment {
 
                 int diff = (view.getBottom() - (nestedScrollView.getHeight() + nestedScrollView
                         .getScrollY()));
-
                 if (diff == 0) {
-                    getReviewList(restaurantId);
+                    getReviewList();
                 }
             }
         });
@@ -113,11 +107,7 @@ public class ReviewLIstFragment extends Fragment {
     }
 
     private void getReviewList() {
-        ReviewService.getUserReviews(LoginToken.getId(), rAdapter.getItemCount(), callBack);
-    }
-
-    private void getReviewList(int restaurantId) {
-        ReviewService.getRestaurantReviews(restaurantId, rAdapter.getItemCount(), callBack);
+        ReviewService.getUserReviews(userId, rAdapter.getItemCount(), callBack);
     }
 
     private void addItems(List<Review> items) {
@@ -131,8 +121,7 @@ public class ReviewLIstFragment extends Fragment {
 
     public Boolean refresh() {
         mListItem1.clear();
-        if (restaurantId != -1) getReviewList(restaurantId);
-        else getReviewList();
+        getReviewList();
         return true;
     }
 }

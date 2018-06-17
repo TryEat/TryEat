@@ -33,7 +33,7 @@ app.get('/', function (req, res) {
 
 app.use(printMessage);
 app.use('/sign', require('./routes/server/sign')(pool, userTokens));
-app.use(verifyUser);
+//app.use(verifyUser);
 app.use('/users', require('./routes/server/users')(pool));
 app.use('/restaurants', require('./routes/server/restaurants')(pool));
 app.use('/bookmarks', require('./routes/server/bookmarks')(pool));
@@ -51,7 +51,7 @@ function myFunc() {
     console.log((new Date()).toLocaleString() + " SVD 추천 정보 갱신 시작")
     var train = require("child_process").spawn('python', ["./deep/svd_train_val.py"]);
     train.stdout.on("data",function(data){
-      console.log("오차 " + data + "%")
+      console.log("오차 " + data[0] + "%")
     });
     train.on("exit", function (code) {
       console.log((new Date()).toLocaleString() + " SVD 추천 정보 갱신 끝")

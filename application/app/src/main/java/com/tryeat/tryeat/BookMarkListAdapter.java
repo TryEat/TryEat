@@ -25,7 +25,7 @@ import retrofit2.Response;
 import static com.tryeat.tryeat.Utils.safeDivide;
 
 
-class FollowListAdapter extends SimpleAdapter<Restaurant> {
+class BookMarkListAdapter extends SimpleAdapter<Restaurant> {
 
     private static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView address;
@@ -57,14 +57,14 @@ class FollowListAdapter extends SimpleAdapter<Restaurant> {
         }
     }
 
-    public FollowListAdapter(ArrayList<Restaurant> item) {
+    public BookMarkListAdapter(ArrayList<Restaurant> item) {
         this.mItemList = item;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.follow_list_item, parent, false);
-        return new FollowListAdapter.ViewHolder(v);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.bookmark_list_item, parent, false);
+        return new BookMarkListAdapter.ViewHolder(v);
     }
 
     @Override
@@ -99,7 +99,7 @@ class FollowListAdapter extends SimpleAdapter<Restaurant> {
             }
         });
 
-        Utils.safeSetObject(viewHolder.rate, safeDivide(item.getTotalRate(), item.getReviewCount()));
+        Utils.safeSetObject(viewHolder.rate, String.format("%.1f" , safeDivide(item.getTotalRate(), item.getReviewCount())));
         Utils.safeSetObject(viewHolder.address, item.getAddress());
         Utils.safeSetObject(viewHolder.bookmark, item.getTotalBookMark());
 

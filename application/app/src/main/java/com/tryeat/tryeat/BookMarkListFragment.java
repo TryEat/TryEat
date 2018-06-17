@@ -23,11 +23,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FollowListFragment extends Fragment{
+public class BookMarkListFragment extends Fragment{
     private View view;
     private RecyclerView lv;
     private RecyclerView.LayoutManager mLayoutManager;
-    private FollowListAdapter rAdapter;
+    private BookMarkListAdapter rAdapter;
 
     private ArrayList<Restaurant> mListItem1;
 
@@ -38,7 +38,7 @@ public class FollowListFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (view == null) {
-            view = inflater.inflate(R.layout.follow_list_fragment, container, false);
+            view = inflater.inflate(R.layout.bookmark_list_fragment, container, false);
 
             userId = getArguments().getInt("user");
 
@@ -50,9 +50,9 @@ public class FollowListFragment extends Fragment{
             lv.setHasFixedSize(true);
             mLayoutManager = new LinearLayoutManager(getContext());
             lv.setLayoutManager(mLayoutManager);
-            rAdapter = new FollowListAdapter(mListItem1);
+            rAdapter = new BookMarkListAdapter(mListItem1);
             rAdapter.setActivity(getActivity());
-            rAdapter.setOnItemClickListener(new FollowListAdapter.ClickListener() {
+            rAdapter.setOnItemClickListener(new BookMarkListAdapter.ClickListener() {
                 @Override
                 public void onItemClick(int position, View v) {
                     itemClick(position);

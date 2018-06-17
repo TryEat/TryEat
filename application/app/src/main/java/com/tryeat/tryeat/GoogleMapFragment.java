@@ -17,6 +17,8 @@ public class GoogleMapFragment extends SupportMapFragment implements OnMapReadyC
     private Marker marker;
     private Location _location;
 
+    private boolean init = false;
+
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
@@ -42,11 +44,13 @@ public class GoogleMapFragment extends SupportMapFragment implements OnMapReadyC
         });
 
         setLocation(MyLocation.getLocation());
+        init=true;
     }
 
     private void update(){
         if(_location==null)return;
-        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(_location.getLatitude(), _location.getLongitude()),gMap.getCameraPosition().zoom));
+        if(init==false)gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(_location.getLatitude(), _location.getLongitude()),12));
+        else gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(_location.getLatitude(), _location.getLongitude()),gMap.getCameraPosition().zoom));
     }
 
     public Location getLocation() {

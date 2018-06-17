@@ -208,13 +208,15 @@ public class RestaurantDetailFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getContext());
         lv.setLayoutManager(mLayoutManager);
         rAdapter = new ReviewListAdapter(mListItem1);
+        rAdapter.setActivity(getActivity());
         rAdapter.setOnItemClickListener(new ReviewListAdapter.ClickListener() {
-            @Override
+        @Override
             public void onItemClick(int position, View v) {
                 itemClick(position);
             }
         });
         lv.setAdapter(rAdapter);
+
 
         if (!init) getData(restaurantId);
         getReviewList(restaurantId, 0);
@@ -332,6 +334,9 @@ public class RestaurantDetailFragment extends Fragment {
         Utils.safeSetObject(address, restaurant.getAddress());
         Utils.safeSetObject(tel, restaurant.getPhone());
         Utils.safeSetObject(reviewNum, restaurant.getReviewCount());
+
+        BitmapLoader bitmapLoader = new BitmapLoader(getActivity(),image);
+        bitmapLoader.Load(restaurant.getImgUri());
 
         if (mListItem1.size() >= restaurant.getReviewCount())
             more.setVisibility(View.GONE);

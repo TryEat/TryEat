@@ -32,7 +32,7 @@ class NavigationManager implements BottomNavigationView.OnNavigationItemSelected
                 return true;
             case R.id.nav_user:
                 bundle = new Bundle(2);
-                bundle.putInt("id",LoginToken.getId());
+                bundle.putInt("user",LoginToken.getId());
                 FragmentLoader.startFragment(R.id.frament_place,UserFragment.class,bundle,false);
                 return true;
         }

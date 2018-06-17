@@ -53,7 +53,7 @@ public class UserFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.user_fragment, container, false);
 
-        userId = getArguments().getInt("id");
+        userId = getArguments().getInt("user");
 
         NavigationManager.setVisibility(View.VISIBLE);
 
@@ -89,8 +89,8 @@ public class UserFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (fragment instanceof FollowListFragment)
-                    ((FollowListFragment) fragment).refresh();
+                if (fragment instanceof BookMarkListFragment)
+                    ((BookMarkListFragment) fragment).refresh();
                 else if (fragment instanceof ReviewLIstFragment)
                     ((ReviewLIstFragment) fragment).refresh();
                 refreshLayout.setRefreshing(false);
@@ -120,7 +120,7 @@ public class UserFragment extends Fragment {
             public void onClick(View v) {
                 Bundle bundle = new Bundle(2);
                 bundle.putInt("user", userId);
-                fragment = FragmentLoader.startFragment(R.id.fragment_view, FollowListFragment.class, bundle, false);
+                fragment = FragmentLoader.startFragment(R.id.fragment_view, BookMarkListFragment.class, bundle, false);
             }
         });
 

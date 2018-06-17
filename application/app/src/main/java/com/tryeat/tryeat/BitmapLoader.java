@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -22,8 +23,12 @@ class BitmapLoader {
     }
 
     public void Load(String uri) {
-        if (uri == null||uri=="") return;
+        if (uri == null||uri=="") {
+            mImageView.setVisibility(View.GONE);
+            return;
+        }
         if (mActivity == null) return;
+        mImageView.setVisibility(View.VISIBLE);
         GlideUrl glideUrl = new GlideUrl(uri, new LazyHeaders.Builder()
                 .addHeader("id", String.valueOf(LoginToken.getId()))
                 .addHeader("Authorization", LoginToken.getToken())

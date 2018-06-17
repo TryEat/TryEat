@@ -61,7 +61,7 @@ public class ReviewDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle(2);
-                bundle.putInt("id", reviewItem.getUserId());
+                bundle.putInt("user", reviewItem.getUserId());
                 bundle.putString("name", reviewItem.getWriter());
                 FragmentLoader.startFragment(R.id.frament_place, UserFragment.class, bundle, false);
             }

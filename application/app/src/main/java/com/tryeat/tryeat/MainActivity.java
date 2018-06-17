@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         FragmentLoader.setActivity(this);
-        FragmentLoader.startFragment(R.id.frament_place,RestaurantListFragment.class,true);
+        FragmentLoader.startFragment(R.id.frament_place,RestaurantListFragment.class,false);
     }
 
     public static class ImageSaver{

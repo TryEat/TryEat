@@ -51,16 +51,6 @@ module.exports = function (_dbPool) {
         });
     })
 
-    router.get('/image/:id', function (req, res) {
-        var restaurant_id = req.params.id;
-
-        var query = 'SELECT img FROM restaurant WHERE restaurant_id=?';
-        dbPool.query(query, [restaurant_id], function (err, rows, fields) {
-            if (err) throw err;
-            res.status(200).json(rows);
-        });
-    })
-
     router.get('/:name/byname', function (req, res) {
         var restaurant_name = "%" + req.params.name + "%";
         var restaurant_name2 = "%" + req.params.name.slice(0, -1) + "%";
