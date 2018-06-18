@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.tryeat.rest.model.Status;
 import com.tryeat.rest.model.StatusCode;
@@ -38,7 +39,7 @@ import retrofit2.Response;
  * Created by socce on 2018-05-08.
  */
 
-public class RestaurantAddFragment extends Fragment {
+public class RestaurantAddFragment extends Fragment implements View.OnClickListener{
     private View view;
     private EditText name;
     private EditText tel;
@@ -54,7 +55,7 @@ public class RestaurantAddFragment extends Fragment {
         if (view == null) {
             view = inflater.inflate(R.layout.restaurant_add_fragment, container, false);
             Button addButton = view.findViewById(R.id.addButton);
-            addButton.setOnClickListener(addRestaurant());
+            addButton.setOnClickListener(this);
 
             NavigationManager.setVisibility(View.GONE);
 
@@ -90,41 +91,41 @@ public class RestaurantAddFragment extends Fragment {
         return view;
     }
 
-    private View.OnClickListener addRestaurant() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Location location = fragment.getLocation();
-                if (location == null) {
-                    AlertDialogBuilder.createAlert(getActivity(), "음식점 위치를 지정해 주세요.");
-                    return;
-                }
+    @Override
+    public void onClick(View v) {
+        ProgressDialogManager.show(getActivity(),"음식점 등록 중입니다...");
+        Location location = fragment.getLocation();
+        if (location == null) {
+            ProgressDialogManager.dismiss();
+            AlertDialogBuilder.createAlert(getActivity(), "음식점 위치를 지정해 주세요.");
+            return;
+        }
 
-                Geocoder myLocation = new Geocoder(getActivity(), Locale.getDefault());
-                List<Address> myList = new ArrayList<>();
+        Geocoder myLocation = new Geocoder(getActivity(), Locale.getDefault());
+        List<Address> myList = new ArrayList<>();
 
-                try {
-                    myList = myLocation.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        try {
+            myList = myLocation.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-                String adress = myList.get(0).getAddressLine(0);
+        String adress = myList.get(0).getAddressLine(0);
 
-                RestaurantService.addRestaurant(name.getText().toString(), adress, tel.getText().toString(), imageFragment.getImageBitmap(), location.getLatitude(), location.getLongitude(),
-                        new SimpleCallBack<>(RestaurantService.class.getSimpleName(), new SimpleCallBack.Success<Status>() {
-                            @Override
-                            public void toDo(Response<Status> response) {
-                                getFragmentManager().popBackStackImmediate();
-                            }
+        RestaurantService.addRestaurant(name.getText().toString(), adress, tel.getText().toString(), imageFragment.getImageBitmap(), location.getLatitude(), location.getLongitude(),
+                new SimpleCallBack<>(RestaurantService.class.getSimpleName(), new SimpleCallBack.Success<Status>() {
+                    @Override
+                    public void toDo(Response<Status> response) {
+                        ProgressDialogManager.dismiss();
+                        getFragmentManager().popBackStackImmediate();
+                    }
 
-                            @Override
-                            public void exception() {
-
-                            }
-                        })
-                );
-            }
-        };
+                    @Override
+                    public void exception() {
+                        ProgressDialogManager.dismiss();
+                        Toast.makeText(getContext(),"다시 시도해 주십시오...",Toast.LENGTH_LONG);
+                    }
+                })
+        );
     }
 }

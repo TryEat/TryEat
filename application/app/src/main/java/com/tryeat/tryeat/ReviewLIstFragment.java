@@ -106,7 +106,7 @@ public class ReviewLIstFragment extends Fragment {
         FragmentLoader.startFragment(R.id.frament_place, ReviewDetailFragment.class, bundle, true);
     }
 
-    private void getReviewList() {
+    public void getReviewList() {
         ReviewService.getUserReviews(userId, rAdapter.getItemCount(), callBack);
     }
 

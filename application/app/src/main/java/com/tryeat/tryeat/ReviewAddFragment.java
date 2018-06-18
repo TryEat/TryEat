@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tryeat.rest.model.Review;
 import com.tryeat.rest.model.Status;
@@ -22,7 +23,7 @@ import retrofit2.Response;
  * Created by socce on 2018-05-20.
  */
 
-public class ReviewAddFragment extends Fragment {
+public class ReviewAddFragment extends Fragment implements View.OnClickListener{
     private View view;
 
     private TextView name;
@@ -39,7 +40,7 @@ public class ReviewAddFragment extends Fragment {
         if (view == null) {
             view = inflater.inflate(R.layout.review_add_fragment, container, false);
             Button addButton = view.findViewById(R.id.addButton);
-            addButton.setOnClickListener(addReview());
+            addButton.setOnClickListener(this);
 
             NavigationManager.setVisibility(View.GONE);
 
@@ -67,41 +68,41 @@ public class ReviewAddFragment extends Fragment {
         return view;
     }
 
-    private View.OnClickListener addReview() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (reviewId == -1) {
-                    ReviewService.writeReview(LoginToken.getId(), restaurantId, desc.getText().toString(), imageAddFragment.getImageBitmap(), rate.getRating(), new SimpleCallBack<Status>(
-                                    ReviewService.class.getSimpleName(), new SimpleCallBack.Success<Status>() {
-                                @Override
-                                public void toDo(Response<Status> response) {
+    @Override
+    public void onClick(View v) {
+        ProgressDialogManager.show(getActivity(),"리뷰 등록중입니다...");
+        if (reviewId == -1) {
+            ReviewService.writeReview(LoginToken.getId(), restaurantId, desc.getText().toString(), imageAddFragment.getImageBitmap(), rate.getRating(), new SimpleCallBack<Status>(
+                            ReviewService.class.getSimpleName(), new SimpleCallBack.Success<Status>() {
+                        @Override
+                        public void toDo(Response<Status> response) {
+                            ProgressDialogManager.dismiss();
+                            getFragmentManager().popBackStackImmediate();
+                        }
 
-                                }
+                        @Override
+                        public void exception() {
+                            ProgressDialogManager.dismiss();
+                            Toast.makeText(getContext(),"다시 시도해 주십시오...",Toast.LENGTH_LONG);
+                        }
+                    })
+            );
+        } else {
+            ReviewService.updateReview(reviewId, desc.getText().toString(), imageAddFragment.getImageBitmap(), rate.getRating(), new SimpleCallBack<Status>(
+                            ReviewService.class.getSimpleName(), new SimpleCallBack.Success<Status>() {
+                        @Override
+                        public void toDo(Response<Status> response) {
+                            ProgressDialogManager.dismiss();
+                            getFragmentManager().popBackStackImmediate();
+                        }
 
-                                @Override
-                                public void exception() {
-
-                                }
-                            })
-                    );
-                } else {
-                    ReviewService.updateReview(reviewId, desc.getText().toString(), imageAddFragment.getImageBitmap(), rate.getRating(), new SimpleCallBack<Status>(
-                                    ReviewService.class.getSimpleName(), new SimpleCallBack.Success<Status>() {
-                                @Override
-                                public void toDo(Response<Status> response) {
-
-                                }
-
-                                @Override
-                                public void exception() {
-
-                                }
-                            })
-                    );
-                }
-                getFragmentManager().popBackStackImmediate();
-            }
-        };
+                        @Override
+                        public void exception() {
+                            ProgressDialogManager.dismiss();
+                            Toast.makeText(getContext(),"다시 시도해 주십시오...",Toast.LENGTH_LONG);
+                        }
+                    })
+            );
+        }
     }
 }

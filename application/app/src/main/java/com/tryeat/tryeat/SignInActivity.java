@@ -38,7 +38,6 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signin_layout);
 
-        appData = getSharedPreferences("appData", MODE_PRIVATE);
         load();
 
         idText = findViewById(R.id.id);
@@ -69,7 +68,6 @@ public class SignInActivity extends AppCompatActivity {
             }
         });
 
-
         if (saveLoginData) {
             idText.setText(id);
             passwordText.setText(pwd);
@@ -90,8 +88,8 @@ public class SignInActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    // 설정값을 불러오는 함수
     private void load() {
+        appData = getSharedPreferences("appData", MODE_PRIVATE);
         saveLoginData = appData.getBoolean("SAVE_LOGIN_DATA", false);
         id = appData.getString("ID", "");
         pwd = appData.getString("PWD", "");
@@ -103,10 +101,7 @@ public class SignInActivity extends AppCompatActivity {
             return;
         }
 
-        final ProgressDialog progressDialog = new ProgressDialog(this, R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("로그인 중...");
-        progressDialog.show();
+        ProgressDialogManager.show(this,"로그인 중입니다...");
 
         new android.os.Handler().postDelayed(
                 new Runnable() {
@@ -118,12 +113,12 @@ public class SignInActivity extends AppCompatActivity {
                                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                 startActivity(intent);
                                 finish();
-                                progressDialog.dismiss();
+                                ProgressDialogManager.dismiss();
                             }
                             @Override
                             public void exception() {
-                                progressDialog.dismiss();
                                 Toast.makeText(getApplicationContext(), "아이디 또는 비밀번호가 틀립니다.", Toast.LENGTH_LONG).show();
+                                ProgressDialogManager.dismiss();
                             }
                         });
                         SignService.signIn(idText.getText().toString(), passwordText.getText().toString(), simpleCallBack);

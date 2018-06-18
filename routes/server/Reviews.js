@@ -78,7 +78,7 @@ module.exports = function (_dbPool) {
         query += 'update counting SET review=review+1 where target=0;'
         dbPool.query(query, [restaurant_id, user_id, img_uri, content, rate, rate, restaurant_id, user_id], function (err, rows, fields) {
             if (err) throw err;
-            if (rows[0].changedRows != 0) res.status(201).json({ message: "write review, count++ success" })
+            if (rows[0].affectedRows != 0) res.status(201).json({ message: "write review, count++ success" })
             else res.status(400).json({ message: "write review success, count++ fail" })
         });
     });

@@ -47,7 +47,7 @@ training_step = optimizer.minimize(base_cost, global_step=global_step)
 
 # execute
 sess = tf.Session()
-init = tf.initialize_all_variables()
+init = tf.global_variables_initializer()
 sess.run(init)
 
 for i in range(1000):

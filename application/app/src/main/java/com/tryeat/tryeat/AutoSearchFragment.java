@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.FilterQueryProvider;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -53,8 +54,6 @@ public class AutoSearchFragment extends DialogFragment {
 
     private boolean prgresing = false;
 
-    private ProgressDialog progressDialog;
-
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.auto_search_fragment, container, false);
@@ -76,13 +75,8 @@ public class AutoSearchFragment extends DialogFragment {
                     bundle.putSerializable("name", matrix.getString(2));
                     FragmentLoader.startFragment(R.id.frament_place, ReviewAddFragment.class, bundle, true);
                 } else {
-                    progressDialog = new ProgressDialog(getContext(), R.style.AppTheme_Dark_Dialog);
-                    progressDialog.setIndeterminate(true);
-                    progressDialog.setMessage("음식점 확인 중...");
-                    progressDialog.show();
-
+                    ProgressDialogManager.show(getActivity(),"음식점 추가 중입니다...");
                     addNewRestaurant(matrix.getString(1));
-
                 }
                 selfDismiss();
             }
@@ -137,7 +131,6 @@ public class AutoSearchFragment extends DialogFragment {
 
             }
         });
-
     }
 
     private void getItem2(CharSequence constraint) {
@@ -199,12 +192,13 @@ public class AutoSearchFragment extends DialogFragment {
                     bundle.putSerializable("id", response.body().payLoadInt);
                     bundle.putSerializable("name", response.body().payLoadString);
                     FragmentLoader.startFragment(R.id.frament_place, ReviewAddFragment.class, bundle, true);
-                    progressDialog.dismiss();
+                    ProgressDialogManager.dismiss();
                 }
 
                 @Override
                 public void onFailure(Call<Status> call, Throwable t) {
-                    progressDialog.dismiss();
+                    Toast.makeText(getActivity(),"다시 시도해 주십시오",Toast.LENGTH_LONG);
+                    ProgressDialogManager.dismiss();
                 }
             });
         }
@@ -229,12 +223,13 @@ public class AutoSearchFragment extends DialogFragment {
                                 bundle.putSerializable("id", response.body().payLoadInt);
                                 bundle.putSerializable("name", response.body().payLoadString);
                                 FragmentLoader.startFragment(R.id.frament_place, ReviewAddFragment.class, bundle, true);
-                                progressDialog.dismiss();
+                                ProgressDialogManager.dismiss();
                             }
 
                             @Override
                             public void onFailure(Call<Status> call, Throwable t) {
-                                progressDialog.dismiss();
+                                Toast.makeText(getActivity(),"다시 시도해 주십시오",Toast.LENGTH_LONG);
+                                ProgressDialogManager.dismiss();
                             }
                         });
                     }
@@ -243,7 +238,8 @@ public class AutoSearchFragment extends DialogFragment {
 
             @Override
             public void onFailure(Call<GoogleDetail> call, Throwable t) {
-                progressDialog.dismiss();
+                Toast.makeText(getActivity(),"다시 시도해 주십시오",Toast.LENGTH_LONG);
+                ProgressDialogManager.dismiss();
             }
         });
     }
