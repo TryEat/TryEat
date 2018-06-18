@@ -9,13 +9,6 @@ var port = process.env.PORT || 8080;
 
 var userTokens = [];
 
-var printMessage = function (req, res, next) {
-  console.log();
-  console.log(req);
-  console.log(req.body);
-  next();
-}
-
 var verifyUser = function (req, res, next) {
   if (userTokens[req.headers["id"]] == undefined || userTokens[req.headers["id"]] != req.headers["authorization"]) {
     console.log("need");
@@ -31,9 +24,8 @@ app.get('/', function (req, res) {
   res.end("hello");
 });
 
-app.use(printMessage);
 app.use('/sign', require('./routes/server/sign')(pool, userTokens));
-//app.use(verifyUser);
+app.use(verifyUser);
 app.use('/users', require('./routes/server/users')(pool));
 app.use('/restaurants', require('./routes/server/restaurants')(pool));
 app.use('/bookmarks', require('./routes/server/bookmarks')(pool));
@@ -51,7 +43,7 @@ function myFunc() {
     console.log((new Date()).toLocaleString() + " SVD 추천 정보 갱신 시작")
     var train = require("child_process").spawn('python', ["./deep/svd_train_val.py"]);
     train.stdout.on("data",function(data){
-      console.log("오차 " + data[0] + "%")
+      console.log("오차 " + data)
     });
     train.on("exit", function (code) {
       console.log((new Date()).toLocaleString() + " SVD 추천 정보 갱신 끝")

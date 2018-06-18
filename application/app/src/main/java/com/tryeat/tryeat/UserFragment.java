@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -48,6 +49,8 @@ public class UserFragment extends Fragment {
     private PopupMenu popupMenu;
 
     private int userId;
+
+    NestedScrollView nestedScrollView;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -121,6 +124,23 @@ public class UserFragment extends Fragment {
                 Bundle bundle = new Bundle(2);
                 bundle.putInt("user", userId);
                 fragment = FragmentLoader.startFragment(R.id.fragment_view, BookMarkListFragment.class, bundle, false);
+            }
+        });
+
+        nestedScrollView = view.findViewById(R.id.nested_view);
+        nestedScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                View view = nestedScrollView.getChildAt(nestedScrollView.getChildCount() - 1);
+
+                int diff = (view.getBottom() - (nestedScrollView.getHeight() + nestedScrollView
+                        .getScrollY()));
+                if (diff == 0) {
+                    if(fragment instanceof ReviewLIstFragment)
+                        ((ReviewLIstFragment)fragment).getReviewList();
+                    else if(fragment instanceof BookMarkListFragment)
+                        ((BookMarkListFragment)fragment).getFollowList();
+                }
             }
         });
 

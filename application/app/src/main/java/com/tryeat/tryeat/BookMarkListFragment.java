@@ -92,7 +92,7 @@ public class BookMarkListFragment extends Fragment{
         getFollowList();
     }
 
-    private void getFollowList(){
+    public void getFollowList(){
         BookMarkService.getBookMarks(userId,rAdapter.getItemCount(),new Callback<ArrayList<Restaurant>>() {
             @Override
             public void onResponse(Call<ArrayList<Restaurant>> call, Response<ArrayList<Restaurant>> response) {
