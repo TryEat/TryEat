@@ -117,7 +117,7 @@ module.exports = function (_dbPool) {
         var position = req.params.position;
 
         if (distance == 0) distance = 100000;
-
+        distance = 50;
         var query = 'SELECT *, (6371 * ACOS(COS(RADIANS(?)) * COS(RADIANS(locate_latitude)) * COS(RADIANS(locate_longitude) \
         - RADIANS(?)) + SIN(RADIANS(?)) * SIN(RADIANS(locate_latitude)))) AS distance FROM tryeat.restaurant HAVING distance < ? \
         ORDER BY distance LIMIT ? , 5;';

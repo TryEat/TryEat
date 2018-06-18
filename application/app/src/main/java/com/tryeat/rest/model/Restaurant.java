@@ -150,7 +150,7 @@ public class Restaurant implements Serializable ,Parcelable {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj!=null && obj instanceof Review){
+        if(obj!=null && obj instanceof Restaurant){
             return this.getId() == ((Restaurant) obj).getId();
         }
         return false;

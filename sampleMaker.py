@@ -5,8 +5,8 @@ user = []
 review = []
 bookmark = []
 
-rLen = random.randint(2000,3000)
-uLen = random.randint(3000,5000)
+rLen = random.randint(300,400)
+uLen = random.randint(50,100)
 
 for i in range(rLen):
     restaurant.append({})
@@ -14,8 +14,8 @@ for i in range(rLen):
     restaurant[i]["uri"] = str(random.randint(1,110))+".webp"
     restaurant[i]["address"] = "음식점 주소"+str(i+1)
     restaurant[i]["phone"] = "010-0000-{0:04d}".format(i+1)
-    restaurant[i]["lat"] = random.random()*random.randrange(33,43)
-    restaurant[i]["ion"] = random.random()*random.randint(124,132)
+    restaurant[i]["lat"] = random.random()*random.randint(36,37)
+    restaurant[i]["ion"] = random.random()*random.randint(128,129)
     restaurant[i]["bookmark"] = 0
     restaurant[i]["count"] = 0
     restaurant[i]["rate"] = 0

@@ -3,7 +3,7 @@ import sys
 import pymysql
 
 user = int(sys.argv[1])
-start =int(sys.argv[2])
+start = int(sys.argv[2])
 end = int(sys.argv[3])
 
 conn = pymysql.connect(host='localhost', user='root', password='1234',
@@ -19,23 +19,23 @@ conn.close()
 data = open(r'''F:\project\TryEat\deep\u.dat''')
 user_data = data.read().split()
 user_len = (int)(counts[0][0])
-u = np.random.rand(user_len*30)
+u = np.random.rand(user_len*50)
 index = 0
 for i in user_data[1:]:
     u[index] = i
     index+=1
-u = u.reshape((user_len,30))
+u = u.reshape((user_len,50))
 data.close()
 
 data = open(r'''F:\project\TryEat\deep\p.dat''')
 restaurant_data = data.read().split()
 restaurant_len = (int)(counts[0][1])
-p = np.random.rand(restaurant_len*30)
+p = np.random.rand(restaurant_len*50)
 index = 0
 for i in restaurant_data[1:]:
     p[index] = i
     index+=1
-p = p.reshape((30,restaurant_len))
+p = p.reshape((50,restaurant_len))
 data.close()
 data.close()
 
