@@ -7,7 +7,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,7 +18,6 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.tryeat.rest.model.Status;
-import com.tryeat.rest.model.StatusCode;
 import com.tryeat.rest.service.RestaurantService;
 import com.tryeat.team.tryeat_service.R;
 
@@ -28,8 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 
@@ -112,7 +108,7 @@ public class RestaurantAddFragment extends Fragment implements View.OnClickListe
 
         String adress = myList.get(0).getAddressLine(0);
 
-        RestaurantService.addRestaurant(name.getText().toString(), adress, tel.getText().toString(), imageFragment.getImageBitmap(), location.getLatitude(), location.getLongitude(),
+        RestaurantService.addRestaurant(name.getText().toString(), adress, tel.getText().toString(),"", imageFragment.getImageBitmap(), location.getLatitude(), location.getLongitude(),
                 new SimpleCallBack<>(RestaurantService.class.getSimpleName(), new SimpleCallBack.Success<Status>() {
                     @Override
                     public void toDo(Response<Status> response) {

@@ -50,7 +50,7 @@ public class AutoSearchFragment extends DialogFragment {
 
     private String[] from = {"name", "address"};
     private int[] to = {android.R.id.text1, android.R.id.text2};
-    private String[] columnNames = {BaseColumns._ID, "id", "name", "address"};
+    private String[] columnNames = {BaseColumns._ID, "id", "placeId", "name", "address"};
 
     private boolean prgresing = false;
 
@@ -72,11 +72,11 @@ public class AutoSearchFragment extends DialogFragment {
                 } else if (type < 50) {
                     Bundle bundle = new Bundle(2);
                     bundle.putSerializable("id", matrix.getInt(1));
-                    bundle.putSerializable("name", matrix.getString(2));
+                    bundle.putSerializable("name", matrix.getString(3));
                     FragmentLoader.startFragment(R.id.frament_place, ReviewAddFragment.class, bundle, true);
                 } else {
-                    ProgressDialogManager.show(getActivity(),"음식점 추가 중입니다...");
-                    addNewRestaurant(matrix.getString(1));
+                    ProgressDialogManager.show(getActivity(), "음식점 추가 중입니다...");
+                    addNewRestaurant(matrix.getString(2));
                 }
                 selfDismiss();
             }
@@ -116,14 +116,19 @@ public class AutoSearchFragment extends DialogFragment {
         RestaurantService.getRestaurant(constraint.toString(), new Callback<ArrayList<Restaurant>>() {
             @Override
             public void onResponse(Call<ArrayList<Restaurant>> call, Response<ArrayList<Restaurant>> response) {
+                ArrayList<Restaurant> items = null;
                 if (response.body() != null) {
-                    ArrayList<Restaurant> items = response.body();
+                    items = response.body();
                     for (int i = 0; i < items.size(); i++) {
-                        Log.d("asdf", items.get(i).getName());
-                        matrixCursor.newRow().add(i).add(items.get(i).getId()).add(items.get(i).getName()).add(items.get(i).getAddress());
+                        Restaurant item = items.get(i);
+                        matrixCursor.newRow().add(i)
+                                .add(item.getId())
+                                .add(item.getPlaceId())
+                                .add(item.getName())
+                                .add(item.getAddress());
                     }
                 }
-                getItem2(constraint);
+                getItem2(constraint, items);
             }
 
             @Override
@@ -133,18 +138,33 @@ public class AutoSearchFragment extends DialogFragment {
         });
     }
 
-    private void getItem2(CharSequence constraint) {
+    private void getItem2(CharSequence constraint, final ArrayList<Restaurant> restaurants) {
         GoogleApiService.getRestaurant(constraint.toString(), MyLocation.getLocation().getLatitude(), MyLocation.getLocation().getLongitude(), 2000, new Callback<GoogleAutoComplete>() {
             @Override
             public void onResponse(Call<GoogleAutoComplete> call, Response<GoogleAutoComplete> response) {
                 if (response.body() != null) {
                     GoogleAutoComplete items = response.body();
                     for (int i = 0; i < items.size(); i++) {
-                        Log.d("asdf", items.get(i).getName());
-                        matrixCursor.newRow().add(50 + i).add(items.get(i).getPlaceId()).add(items.get(i).getName()).add(items.get(i).getAddress());
+                        GoogleAutoComplete.Prediction item = items.get(i);
+                        Restaurant forTest = new Restaurant(item.getPlaceId());
+                        if (restaurants != null && restaurants.contains(forTest)) {
+                            continue;
+                        } else {
+                            matrixCursor.newRow()
+                                    .add(50 + i)
+                                    .add(item.getId())
+                                    .add(item.getPlaceId())
+                                    .add(item.getName())
+                                    .add(item.getAddress());
+                        }
                     }
                 }
-                matrixCursor.newRow().add(99).add(-1).add("원하는 음식점이 없습니다.").add("추가하겠습니다.");
+                matrixCursor.newRow()
+                        .add(99)
+                        .add(-1)
+                        .add("")
+                        .add("원하는 음식점이 없습니다.")
+                        .add("추가하겠습니다.");
                 simpleCursorAdapter.changeCursor(matrixCursor);
                 simpleCursorAdapter.notifyDataSetChanged();
                 prgresing = false;
@@ -185,7 +205,7 @@ public class AutoSearchFragment extends DialogFragment {
 
         @Override
         public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-            RestaurantService.addRestaurant(mGoogleDetail.getName(),mGoogleDetail.getAddress(),mGoogleDetail.getPhoneNumber(), resource, mGoogleDetail.getLat(), mGoogleDetail.getLon(), new Callback<Status>() {
+            RestaurantService.addRestaurant(mGoogleDetail.getName(), mGoogleDetail.getAddress(), mGoogleDetail.getPhoneNumber(), mGoogleDetail.getPlaceId(), resource, mGoogleDetail.getLat(), mGoogleDetail.getLon(), new Callback<Status>() {
                 @Override
                 public void onResponse(Call<Status> call, Response<Status> response) {
                     Bundle bundle = new Bundle(2);
@@ -197,7 +217,7 @@ public class AutoSearchFragment extends DialogFragment {
 
                 @Override
                 public void onFailure(Call<Status> call, Throwable t) {
-                    Toast.makeText(getActivity(),"다시 시도해 주십시오",Toast.LENGTH_LONG);
+                    Toast.makeText(getActivity(), "다시 시도해 주십시오", Toast.LENGTH_LONG);
                     ProgressDialogManager.dismiss();
                 }
             });
@@ -216,7 +236,7 @@ public class AutoSearchFragment extends DialogFragment {
                                 .load(detailItem.getPhotoUrl())
                                 .into(new MyTarget(detailItem));
                     } else {
-                        RestaurantService.addRestaurant(detailItem.getName(),detailItem.getAddress(),detailItem.getPhoneNumber(), null, detailItem.getLat(), detailItem.getLon(), new Callback<Status>() {
+                        RestaurantService.addRestaurant(detailItem.getName(), detailItem.getAddress(), detailItem.getPhoneNumber(), detailItem.getPlaceId(), null, detailItem.getLat(), detailItem.getLon(), new Callback<Status>() {
                             @Override
                             public void onResponse(Call<Status> call, Response<Status> response) {
                                 Bundle bundle = new Bundle(2);
@@ -228,7 +248,7 @@ public class AutoSearchFragment extends DialogFragment {
 
                             @Override
                             public void onFailure(Call<Status> call, Throwable t) {
-                                Toast.makeText(getActivity(),"다시 시도해 주십시오",Toast.LENGTH_LONG);
+                                Toast.makeText(getActivity(), "다시 시도해 주십시오", Toast.LENGTH_LONG);
                                 ProgressDialogManager.dismiss();
                             }
                         });
@@ -238,7 +258,7 @@ public class AutoSearchFragment extends DialogFragment {
 
             @Override
             public void onFailure(Call<GoogleDetail> call, Throwable t) {
-                Toast.makeText(getActivity(),"다시 시도해 주십시오",Toast.LENGTH_LONG);
+                Toast.makeText(getActivity(), "다시 시도해 주십시오", Toast.LENGTH_LONG);
                 ProgressDialogManager.dismiss();
             }
         });

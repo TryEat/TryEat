@@ -5,7 +5,7 @@ import pandas as pd
 import makeData
 
 # read data
-df = pd.read_csv("F:\project\TryEat\deep\data.dat", sep="::", names=['user', 'item', 'rate'],engine="python")
+df = pd.read_csv(r'''.\deep\data.dat''', sep="::", names=['user', 'item', 'rate'],engine="python")
 
 user_len = df.user.values[0]
 item_len = df.item.values[0]
@@ -48,10 +48,10 @@ sess = tf.Session()
 init = tf.global_variables_initializer()
 sess.run(init)
 
-for i in range(10000):
+for i in range(500):
     sess.run(training_step)
 
-f = open(r'''F:\project\TryEat\deep\u.dat''','w')
+f = open(r'''.\deep\u.dat''','w')
 val = sess.run(U)
 f.write("%d\n"%user_len)
 for i in range(user_len):
@@ -59,7 +59,7 @@ for i in range(user_len):
         f.write("%f\n" %val[i][j])
 f.close()
 
-f = open(r'''F:\project\TryEat\deep\p.dat''','w')
+f = open(r'''.\deep\p.dat''','w')
 val = sess.run(P)
 f.write("%d\n"%item_len)
 for i in range(feature_len):

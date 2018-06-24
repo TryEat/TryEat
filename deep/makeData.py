@@ -15,7 +15,7 @@ rows = curs.fetchall()
 
 conn.close()
 
-f = open("F:\project\TryEat\deep\data.dat", 'w')
+f = open(r'''.\deep\data.dat''', 'w')
 f.write("%d::%d::%d\n" % (counts[0][0], counts[0][1], counts[0][2]))
 for row in rows:
     f.write("%d::%d::%.1f\n" % (row[0], row[1], row[2]))

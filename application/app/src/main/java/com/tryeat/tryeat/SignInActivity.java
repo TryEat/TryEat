@@ -1,6 +1,5 @@
 package com.tryeat.tryeat;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tryeat.rest.model.Status;
-import com.tryeat.rest.model.StatusCode;
 import com.tryeat.rest.service.SignService;
 import com.tryeat.team.tryeat_service.R;
 

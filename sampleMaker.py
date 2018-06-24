@@ -5,8 +5,8 @@ user = []
 review = []
 bookmark = []
 
-rLen = random.randint(300,400)
-uLen = random.randint(50,100)
+rLen = 6000
+uLen = 3000
 
 for i in range(rLen):
     restaurant.append({})

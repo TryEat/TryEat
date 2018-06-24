@@ -16,6 +16,7 @@ CREATE TABLE user(
 
 CREATE TABLE restaurant(
 	restaurant_id INT(11) NOT NULL AUTO_INCREMENT,
+	place_id VARCHAR(50),
 	img_uri VARCHAR(50),
 	restaurant_name VARCHAR(30) NOT NULL,
 	address VARCHAR(100),
@@ -65,85 +66,3 @@ USE tryeat;
 
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '1234';
 flush privileges;
-
-������ ���� (18.05.08.22:27 ����)
-
-USE tryeat;
-
-������ �̸� �˻��ϴ� ����
- SELECT restaurant_name FROM restaurant;
-
-restaurant_id ������ ��, ����ϴ� ����
- INSERT INTO review (restaurant_id,title,content,rate) VALUES ('restaurant_id','title','content','rate');
- 
-restaurant_id ������ �� ����, ����ϴ� ����
- UPDATE review SET title='title', content='content', rate='rate' WHERE review_id=restaurant_id;
- 
-restaurant_id �������� ���� ������ 1 ������Ű�� ����
- UPDATE restaurant SET review_count=review_count+1 WHERE restaurant_id=restaurant_id;
- 
-restaurant_id ������ �� �����ϴ� ����
- DELETE FROM review WHERE review_id=restaurant_id;
- 
-restaurant_id ������ �� �����ִ� ����
- SELECT * FROM review WHERE restaurant_id=restaurant_id;
-
-restaurant_id ������ �� ������ ����ϴ� ����
- UPDATE review SET rate='rate' WHERE review_id=restaurant_id;
-
-
-�������� �߰��ϴ� ����
- INSERT INTO restaurant (restaurant_name,locate_latitude,locate_longitude,restaurant_desc,review_count,open_time,close_time) VALUES ('restaurant_name','locate_latitude','locate_longitude','restaurant_desc','0','open_time','close_time');
-
-restaurant_id ������ ������ �����ϴ� ����
- UPDATE restaurant SET restaurant_name='���� ��ġ', locate_latitude='locate_latitude', locate_longitude='locate_longitude', restaurant_desc='restaurant_desc', open_time='open_time', close_time='close_time' WHERE restaurant_id=restaurant_id;
- 
-restaurant_id �������� ���� ����� ����ϴ� ����
- SELECT avg(rate) FROM review WHERE restaurant_id=restaurant_id;
- 
-user_id ������ �ȷο� id���� �����ϴ� ����
- INSERT INTO follow (user_id,follow_id,target_id) VALUES ('user_id','follow_id','target_id');
- 
-user_id ������ �ȷο� id���� �����ϴ� ����
- DELETE FROM follow WHERE(user_id=user_id AND follow_id="follow_id");
- 
-user_id ������ �ȷο� ��� ������ ����
- SELECT * FROM follow WHERE user_id=user_id;
- 
- 
-user_id ������ �� �׸� ������ ����
- SELECT * FROM review WHERE user_id=user_id;
- 
-user_id ������ ���� ������ ����� ������ ����
- SELECT restaurant_id FROM review WHERE user_id=user_id;
-
- 
-�������� ��Ͽ� �ִ��� Ȯ���ϴ� ����
-�̸����� �˻�// SELECT restaurant_name FROM restaurant WHERE restaurant_name="restaurant_name";
-����id�� �˻�// SELECT restaurant_id FROM restaurant WHERE restaurant_id=restaurant_id;
-��ǥ�� �˻�  // SELECT (locate_latitude AND locate_longitude) as exist FROM restaurant WHERE (locate_latitude="locate_latitude" AND locate_longitude="locate_longitude");
-
-
-restaurant_id �������� �̹����� �ҷ����� ����
- SELECT image FROM images WHERE 'restaurant_id' = restaurant_id;
-
-restaurant_id ������ �̹����� ����, �߰��ϴ� ����
- INSERT INTO images (restaurant_id, image) VALUES ('restaurant_id', 'image');
-
-restaurant_id �������� img_id �̹����� �����ϴ� ����
- DELETE FROM images WHERE img_id = img_id;
- 
-u_num�� ����� restaurant_id ������ �̹����� �������� ����
- SELECT image FROM images WHERE (user_id = user_id AND restaurant_id = restaurant_id);
- 
-u_num�� ����� restaurant_id ������ �̹����� ��� �����ϴ� ����
- DELETE FROM images WHERE (user_id = user_id AND restaurant_id = restaurant_id);
-
-���� ad ����� �����ִ� ����
- SELECT * FROM ad;
- 
-ad_requester �� ����� restaurant_id �������� ����ϴ� ����
- SELECT restaurant_id FROM ad WHERE ad_requester = ad_requester;
-
-
-

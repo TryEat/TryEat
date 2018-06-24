@@ -328,7 +328,7 @@ public class RestaurantDetailFragment extends Fragment {
 
     private void setData(Restaurant restaurant) {
         name.setText(restaurant.getName());
-        rate.setText(String.format("%.1fm" , safeDivide(restaurant.getTotalRate(), restaurant.getReviewCount())));
+        rate.setText(String.format("%.1f" , safeDivide(restaurant.getTotalRate(), restaurant.getReviewCount())));
         count.setText(restaurant.getReviewCount() + "");
         Utils.safeSetObject(bookmark, restaurant.getTotalBookMark());
         Utils.safeSetObject(address, restaurant.getAddress());

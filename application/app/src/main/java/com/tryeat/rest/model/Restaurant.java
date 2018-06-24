@@ -13,6 +13,8 @@ public class Restaurant implements Serializable ,Parcelable {
 
     @SerializedName("restaurant_id")
     private int id;
+    @SerializedName("place_id")
+    private String placeId;
     @SerializedName("img_uri")
     private String imgUri;
     @SerializedName("restaurant_name")
@@ -47,6 +49,14 @@ public class Restaurant implements Serializable ,Parcelable {
     public String getImgUri() {
         if(imgUri==null)return null;
         return ServiceGenerator.getServerUri()+"restaurants/image/uri/"+imgUri;
+    }
+
+    public String getPlaceId() {
+        return placeId;
+    }
+
+    public void setPlaceId(String placeId) {
+        this.placeId = placeId;
     }
 
     public void setImgUri(String imgUri) {
@@ -133,6 +143,11 @@ public class Restaurant implements Serializable ,Parcelable {
         this.distance = distance;
     }
 
+    public Restaurant(String placeId){
+        this.id = -100;
+        this.placeId=placeId;
+    }
+
     protected Restaurant(Parcel in) {
         id = in.readInt();
         imgUri = in.readString();
@@ -151,7 +166,8 @@ public class Restaurant implements Serializable ,Parcelable {
     @Override
     public boolean equals(Object obj) {
         if(obj!=null && obj instanceof Restaurant){
-            return this.getId() == ((Restaurant) obj).getId();
+            if(this.getId() == ((Restaurant) obj).getId())return true;
+            if(this.getPlaceId()!=null && this.getPlaceId()!="" && this.getPlaceId().equals (((Restaurant) obj).getPlaceId()))return true;
         }
         return false;
     }

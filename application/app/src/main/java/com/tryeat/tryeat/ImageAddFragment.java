@@ -138,7 +138,8 @@ public class ImageAddFragment extends Fragment implements View.OnClickListener {
     private Bitmap rotate(Bitmap bitmap, float degree) {
         Matrix matrix = new Matrix();
         matrix.postRotate(degree);
-        return Bitmap.createScaledBitmap(bitmap, 960, bitmap.getHeight()/(bitmap.getWidth()/960), true);
+        int height = (int)((float)bitmap.getHeight()/((float)bitmap.getWidth()/960));
+        return Bitmap.createScaledBitmap(bitmap, 960, height, true);
     }
 
     public Bitmap getImageBitmap() {
@@ -160,7 +161,8 @@ public class ImageAddFragment extends Fragment implements View.OnClickListener {
 
                 try {
                     image_bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
-                    image_bitmap = Bitmap.createScaledBitmap(image_bitmap, 960, image_bitmap.getHeight()/(image_bitmap.getWidth()/960), true);
+                    int height = (int)((float)image_bitmap.getHeight()/((float)image_bitmap.getWidth()/960));
+                    image_bitmap = Bitmap.createScaledBitmap(image_bitmap, 960, height, true);
                     mImageView.setImageBitmap(image_bitmap);
                 } catch (IOException e) {
                     e.printStackTrace();

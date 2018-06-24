@@ -18,9 +18,9 @@ var printMessage = function (req, res, next) {
 
 var verifyUser = function (req, res, next) {
   if (userTokens[req.headers["id"]] == undefined || userTokens[req.headers["id"]] != req.headers["authorization"]) {
-    console.log("need");
+    console.log("fail token check");
   } else {
-    console.log("don't need");
+    console.log("success token check");
     next();
   }
 }
@@ -41,6 +41,7 @@ app.use('/reviews', require('./routes/server/reviews')(pool));
 
 var server = app.listen(port, function () {
   console.log('서버 동작중.' + port);
+  myFunc();
 });
 
 function myFunc() {
@@ -61,5 +62,3 @@ function myFunc() {
     });
   });
 }
-
-myFunc();

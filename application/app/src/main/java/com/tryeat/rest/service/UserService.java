@@ -6,30 +6,21 @@ import com.tryeat.rest.model.User;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
 
 public class UserService {
     private static UserServiceInterface userServiceInterface = ServiceGenerator.createService(UserServiceInterface.class);
-
-    public static void getUsers(Callback<ArrayList<User>> callback) {
-        userServiceInterface.getUsers().enqueue(callback);
-    }
 
     public static void getUser(int userId, Callback<User> callback) {
         userServiceInterface.getUser(userId).enqueue(callback);
     }
 
-    public static void updateProfile(int userId, String profile, Callback<Status> callback) {
-        HashMap<String, Object> body = new HashMap<>();
-        body.put("user_id",userId);
-        body.put("profile",profile);
-        userServiceInterface.updateProfile(body).enqueue(callback);
+    interface UserServiceInterface {
+        @GET("users/{user_id}")
+        Call<User> getUser(@Path("user_id") int userId);
     }
 
-    public static void deleteUser(int userId, String pwd, Callback<Status> callback) {
-        HashMap<String, Object> body = new HashMap<>();
-        body.put("user_id",userId);
-        body.put("profile",pwd);
-        userServiceInterface.deleteUser(body).enqueue(callback);
-    }
 }

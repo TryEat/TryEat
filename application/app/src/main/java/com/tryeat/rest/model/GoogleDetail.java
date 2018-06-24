@@ -11,6 +11,7 @@ public class GoogleDetail {
     class Result {
         Geometry geometry;
         String name;
+        String place_id;
         String formatted_address;
         String formatted_phone_number;
         List<Photo> photos;
@@ -36,6 +37,10 @@ public class GoogleDetail {
 
     public String getAddress() {
         return result.formatted_address;
+    }
+
+    public String getPlaceId() {
+        return result.place_id;
     }
 
     public String getPhoneNumber() {

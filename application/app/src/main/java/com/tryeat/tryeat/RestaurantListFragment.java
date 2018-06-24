@@ -9,25 +9,20 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.tryeat.rest.model.Restaurant;
-import com.tryeat.rest.model.Review;
 import com.tryeat.rest.service.RestaurantService;
 import com.tryeat.team.tryeat_service.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -189,7 +184,7 @@ public class RestaurantListFragment extends Fragment{
     private void getRestaurantsOrderByRecommend() {
         if (getFlag) return;
         getFlag = true;
-        RestaurantService.getRestaurantsOrderByRecommander(LoginToken.getId(),MyLocation.getLocation().getLatitude(),MyLocation.getLocation().getLongitude(),rAdapter.getItemCount(),mDistanceValue[mDistance], callBack);
+        RestaurantService.getRestaurantsOrderByRecommended(LoginToken.getId(),MyLocation.getLocation().getLatitude(),MyLocation.getLocation().getLongitude(),rAdapter.getItemCount(),mDistanceValue[mDistance], callBack);
     }
 
     private void itemClick(int position) {

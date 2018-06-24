@@ -19,20 +19,14 @@ import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 
 interface RestaurantServiceInterface {
-    @GET("restaurants/{position}")
-    Call<ArrayList<Restaurant>> getRestaurants(@Path("position") int position);
-
     @GET("restaurants/{id}/byid")
     Call<Restaurant> getRestaurant(@Path("id") int restaurantId);
 
     @GET("restaurants/{name}/byname")
     Call<ArrayList<Restaurant>> getRestaurant(@Path("name") String name);
 
-    @GET("restaurants/list/{id_list}/byid")
-    Call<ArrayList<Restaurant>> getRestaurants(@Path("id_list") String name);
-
-    @GET("restaurants/byrecommander/{user_id}/{lat}/{ion}/{position}/{distance}")
-    Call<ArrayList<Restaurant>> getRestaurantsOrderByRecommander(@Path("user_id") int userId, @Path("lat") double lat, @Path("ion") double ion,@Path("position") int position,@Path("distance") double distance);
+    @GET("restaurants/byrecommender/{user_id}/{lat}/{ion}/{position}/{distance}")
+    Call<ArrayList<Restaurant>> getRestaurantsOrderByRecommended(@Path("user_id") int userId, @Path("lat") double lat, @Path("ion") double ion,@Path("position") int position,@Path("distance") double distance);
 
     @GET("restaurants/byrate/{lat}/{ion}/{position}/{distance}")
     Call<ArrayList<Restaurant>> getRestaurantsOrderByRate(@Path("lat") double lat, @Path("ion") double ion,@Path("position") int position,@Path("distance") double distance);
@@ -42,18 +36,6 @@ interface RestaurantServiceInterface {
 
     @GET("restaurants/bydistance/{lat}/{ion}/{position}/{distance}")
     Call<ArrayList<Restaurant>> getRestaurantsOrderByDistance(@Path("lat") double lat, @Path("ion") double ion, @Path("position") int position, @Path("distance") double distance);
-
-    @GET("restaurants/{name}/{lat}/{ion}")
-    Call<ArrayList<Restaurant>> getRestaurant(@Path("name") String name,@Path("lat") double lat, @Path("ion") double ion);
-
-    @GET("restaurants/is_exist/{name}/byname")
-    Call<Status> isExistRestaurant(@Path("name") String name);
-
-    @GET("restaurants/is_exist/{lat}/{ion}/bylocation")
-    Call<ArrayList<Restaurant>> isExistRestaurant(@Path("lat") double lat, @Path("ion") double ion);
-
-    @GET("restaurants/count/{id}")
-    Call<Status> getReviewCount(@Path("id") int restaurantId);
 
     @Multipart
     @POST("restaurants/")

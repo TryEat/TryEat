@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tryeat.rest.model.Status;
-import com.tryeat.rest.model.StatusCode;
 import com.tryeat.rest.service.SignService;
 import com.tryeat.team.tryeat_service.R;
 
@@ -81,11 +80,11 @@ public class SignUpActivity extends AppCompatActivity {
                             public void onResponse(Call<Status> call, Response<Status> response) {
                                 int statusCode = response.code();
                                 switch (statusCode) {
-                                    case StatusCode.SIGNUP_ID_DUPLICATION:
+                                    case 409:
                                         progressDialog.dismiss();
                                         Toast.makeText(getApplicationContext(), "Id 가 중복됩니다...", Toast.LENGTH_LONG).show();
                                         break;
-                                    case StatusCode.SIGNUP_SUCCESS:
+                                    case 201:
                                         progressDialog.dismiss();
                                         Toast.makeText(getApplicationContext(), "가입에 성공했습니다...", Toast.LENGTH_LONG).show();
                                         Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
@@ -94,7 +93,7 @@ public class SignUpActivity extends AppCompatActivity {
                                         overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 
                                         break;
-                                    case StatusCode.SIGNIN_FAIL:
+                                    case 401:
                                         progressDialog.dismiss();
                                         Toast.makeText(getApplicationContext(), "가입에 실패했습니다...", Toast.LENGTH_LONG).show();
                                         break;
