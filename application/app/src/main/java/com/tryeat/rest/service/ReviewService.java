@@ -15,7 +15,7 @@ import okhttp3.RequestBody;
 import retrofit2.Callback;
 
 public class ReviewService {
-    private static ReviewServiceInterface userServiceInterface = ServiceGenerator.createService(ReviewServiceInterface.class);
+    private static ReviewServiceinterface userServiceInterface = ServiceGenerator.createService(ReviewServiceinterface.class);
 
     public static void getUserReviews(int userId, int position, Callback<ArrayList<Review>> callback) {
         userServiceInterface.getUserReviews(userId, position).enqueue(callback);

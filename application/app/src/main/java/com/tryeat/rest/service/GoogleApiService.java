@@ -11,7 +11,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public class GoogleApiService {
-    private static final String GOOGLE_API_KEY = "AIzaSyClqhsf_HgFPeNBwmOM0GkHJLjBFl-lwTo";
+    private static final String GOOGLE_API_KEY = "GOOGLE_PLACE_API_WEB_KEY";
 
     private static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://maps.googleapis.com/")

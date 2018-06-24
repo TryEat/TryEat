@@ -18,7 +18,7 @@ import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 
-interface ReviewServiceInterface {
+interface ReviewServiceinterface {
     @GET("reviews/{user_id}/{position}/user")
     Call<ArrayList<Review>> getUserReviews(@Path("user_id") int userId, @Path("position") int position);
 

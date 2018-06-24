@@ -26,7 +26,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyC9UOgcMf-3IVt5mL6JKSQwgJfgZuyX6OA" />
+            android:value="GOOGLE_MAP_API_KEY"/>
 
         <activity android:name="com.tryeat.tryeat.LoadingActivity"
             android:theme="@style/AppTheme.NoActionBar">
