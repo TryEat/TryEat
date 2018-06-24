@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name"></string>
+    <string name="app_name">TryEat</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -19,7 +19,7 @@
     <string name="raf_hours">영업시간 : </string>
     <!--restaurant_detail_fragment-->
     <string name="rdf_name">맘스터치 금오공대점</string>
-    <string name="rdf_tel">000-000-0000</string>
+    <string name="rdf_tel">000–000-0000</string>
     <string name="rdf_hours">12:00 ~ 20:00</string>
     <!--login& sign up-->
     <string name="yetsignin"><u>회원가입을 아직 안하셨나요?</u></string>

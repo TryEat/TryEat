@@ -1,13 +1,14 @@
 package com.tryeat.tryeat;
 
-import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.tryeat.rest.model.Review;
 import com.tryeat.team.tryeat_service.R;
 
 import java.util.ArrayList;
@@ -18,65 +19,55 @@ import java.util.ArrayList;
  */
 
 
-public class ReviewListAdapter extends BaseAdapter {
-    private Context mContext = null;
-    private int mLayout;
-    private ArrayList<ReviewListItem> mList;
+class ReviewListAdapter extends SimpleAdapter<Review>{
+    private static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        ImageView image;
+        TextView name;
+        RatingBar rate;
+        TextView text;
 
-    private class ViewHolder{
-        public ImageView mIcon;
-        public TextView mName;
-        public TextView mRate;
-    }
-
-    public ReviewListAdapter(Context mContext,int mLayout){
-        super();
-        this.mContext = mContext;
-        this.mLayout = mLayout;
-        this.mList = new ArrayList<>();
-    }
-
-    @Override
-    public int getCount() {
-        return mList.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-        if (convertView == null) {
-            holder = new ViewHolder();
-
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(mLayout, null);
-
-            holder.mIcon = (ImageView) convertView.findViewById(R.id.icon);
-            holder.mName = (TextView) convertView.findViewById(R.id.name);
-            holder.mRate = (TextView) convertView.findViewById(R.id.rate);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
+        ViewHolder(View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(this);
+            image = itemView.findViewById(R.id.image);
+            name = itemView.findViewById(R.id.name);
+            rate = itemView.findViewById(R.id.rate);
+            text = itemView.findViewById(R.id.text);
         }
 
-        ReviewListItem item = mList.get(position);
-
-        holder.mIcon.setImageDrawable(item.getmIcon());
-        holder.mName.setText(item.getmName());
-        holder.mRate.setText(item.getmRate());
-
-        return convertView;
+        @Override
+        public void onClick(View view) {
+            clickListener.onItemClick(getAdapterPosition(),view);
+        }
     }
 
-    public void addItem(ReviewListItem item){
-        mList.add(item);
+    public ReviewListAdapter(ArrayList<Review> item){
+        this.mItemList = item;
     }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.review_list_item, parent, false);
+        return new ViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        ViewHolder viewHolder = (ViewHolder) holder;
+        Review item = mItemList.get(position);
+
+        BitmapLoader bitmapLoader = new BitmapLoader(mActivitiy,viewHolder.image);
+        bitmapLoader.Load(item.getImgUri());
+
+        viewHolder.name.setText(item.getWriter());
+        viewHolder.rate.setRating(item.getRate());
+        viewHolder.text.setText(item.getText());
+    }
+
+    @Override
+    public int getItemCount() {
+        return mItemList.size();
+    }
+
 }
+

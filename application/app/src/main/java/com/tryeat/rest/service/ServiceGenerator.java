@@ -1,5 +1,7 @@
 package com.tryeat.rest.service;
 
+import android.icu.util.TimeUnit;
+
 import com.tryeat.tryeat.LoginToken;
 
 import java.io.IOException;
@@ -12,8 +14,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
-    private static final String URL = "http://try-eat.homedns.tv:8080/";
-    //private static final String URL = "http://192.168.1.20:8080/";
+    private static final String URL = "http://tryeat.homedns.tv:8080/";
 
     private static Interceptor mTokenInterceptor = new Interceptor() {
         @Override
@@ -43,5 +44,9 @@ public class ServiceGenerator {
 
     public static <S> S createService(Class<S> serviceClass) {
         return retrofit.create(serviceClass);
+    }
+
+    public static String getServerUri(){
+        return URL;
     }
 }

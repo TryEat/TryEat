@@ -7,6 +7,7 @@ var dbConfig = {
     database: 'tryeat',
     port: 3306,
     connectionLimit: 100,
+    multipleStatements : true,
     insecureAuth: true
 };
 

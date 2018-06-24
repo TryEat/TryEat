@@ -1,8 +1,8 @@
 package com.tryeat.tryeat;
 
 public class LoginToken {
-    private static String token = null;
-    private static int id = -1;
+    private static String token = "None";
+    private static int id = 1;
 
     public static Boolean hasLoginToken(){
         return token != null || id !=-1;

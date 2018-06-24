@@ -1,81 +1,112 @@
 package com.tryeat.tryeat;
 
-import android.content.Context;
+import android.app.Activity;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.tryeat.rest.model.Restaurant;
 import com.tryeat.team.tryeat_service.R;
 
 import java.util.ArrayList;
+
+import static com.tryeat.tryeat.Utils.safeDivide;
 
 
 /**
  * Created by socce on 2018-05-08.
  */
 
-public class RestaurantListAdapter extends BaseAdapter {
-    private Context mContext = null;
-    private int mLayout;
-    private ArrayList<RestaurantListItem> mList = new ArrayList<RestaurantListItem>();
+class RestaurantListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private class ViewHolder{
-        public ImageView mIcon;
-        public TextView mName;
-        public TextView mRate;
+    public interface ClickListener {
+        void onItemClick(int position, View v);
     }
 
-    public RestaurantListAdapter(Context mContext,int mLayout){
-        super();
-        this.mContext = mContext;
-        this.mLayout=mLayout;
-        this.mList = new ArrayList<>();
-    }
+    private static ClickListener clickListener;
 
-    @Override
-    public int getCount() {
-        return mList.size();
-    }
+    private ArrayList<Restaurant> mList;
 
-    @Override
-    public Object getItem(int position) {
-        return mList.get(position);
-    }
+    private Activity mActivity;
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
+    private static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        TextView address;
+        TextView rate;
+        TextView count;
+        TextView bookmark;
+        TextView name;
+        ImageView image;
+        TextView distance;
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-        if (convertView == null) {
-            holder = new ViewHolder();
-
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(mLayout, null);
-
-            holder.mIcon = (ImageView) convertView.findViewById(R.id.icon);
-            holder.mName = (TextView) convertView.findViewById(R.id.name);
-            holder.mRate = (TextView) convertView.findViewById(R.id.rate);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
+        ViewHolder(View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(this);
+            address = itemView.findViewById(R.id.address);
+            rate = itemView.findViewById(R.id.rate);
+            bookmark = itemView.findViewById(R.id.addbookmark);
+            count = itemView.findViewById(R.id.count);
+            image = itemView.findViewById(R.id.image);
+            name = itemView.findViewById(R.id.name);
+            distance = itemView.findViewById(R.id.distance);
         }
 
-        RestaurantListItem item = mList.get(position);
-
-        holder.mIcon.setImageDrawable(item.getmIcon());
-        holder.mName.setText(item.getmName());
-        holder.mRate.setText(item.getmRate()+"");
-
-        return convertView;
+        @Override
+        public void onClick(View view) {
+            clickListener.onItemClick(getAdapterPosition(), view);
+        }
     }
 
-    public void addItem(RestaurantListItem item){
-        mList.add(item);
+    public void setOnItemClickListener(ClickListener clickListener) {
+        RestaurantListAdapter.clickListener = clickListener;
+    }
+
+    public void setActivity(Activity activity){
+        mActivity = activity;
+    }
+
+    public RestaurantListAdapter(ArrayList<Restaurant> item) {
+        this.mList = item;
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.restaurant_list_item, parent, false);
+        return new ViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        ViewHolder viewHolder = (ViewHolder) holder;
+        Restaurant item = mList.get(position);
+
+
+        Utils.safeSetObject(viewHolder.rate,String.format("%.1f" , safeDivide(item.getTotalRate(), item.getReviewCount())));
+        Utils.safeSetObject(viewHolder.address,item.getAddress());
+        Utils.safeSetObject(viewHolder.bookmark,item.getTotalBookMark());
+        Utils.safeSetObject(viewHolder.count,item.getReviewCount());
+
+        if(item.getDistance()!=0){
+            viewHolder.distance.setVisibility(View.VISIBLE);
+            double distance = item.getDistance();
+            if(distance<1) Utils.safeSetObject(viewHolder.distance,String.format("%.0fm" , distance*1000));
+            else Utils.safeSetObject(viewHolder.distance,String.format("%.1fkm" , distance));
+        }else{
+            viewHolder.distance.setVisibility(View.GONE);
+        }
+
+        if(item.getImgUri()!=null) {
+            BitmapLoader bitmapLoader = new BitmapLoader(mActivity,viewHolder.image);
+            bitmapLoader.Load(item.getImgUri());
+        }
+
+        viewHolder.name.setText(item.getName());
+    }
+
+    @Override
+    public int getItemCount() {
+        return mList.size();
     }
 }

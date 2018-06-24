@@ -35,10 +35,11 @@ module.exports = function (_dbPool, _userTokens) {
         dbPool.query(query, [user_login_id], function (err, rows, fields) {
             if (err) throw err;
             if (rows.length == 0) {
-                query = 'INSERT INTO user (user_login_id ,user_pwd) VALUES (?,?)';
+                query = 'INSERT INTO user (user_login_id ,user_pwd) VALUES (?,?);';
+                query += 'update tryeat.counting SET user=user+1 where target=0;'
                 dbPool.query(query, [user_login_id, user_pwd], function (err, rows, fields) {
                     if (err) throw err;
-                    if (rows.affectedRows != 0) res.status(201).json({ message: "signup success" })
+                    if (rows[0].affectedRows != 0) res.status(201).json({ message: "signup success" })
                     else res.status(401).json({ message: "signup fail" })
                 });
             } else {

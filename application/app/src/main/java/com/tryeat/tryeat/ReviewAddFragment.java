@@ -9,56 +9,100 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.tryeat.rest.model.Review;
 import com.tryeat.rest.model.Status;
-import com.tryeat.rest.model.StatusCode;
 import com.tryeat.rest.service.ReviewService;
 import com.tryeat.team.tryeat_service.R;
 
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
  * Created by socce on 2018-05-20.
  */
 
-public class ReviewAddFragment extends Fragment {
-    View view;
+public class ReviewAddFragment extends Fragment implements View.OnClickListener{
+    private View view;
 
-    EditText header;
-    EditText desc;
-    RatingBar rate;
+    private TextView name;
+    private EditText desc;
+    private RatingBar rate;
+
+    private int reviewId;
+    private int restaurantId;
+
+    private ImageAddFragment imageAddFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.review_add_fragment,container,false);
-        Button addButton = view.findViewById(R.id.addButton);
-        addButton.setOnClickListener(addReview());
-        header = view.findViewById(R.id.header);
-        desc = view.findViewById(R.id.desc);
-        rate = view.findViewById(R.id.rate);
+        if (view == null) {
+            view = inflater.inflate(R.layout.review_add_fragment, container, false);
+            Button addButton = view.findViewById(R.id.addButton);
+            addButton.setOnClickListener(this);
+
+            NavigationManager.setVisibility(View.GONE);
+
+            name = view.findViewById(R.id.name);
+            desc = view.findViewById(R.id.review);
+            rate = view.findViewById(R.id.rate);
+
+            imageAddFragment = (ImageAddFragment) getChildFragmentManager().findFragmentById(R.id.image_fragment);
+
+            if (getArguments().containsKey("revise")) {
+                Review review = (Review) getArguments().getSerializable("revise");
+                reviewId = review.getReviewId();
+                restaurantId = review.getRestaurantId();
+                name.setText(review.getRestaurantName());
+                rate.setRating(review.getRate());
+                desc.setText(review.getText());
+                imageAddFragment.setImage(review.getImgUri());
+            } else {
+                reviewId = -1;
+                restaurantId = getArguments().getInt("id");
+                name.setText(getArguments().getString("name"));
+            }
+
+        }
         return view;
     }
 
-    public View.OnClickListener addReview(){
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ReviewService.writeReview(1, 1, desc.getText().toString(), rate.getNumStars(), new Callback<Status>() {
-                    @Override
-                    public void onResponse(Call<Status> call, Response<Status> response) {
-                        int code = response.code();
-                        if(code == StatusCode.WRITE_REVIEW_SUCCESS){}
-                        else if(code == StatusCode.WRITE_REVIEW_FAIL){}
-                    }
+    @Override
+    public void onClick(View v) {
+        ProgressDialogManager.show(getActivity(),"리뷰 등록중입니다...");
+        if (reviewId == -1) {
+            ReviewService.writeReview(LoginToken.getId(), restaurantId, desc.getText().toString(), imageAddFragment.getImageBitmap(), rate.getRating(), new SimpleCallBack<Status>(
+                            ReviewService.class.getSimpleName(), new SimpleCallBack.Success<Status>() {
+                        @Override
+                        public void toDo(Response<Status> response) {
+                            ProgressDialogManager.dismiss();
+                            getFragmentManager().popBackStackImmediate();
+                        }
 
-                    @Override
-                    public void onFailure(Call<Status> call, Throwable t) {
+                        @Override
+                        public void exception() {
+                            ProgressDialogManager.dismiss();
+                            Toast.makeText(getContext(),"다시 시도해 주십시오...",Toast.LENGTH_LONG);
+                        }
+                    })
+            );
+        } else {
+            ReviewService.updateReview(reviewId, desc.getText().toString(), imageAddFragment.getImageBitmap(), rate.getRating(), new SimpleCallBack<Status>(
+                            ReviewService.class.getSimpleName(), new SimpleCallBack.Success<Status>() {
+                        @Override
+                        public void toDo(Response<Status> response) {
+                            ProgressDialogManager.dismiss();
+                            getFragmentManager().popBackStackImmediate();
+                        }
 
-                    }
-                });
-            }
-        };
+                        @Override
+                        public void exception() {
+                            ProgressDialogManager.dismiss();
+                            Toast.makeText(getContext(),"다시 시도해 주십시오...",Toast.LENGTH_LONG);
+                        }
+                    })
+            );
+        }
     }
 }
